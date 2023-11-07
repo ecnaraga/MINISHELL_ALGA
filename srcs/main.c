@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/02 14:37:36 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:19:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(int ac, char **av, char **env)
 		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
-			
+		
 		int i = -1;
 		while (minish.av[++i].data)
 		{

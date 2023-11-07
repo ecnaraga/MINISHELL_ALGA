@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/02 12:24:54 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/07 16:43:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ ft_parse_bis
 */
 int		ft_parse_bis(t_msh *minish);
 // int		ft_parse_bis(char *str);
+int ft_error_syntax(char *str, int exitstatus, int clean);
+
 
 /*
 ft_parse_utils.c

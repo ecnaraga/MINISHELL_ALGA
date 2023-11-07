@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/02 17:19:34 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/06 14:33:45 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ enum	e_parenthesis
 	PAR_OPEN = 1,
 	PAR_CLOSE = 2,
 	OTHER = 4,
+	ISS = 5,
 };
 
 #endif
