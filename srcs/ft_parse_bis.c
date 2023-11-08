@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/07 17:42:00 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:07:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,54 +56,34 @@ char	*ft_error_message(char *str)
 //penser a gerer les parentheses dans des quotes
 int ft_parse_bis(t_msh *minish)
 {
-	int par;
 	int par_o;
-	int	multi_par_o;
-	int	multi_par_condition_close;
 	int par_c;
-	int	multi_par_c;
-	int par_and_oper;
-	int prec;
 	int prec_iss;
-	int other_char;
 	char *line;
 	char *tmp;
 	int	i;
 	
 	i = 0;
-	par = 0;
 	par_o = 0;
-	multi_par_o = 0;
 	par_c = 0;
-	multi_par_c = 0;
-	par_and_oper = 0;
-	prec = 0;
 	prec_iss = 0;
-	other_char = 0;
-	multi_par_condition_close = 0;
+	
 	while (minish->line[i])
 	{
 		if (minish->line[i] == '"')
 		{
-			other_char = 1;
 			while (minish->line[++i] && minish->line[i] != '"');
+			prec_iss = OTHER;
 		}
 		else if (minish->line[i] == '\'')
 		{
-			other_char = 1;
 			while (minish->line[++i] && minish->line[i] != '\'');
+			prec_iss = OTHER;
 		}
 		else if (ft_is_isspace(minish->line[i]) == 0)
-		{
-			prec = ISS;
 			i++;
-		}
 		else if (minish->line[i] == '(')
 		{
-			if (prec_iss == OPERATOR)
-				par_and_oper += 1;
-			if (prec == PAR_OPEN)
-				multi_par_o += 1;
 			if (prec_iss == PAR_CLOSE /*|| prec_iss == OTHER*/)
 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
 			if (prec_iss == OTHER)
@@ -113,10 +93,8 @@ int ft_parse_bis(t_msh *minish)
 				//IF ERROR MALLOC
 				return (ft_error_syntax(line, 2, 1));
 			}
-			prec = PAR_OPEN;
 			prec_iss = PAR_OPEN;
 			par_o += 1;
-			par += 1;
 			i++;
 		}
 		else if (minish->line[i] == ')')
@@ -125,30 +103,12 @@ int ft_parse_bis(t_msh *minish)
 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
 			if (par_o <= par_c)
 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
-			if (prec == PAR_CLOSE && multi_par_o > 0)
-				return (ft_error_syntax("", 2, 0));
-			if (multi_par_o > 0)
-				multi_par_condition_close += 1;
-			prec = PAR_CLOSE;
 			prec_iss = PAR_CLOSE;
 			par_c += 1;
-			par -= 1;
-			
-			
-			// if (prec == PAR_CLOSE)
-			// 	multi_par_c += 2;
 			i++;
 		}
 		else if (minish->line[i] == '&' || minish->line[i] == '|')
 		{
-			if (prec_iss == PAR_CLOSE)
-				par_and_oper += 1;
-			if (multi_par_condition_close == 1)
-			{
-				multi_par_o -= 1;
-				multi_par_condition_close = 0;
-			}
-			prec = OPERATOR;
 			prec_iss = OPERATOR;
 			i++;
 		}
@@ -160,55 +120,28 @@ int ft_parse_bis(t_msh *minish)
 				//IF ERROR MALLOC
 				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax
 			}
-			prec = OTHER;
 			prec_iss = OTHER;
-			other_char += 1;
 			i++;
 		}
 	}
-	if (multi_par_o != 0 && multi_par_c == multi_par_o)
+	if (par_c != par_o) // POUR GERER SI PARENTHESE OUVERTE
 	{
-		printf("multi_par_o %d\n", multi_par_o);
-		return (ft_error_syntax("", 2, 0));
-	}
-	// while (minish->line[i])
-	// {
-	// 	if (minish->line[i] == '(')
-	// 	{
-	// 		par_o += 1;
-	// 		i++;
-	// 	}
-	// 	else if (minish->line[i] == ')')
-	// 	{
-	// 		if (par_o <= par_c)
-	// 			 return (ft_error_syntax("syntax error near unexpected token `)'\n", 2));
-	// 		par_c += 1;
-	// 		i++;
-	// 	}
-	// 	else if (minish->line[i] == '"')
-	// 		while (minish->line[++i] && minish->line[i] != '"');
-	// 	else if (minish->line[i] == '\'')
-	// 		while (minish->line[++i] && minish->line[i] != '\'');
-	// 	else
-	// 		i++;
-	// }
-	if ((par_c + par_o) % 2 == 1) // POUR GERER SI PARENTHESE OUVERTE
-	{
-		line = readline("> ");
-		tmp = minish->line;
-		minish->line = ft_strjoin(minish->line, " "); // MALLOC
-		// IF ERROR MALLOC
-		free(tmp);
-		tmp = minish->line;
-		minish->line = ft_strjoin(minish->line, line); // MALLOC
-		// IF ERROR MALLOC
-		free(tmp);
-		free(line);
-		add_history(line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
-		ft_parse_line(minish); // MALLOC
-		// IF ERROR MALLOC
-		ft_parse_bis(minish); // MALLOC
-		// IF ERROR MALLOC
+		return (ft_error_syntax("parentheses ouvertes...", 2, 1));
+		// line = readline("> ");
+		// tmp = minish->line;
+		// minish->line = ft_strjoin(minish->line, " "); // MALLOC
+		// // IF ERROR MALLOC
+		// free(tmp);
+		// tmp = minish->line;
+		// minish->line = ft_strjoin(minish->line, line); // MALLOC
+		// // IF ERROR MALLOC
+		// free(tmp);
+		// free(line);
+		// add_history(line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
+		// ft_parse_line(minish); // MALLOC
+		// // IF ERROR MALLOC
+		// ft_parse_bis(minish); // MALLOC
+		// // IF ERROR MALLOC
 	}
 	return (0);
 }
@@ -227,9 +160,10 @@ int ft_parse_bis(t_msh *minish)
 	( ( echo bravo ) ) = ((echo bravo) ) = ( (echo bravo)) = ( ( echo bravo )) = (( echo bravo ) )
 	(( bravo ) && bravo ) = ((bravo) && bravo) = ( (bravo) && bravo) = ( ( bravo ) && bravo )
 	( bravo && (bravo)) = ( bravo && (bravo) ) = ( bravo && ( bravo ) ) = ( bravo && ( bravo ))
-	( ( ls && ls ) )
+	( ( ls && ls ) ) = (( ls && ls ) ) = ( ( ls && ls ))
+	(( echo && ( bravo )) && la ) = (( echo && ( bravo ) ) && la ) = ( ( echo && ( bravo ) ) && la ) = ( ( echo && ( bravo )) && la )
 	
-2- N IMPRIME RIEN + EXITSTATUS = 1
+2- N IMPRIME RIEN + EXITSTATUS = 1 // AGERER DANS L EXEC
 	(( bravo )) = ((bravo))
 	(( ls && ls )) = ((ls && ls))
 
@@ -239,20 +173,216 @@ int ft_parse_bis(t_msh *minish)
 	() = ( ) = (      ) => syntax error near unexpected token `)'
 	) =        ) = bravo ) => syntax error near unexpected token `)'
 	
-KO	( bravo ( bravo ) ) = ( bravo( bravo )) = ( bravo(bravo)) = (bravo (bravo)) => minishell: syntax error near unexpected token `bravo'
-OK	(( bravo ) ( bravo )) = ( (bravo)  (bravo) ) = ((bravo)  (bravo)) = ((bravo)(bravo)) = ((bravo)(bravo) ) = ( (bravo)(bravo) ) => minishell: syntax error near unexpected token `('
+	( echo ( bravo ) ) = ( echo( bravo )) = ( echo(bravo)) = (echo (bravo)) = ( echoo ( bravo ) echo ) = ( echoo ( bravo ) echo) = (( echo ) bravo ) = ( ( echo ) bravo ) => minishell: syntax error near unexpected token `bravo'
+	(( bravo ) ( bravo )) = ( (bravo)  (bravo) ) = ((bravo)  (bravo)) = ((bravo)(bravo)) = ((bravo)(bravo) ) = ( (bravo)(bravo) ) => minishell: syntax error near unexpected token `('
 	
-4- minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2
+4- minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2 // AGERER DANS L EXEC
 	(( echo bravo )) = ((echo bravo)) => minishell: ((: echo bravo : syntax error in expression (error token is "bravo ")
 */
 
 /*
 KO : 
-( bravo ( bravo ) ) -> fonctionne mais ne devrait pas
-( bravo ( bravo )) -> fonctionne mais ne devrait pas
 (( echo bravo )) -> mauvaise erreur
 */
 
+
+// int ft_parse_bis(t_msh *minish)
+// {
+// 	int par;
+// 	int par_o;
+// 	int	multi_par_o;
+// 	int	multi_par_condition_close;
+// 	int par_c;
+// 	int	multi_par_c;
+// 	int par_and_oper;
+// 	int prec;
+// 	int prec_iss;
+// 	int prec_type_par;
+// 	int cmd;
+// 	int other_char;
+// 	char *line;
+// 	char *tmp;
+// 	int	i;
+	
+// 	i = 0;
+// 	par = 0;
+// 	par_o = 0;
+// 	multi_par_o = 0;
+// 	par_c = 0;
+// 	multi_par_c = 0;
+// 	par_and_oper = 0;
+// 	prec = 0;
+// 	prec_iss = 0;
+// 	cmd = 0;
+// 	other_char = 0;
+// 	multi_par_condition_close = 0;
+// 	prec_type_par = 0;
+	
+// 	while (minish->line[i])
+// 	{
+// 		if (minish->line[i] == '"')
+// 		{
+// 			other_char = 1;
+// 			while (minish->line[++i] && minish->line[i] != '"');
+// 		}
+// 		else if (minish->line[i] == '\'')
+// 		{
+// 			other_char = 1;
+// 			while (minish->line[++i] && minish->line[i] != '\'');
+// 		}
+// 		else if (ft_is_isspace(minish->line[i]) == 0)
+// 		{
+// 			// if (multi_par_o > 0 && prec_iss == OTHER && cmd == 0)
+// 			// 	cmd = 1;
+// 			printf("ISSSPACE BEF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			prec = ISS;
+// 			printf("ISSSPACE AF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			i++;
+// 		}
+// 		else if (minish->line[i] == '(')
+// 		{
+// 			printf("( BEF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			if (prec_iss == OPERATOR)
+// 				par_and_oper += 1;
+// 			if (prec == PAR_OPEN)
+// 			{
+// 				multi_par_o += 1;
+// 				prec_type_par = 2;
+// 			}
+// 			else
+// 				prec_type_par = 1;
+// 			if (prec_iss == PAR_CLOSE /*|| prec_iss == OTHER*/)
+// 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
+// 			if (prec_iss == OTHER)
+// 			{
+// 				while (ft_is_isspace(minish->line[++i]) == 0);
+// 				line = ft_error_message(minish->line + i); //MALLOC
+// 				//IF ERROR MALLOC
+// 				return (ft_error_syntax(line, 2, 1));
+// 			}
+// 			prec = PAR_OPEN;
+// 			prec_iss = PAR_OPEN;
+// 			par_o += 1;
+// 			par += 1;
+// 			printf("( AF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			i++;
+// 		}
+// 		else if (minish->line[i] == ')')
+// 		{
+// 			printf(") BEF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			if (prec_iss == PAR_OPEN)
+// 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+// 			if (par_o <= par_c)
+// 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+// 			if (prec == PAR_CLOSE && multi_par_o > 0 && prec_type_par == 2)
+// 				return (ft_error_syntax("", 2, 0));
+// 			if (multi_par_o > 0 && 2 * multi_par_o == par)
+// 				multi_par_condition_close += 1;
+// 			// if (multi_par_condition_close == 1 && prec == PAR_CLOSE)//manque quelque chose
+// 			// {	
+// 			// 	multi_par_o -= 1;//
+// 			// 	multi_par_condition_close = 0;
+// 			// }
+// 			prec = PAR_CLOSE;
+// 			prec_iss = PAR_CLOSE;
+// 			par_c += 1;
+// 			par -= 1;
+			
+			
+// 			// if (prec == PAR_CLOSE)
+// 			// 	multi_par_c += 2;
+// 			printf(") AF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			i++;
+// 		}
+// 		else if (minish->line[i] == '&' || minish->line[i] == '|')
+// 		{
+// 			printf("OPERATOR BEF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			if (prec_iss == PAR_CLOSE)
+// 				par_and_oper += 1;
+// 			// if (multi_par_condition_close == 1)
+// 			// {
+// 			// 	multi_par_o -= 1;
+// 			// 	multi_par_condition_close = 0;
+// 			// }
+// 			prec = OPERATOR;
+// 			prec_iss = OPERATOR;
+// 			printf("OPERATOR AF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			i++;
+// 		}
+// 		else
+// 		{
+// 			printf("OTHER : minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			if (prec_iss == PAR_CLOSE)
+// 			{
+// 				line = ft_error_message(minish->line + i); //MALLOC
+// 				//IF ERROR MALLOC
+// 				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax
+// 			}
+// 			if (cmd == 1)
+// 				cmd = 2;
+// 			prec = OTHER;
+// 			prec_iss = OTHER;
+// 			other_char += 1;
+// 			printf("OTHER AF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n\n", 
+// 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
+// 			i++;
+// 		}
+// 	}
+// 	if (multi_par_o != 0 && multi_par_c == multi_par_o) //UTILE???
+// 	{
+// 		printf("multi_par_o %d\n", multi_par_o);
+// 		return (ft_error_syntax("", 2, 0));
+// 	}
+// 	// while (minish->line[i])
+// 	// {
+// 	// 	if (minish->line[i] == '(')
+// 	// 	{
+// 	// 		par_o += 1;
+// 	// 		i++;
+// 	// 	}
+// 	// 	else if (minish->line[i] == ')')
+// 	// 	{
+// 	// 		if (par_o <= par_c)
+// 	// 			 return (ft_error_syntax("syntax error near unexpected token `)'\n", 2));
+// 	// 		par_c += 1;
+// 	// 		i++;
+// 	// 	}
+// 	// 	else if (minish->line[i] == '"')
+// 	// 		while (minish->line[++i] && minish->line[i] != '"');
+// 	// 	else if (minish->line[i] == '\'')
+// 	// 		while (minish->line[++i] && minish->line[i] != '\'');
+// 	// 	else
+// 	// 		i++;
+// 	// }
+// 	if ((par_c + par_o) % 2 == 1) // POUR GERER SI PARENTHESE OUVERTE
+// 	{
+// 		line = readline("> ");
+// 		tmp = minish->line;
+// 		minish->line = ft_strjoin(minish->line, " "); // MALLOC
+// 		// IF ERROR MALLOC
+// 		free(tmp);
+// 		tmp = minish->line;
+// 		minish->line = ft_strjoin(minish->line, line); // MALLOC
+// 		// IF ERROR MALLOC
+// 		free(tmp);
+// 		free(line);
+// 		add_history(line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
+// 		ft_parse_line(minish); // MALLOC
+// 		// IF ERROR MALLOC
+// 		ft_parse_bis(minish); // MALLOC
+// 		// IF ERROR MALLOC
+// 	}
+// 	return (0);
+// }
 
 
 // int ft_parse_bis(t_msh *minish)
