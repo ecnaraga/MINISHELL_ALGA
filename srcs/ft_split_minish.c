@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/02 14:02:43 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/08 16:40:25 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	ft_count_letter(const char *s, t_quote *q, int *i, int *k)
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		*i += 1;
 	}
-	while (ft_test(s[*i], s[*i + 1], q->d, q->s) == 0)
+	while (s[*i] && ft_test(s[*i], s[*i + 1], q->d, q->s) == 0)
 	{
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		if (ft_test_bis(s[*i], q->d, q->s) == 0)

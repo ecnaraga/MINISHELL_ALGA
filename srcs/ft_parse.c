@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/08 14:05:28 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/08 16:41:05 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,10 +175,12 @@ char	*add_spaces(char *str)
         	} 
              	i++;
 	}
-	printf("str size : %zu\n", i);
-	printf("fstr size : %lu\n", i + count);
-	i = 0;
+	// printf("str size : %zu\n", i);
+	// printf("fstr size : %lu\n", i + count);
 	fstr = malloc(sizeof(char) * (i + count + 1));
+	i = 0;
+	
+	// fstr = malloc(sizeof(char) * (28));
 	//flag = 0;
 	while (str[i]) 
 	{
@@ -194,16 +196,18 @@ char	*add_spaces(char *str)
 			flag = 0;*/
 		if (is_operator(str[i]) == 1)
 		{
-            		if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i - 1]) == 0)
+            if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i - 1]) == 0)
 	   		{
 				if (is_operator(str[i - 1]) == 0)
 					fstr[j++] = ' ';
 				fstr[j] = str[i];
-	    		}
-            		else if (i < ft_strlen(str) && ((str[i + 1] == str[i]) || str[i] == str[i - 1]))
+			}
+	    	else if (i < ft_strlen(str) && ((str[i + 1] == str[i]) || str[i] == str[i - 1]))
+			{	
 				fstr[j] = str[i];
-            		if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0))
-	    		{
+			}
+            if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0))
+	    	{
 				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i + 1]) == 1 && str[i] != str[i + 1]))
 				{	
 					
@@ -212,12 +216,16 @@ char	*add_spaces(char *str)
                 				fstr[++j] = ' '; 
 				}
 					
-            		}
+            }
 			else if (i < ft_strlen(str) && is_separator(str[i + 1]) == 1)
+			{	
 				fstr[j] = str[i];
-        	}
+			}
+        }
 		else
-             		fstr[j] = str[i];
+		{
+            fstr[j] = str[i];
+		}
 		i++;
 		j++;
 	}

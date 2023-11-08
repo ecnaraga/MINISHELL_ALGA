@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/08 14:07:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/08 16:58:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char	*ft_error_message(char *str)
 	i = -1;
 	if (!str[i])
 		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
+	//IF ERROR
 	else
 	{
 		while (str[++i])
@@ -46,8 +47,10 @@ char	*ft_error_message(char *str)
 				break ;
 		str[i] = '\0';
 		message = ft_strjoin("minishell: syntax error near unexpected token `", str);
+		//IF ERROR
 		tmp = message;
 		message = ft_strjoin(message, "'\n");
+		//IF ERROR
 		free(tmp);
 	}
 	return (message);
@@ -60,7 +63,6 @@ int ft_parse_bis(t_msh *minish)
 	int par_c;
 	int prec_iss;
 	char *line;
-	char *tmp;
 	int	i;
 	
 	i = 0;
@@ -163,9 +165,11 @@ int ft_parse_bis(t_msh *minish)
 	( ( ls && ls ) ) = (( ls && ls ) ) = ( ( ls && ls ))
 	(( echo && ( bravo )) && la ) = (( echo && ( bravo ) ) && la ) = ( ( echo && ( bravo ) ) && la ) = ( ( echo && ( bravo )) && la )
 	
-2- N IMPRIME RIEN + EXITSTATUS = 1 // AGERER DANS L EXEC
+2- DOIT PASSER TEST PARSING MAIS EN EXEC : N IMPRIME RIEN + EXITSTATUS = 1 // AGERER DANS L EXEC
 	(( bravo )) = ((bravo))
 	(( ls && ls )) = ((ls && ls))
+	echo Bravo && ((ls && ls)) && echo hehe
+	echo Bravo && ((ls && ls)) || echo hehe
 
 3- bash: syntax error near unexpected token + EXIT STATUS 2
 	( bravo ) ( bravo ) = (bravo) (bravo) = (bravo)(bravo) = ( bravo )( bravo ) => minishell: syntax error near unexpected token `('

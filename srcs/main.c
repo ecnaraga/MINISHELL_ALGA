@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/08 09:39:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:26:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,12 @@ int main(int ac, char **av, char **env)
 		APRES FT_PARSE : str = ( bravo )?0
 		C est comme si il n y avait plus de \0 a la fin de str >> erreur qui arrive parfois mais pas tout le temps
 		*/
-		// if (ft_parse_line(&minish) != 0)
-		// {
-		// 	free(minish.line);
-		// 	continue ; //verifier si on revient au debut de la boucle
-		// }
+		if (ft_parse_line(&minish) != 0)
+		{
+			free(minish.line);
+			continue ; //verifier si on revient au debut de la boucle
+		}
+		printf("test\n");
 		if (ft_parse_bis(&minish) != 0)
 		{
 			free(minish.line);
