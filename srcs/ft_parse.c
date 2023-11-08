@@ -6,43 +6,34 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/07 18:07:18 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:05:28 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-size_t	ft_strlen(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t	i;
-	char	*str;
-
-	i = 0;
-	str = s;
-	while (i < n)
-	{
-		str[i] = '\0';
-		i++;
-	}
-}
-
-
-// void	ft_inc_quote(char c, int *d_q, int *s_q)
+// size_t	ft_strlen(const char *str)
 // {
-// 	if (*s_q % 2 == 0 && c == '"')
-// 		*d_q += 1;
-// 	else if (*d_q % 2 == 0 && c == 39)
-// 		*s_q += 1;
+// 	int	i;
+
+// 	i = 0;
+// 	while (str[i])
+// 		i++;
+// 	return (i);
+// }
+
+// void	ft_bzero(void *s, size_t n)
+// {
+// 	size_t	i;
+// 	char	*str;
+
+// 	i = 0;
+// 	str = s;
+// 	while (i < n)
+// 	{
+// 		str[i] = '\0';
+// 		i++;
+// 	}
 // }
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -54,80 +45,80 @@ Verifie que les chevrons sont bien assortis a leurs arguments :
 	- si rien apres renvoie erreur 🗸
 	- espaces ignores 🗸
 */
-// static int	ft_parse_chevron(char *str)
-// {
-// 	int	i;
+static int	ft_parse_chevron(char *str)
+{
+	int	i;
 
-// 	i = -1;
-// 	while (str[++i])
-// 	{
-// 		if (str[i] == '>')
-// 		{
-// 			if (str[i + 1] == '>')
-// 				i++;
-// 			i++;
-// 			while (str[i] == ' ')
-// 				i++;
-// 			if (!((str[i - 1] == ' ' || str[i - 1] == '>')
-// 					&& (str[i] >= 33 && str[i] <= 126) && str[i] != '>'))
-// 			{
-// 				printf("minishell: syntax error near unexpected token `newline'\n");
-// 				return (2);
-// 			}
-// 		}
-// 	}
-// 	return (0);
-// }
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '>')
+		{
+			if (str[i + 1] == '>')
+				i++;
+			i++;
+			while (str[i] == ' ')
+				i++;
+			if (!((str[i - 1] == ' ' || str[i - 1] == '>')
+					&& (str[i] >= 33 && str[i] <= 126) && str[i] != '>'))
+			{
+				printf("minishell: syntax error near unexpected token `newline'\n");
+				return (2);
+			}
+		}
+	}
+	return (0);
+}
 
 /*
 Verifie que les " et ' sont bien apparies
 	- quote entre quote 🗸
 	- pouvoir ajouter plusieurs quote entre 2 mm quote : "'bra'vo" 🗸
 */
-// static int	ft_quote_order(char *str)
-// {
-// 	char	*quote;
-// 	int		count;
-// 	int		i;
-// 	int sq;
-// 	int dq;
-// 	int flag;
+static int	ft_quote_order(char *str)
+{
+	char	*quote;
+	int		count;
+	int		i;
+	int sq;
+	int dq;
+	int flag;
 
-// 	(quote = malloc(sizeof(char) * ft_strlen(str)), ft_bzero(quote, sizeof(char)));
-// 	count = -1;
-// 	i = -1;
-// 	dq = 0;
-// 	sq = 0;
-// 	flag = 0;
-// 	while (str[++i])
-// 	{
-// 		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
-// 			flag = 0;
-// 		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-// 		{
-// 			if(str[i] == '"') 
-// 				flag = 1;
-// 			else if (str[i] == '\'')
-// 				flag = 2;
-// 			i++;
-// 		}
-// 		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-// 		{
-// 			if (count >= 0 && quote[count] == str[i])
-// 				quote[count--] = '\0';
-// 			else
-// 				quote[++count] = str[i];
-// 		}
-// 	}
-// 	if (count != -1)
-// 	{
-// 		printf("minishell: les guillemets ne sont pas correctement appariés.\n");
-// 		//printf("minishell: syntax error); AJOUTER UN TRUC AVEC NB DES OP
-// 		exit (2);
-// 	}	
-// 	free(quote);
-// 	return (0);
-// }
+	(quote = malloc(sizeof(char) * ft_strlen(str)), ft_bzero(quote, sizeof(char)));
+	count = -1;
+	i = -1;
+	dq = 0;
+	sq = 0;
+	flag = 0;
+	while (str[++i])
+	{
+		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
+			flag = 0;
+		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		{
+			if(str[i] == '"') 
+				flag = 1;
+			else if (str[i] == '\'')
+				flag = 2;
+			i++;
+		}
+		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		{
+			if (count >= 0 && quote[count] == str[i])
+				quote[count--] = '\0';
+			else
+				quote[++count] = str[i];
+		}
+	}
+	if (count != -1)
+	{
+		printf("minishell: les guillemets ne sont pas correctement appariés.\n");
+		//printf("minishell: syntax error); AJOUTER UN TRUC AVEC NB DES OP
+		exit (2);
+	}	
+	free(quote);
+	return (0);
+}
 
 static int	is_separator(char c)
 {
@@ -175,20 +166,13 @@ char	*add_spaces(char *str)
 			flag = 0;*/
 		if (is_operator(str[i]) == 1) 
 		{
-            		if (i > 0 && is_separator(str[i - 1]) == 0)
+            		if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i - 1]) == 0)
 				count++;
             		if (i < ft_strlen(str) && (str[i + 1] == str[i]))
 				i += 1;
             		 if (i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0)
 				count++;
         	} 
-		/*else if (str[i] == ')' || str[i] == '(') 
-		{
-            		if (i > 0 && is_separator(str[i - 1]) == 0 && !(str[i - 1] == ')' || str[i - 1] == '('))
-				count++;
-            		if (i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0)
-				count++;
-        	}*/
              	i++;
 	}
 	printf("str size : %zu\n", i);
@@ -210,40 +194,30 @@ char	*add_spaces(char *str)
 			flag = 0;*/
 		if (is_operator(str[i]) == 1)
 		{
-            		if (i > 0 && is_separator(str[i - 1]) == 0)
+            		if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i - 1]) == 0)
 	   		{
 				if (is_operator(str[i - 1]) == 0)
 					fstr[j++] = ' ';
 				fstr[j] = str[i];
 	    		}
-            		if (i < ft_strlen(str) && ((str[i + 1] == str[i]) || str[i] == str[i - 1]))
+            		else if (i < ft_strlen(str) && ((str[i + 1] == str[i]) || str[i] == str[i - 1]))
 				fstr[j] = str[i];
-            		else if (i < ft_strlen(str) && is_separator(str[i + 1]) == 0)
+            		if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0))
 	    		{
-				fstr[j] = str[i];
-				if (i + 1 < ft_strlen(str))
-                			fstr[++j] = ' '; 
+				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i + 1]) == 1 && str[i] != str[i + 1]))
+				{	
+					
+					fstr[j] = str[i];
+					if (i + 1 < ft_strlen(str))
+                				fstr[++j] = ' '; 
+				}
+					
             		}
 			else if (i < ft_strlen(str) && is_separator(str[i + 1]) == 1)
 				fstr[j] = str[i];
         	}
-		/*else if (str[i] == ')' || str[i] == '(') 
-		{
-            		if (i > 0 && is_separator(str[i - 1]) == 0)
-	   		{
-				fstr[j] = ' ';
-				fstr[++j] = str[i];
-	    		}
-            		if (i < ft_strlen(str) && is_separator(str[i + 1]) == 0)
-	    		{
-				fstr[j] = str[i];
-				if (i + 1 < ft_strlen(str))
-                			fstr[++j] = ' '; 
-            		}
-        	} */
 		else
              		fstr[j] = str[i];
-		printf("str[%zu]|%c| fstr[%zu]|%s|\n", i, str[i], j, fstr);
 		i++;
 		j++;
 	}
@@ -251,34 +225,35 @@ char	*add_spaces(char *str)
 	return (fstr);
 }
 
-// int	ft_parse_line(t_msh *minish)
-// {
-// 	if(ft_parse_chevron(minish->line) == 2)
-// 		return (2);
-// 	if (ft_quote_order(minish->line) == 2)
-// 		return (2);
-// 	minish->line = add_spaces(minish->line); // malloc
-// 	printf("str : _%s_\n", minish->line);
-// 	return (0);
-// }
-
-int main(int ac, char **av)
+int	ft_parse_line(t_msh *minish)
 {
-	char *str;
-	char *fstr;
-	(void)ac;
-	(void)av;
-	while (1)
-	{
-		str = readline("Oui$ "); //malloc
-		if (!str)
-			return (1);
-		//ft_parse_chevron(str);
-		//ft_quote_order(av[1]);
-		printf("str avant : \"%s\"\n", str);
-		fstr = add_spaces(str); //malloc
-		free(str);
-		printf("fstr apres : \"%s\"\n", fstr);
-		free(fstr);
-	}	
+	if(ft_parse_chevron(minish->line) == 2)
+		return (2);
+	if (ft_quote_order(minish->line) == 2)
+		return (2);
+	minish->line = add_spaces(minish->line); // malloc
+	printf("str : _%s_\n", minish->line);
+	return (0);
 }
+
+// int main(int ac, char **av)
+// {
+// 	char *str;
+// 	char *fstr;
+// 	(void)ac;
+// 	(void)av;
+// 	while (1)
+// 	{
+// 		str = readline("Oui$ "); //malloc
+// 		if (!str)
+// 			return (1);
+// 		//ft_parse_chevron(str);
+// 		//ft_quote_order(av[1]);
+// 		printf("str avant : \"%s\"\n", str);
+// 		fstr = add_spaces(str); //malloc
+// 		free(str);
+// 		printf("fstr apres : \"%s\"\n", fstr);
+// 		printf("--------------------------------\n");
+// 		free(fstr);
+// 	}	
+// }
