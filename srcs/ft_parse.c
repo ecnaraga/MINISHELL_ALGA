@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/02 14:39:18 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:05:28 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,53 +36,7 @@
 // 	}
 // }
 
-// void	ft_inc_quote(char c, int *d_q, int *s_q)
-// {
-// 	if (*s_q % 2 == 0 && c == '"')
-// 		*d_q += 1;
-// 	else if (*d_q % 2 == 0 && c == 39)
-// 		*s_q += 1;
-// }
-
 /*----------------------------------------------------------------------------------------------------*/
-
-/*
-Verifie que les " et ' sont bien apparies
-	- quote entre quote 🗸
-	- pouvoir ajouter plusieurs quote entre 2 mm quote : "'bra'vo" X
-*/
-int	ft_quote_order(char *str)
-{
-	char	*quote;
-	int		count;
-	int		i;
-	int sq;
-	int dq;
-
-	(quote = malloc(sizeof(char) * ft_strlen(str)), ft_bzero(quote, sizeof(char)));
-	count = -1;
-	i = -1;
-	dq = 0;
-	sq = 0;
-	while (str[++i])
-	{
-		if (str[i] == '"' || str[i] == '\'')
-		{
-			if (count >= 0 && quote[count] == str[i])
-				quote[count--] = '\0';
-			else
-				quote[++count] = str[i];
-		}
-	}
-	if (count != -1)
-	{
-		printf("minishell: les guillemets ne sont pas correctement appariés.\n");
-		//printf("minishell: syntax error); AJOUTER UN TRUC AVEC NB DES OP
-		exit (2);
-	}	
-	free(quote);
-	return (0);
-}
 
 /* 
 Verifie que les chevrons sont bien assortis a leurs arguments : 
@@ -91,7 +45,7 @@ Verifie que les chevrons sont bien assortis a leurs arguments :
 	- si rien apres renvoie erreur 🗸
 	- espaces ignores 🗸
 */
-int	ft_parse_chevron(char *str)
+static int	ft_parse_chevron(char *str)
 {
 	int	i;
 
@@ -116,9 +70,59 @@ int	ft_parse_chevron(char *str)
 	return (0);
 }
 
+/*
+Verifie que les " et ' sont bien apparies
+	- quote entre quote 🗸
+	- pouvoir ajouter plusieurs quote entre 2 mm quote : "'bra'vo" 🗸
+*/
+static int	ft_quote_order(char *str)
+{
+	char	*quote;
+	int		count;
+	int		i;
+	int sq;
+	int dq;
+	int flag;
+
+	(quote = malloc(sizeof(char) * ft_strlen(str)), ft_bzero(quote, sizeof(char)));
+	count = -1;
+	i = -1;
+	dq = 0;
+	sq = 0;
+	flag = 0;
+	while (str[++i])
+	{
+		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
+			flag = 0;
+		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		{
+			if(str[i] == '"') 
+				flag = 1;
+			else if (str[i] == '\'')
+				flag = 2;
+			i++;
+		}
+		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		{
+			if (count >= 0 && quote[count] == str[i])
+				quote[count--] = '\0';
+			else
+				quote[++count] = str[i];
+		}
+	}
+	if (count != -1)
+	{
+		printf("minishell: les guillemets ne sont pas correctement appariés.\n");
+		//printf("minishell: syntax error); AJOUTER UN TRUC AVEC NB DES OP
+		exit (2);
+	}	
+	free(quote);
+	return (0);
+}
+
 static int	is_separator(char c)
 {
-	if (c == '\t' || c == '\f' || c == '\n' || c == '\r' || c == '\v' || c == ' ' || c == '\0')
+	if (c == '\t' || c == '\f' || c == '\n' || c == '\r' || c == '\v' || c == ' ')
 		return (1);
 	else
 		return (0);
@@ -126,7 +130,7 @@ static int	is_separator(char c)
 
 static int	is_operator(char c)
 {
-	if (c == '|' || c == '(' || c == ')' || c == '<' || c == '>' || c == '&')
+	if (c == '|' || c == '<' || c == '>' || c == '&' || c == '(' || c == ')')
 		return (1);
 	else
 		return (0);
@@ -136,60 +140,88 @@ static int	is_operator(char c)
 Ajouter des espaces avant et apres des operateurs
 	- espaces apres 🗸
 	- espaces avant 🗸
+	- double operateurs 🗸
+	- calcul du malloc 🗸
+	- guillemets X
 */
 char	*add_spaces(char *str)
-{
-	int	flag;
-	int	i;
-	int	count;
+{	
 	char	*fstr;
-	int	j;
+	size_t	i = 0;
+	size_t	j = 0;
+	int	count = 0;
+	//int	flag = 0;
 
-	i = 0;
-	flag = 0;
-	count = 0;
 	while(str[i])
 	{
-		if (str[i] == '"' || str[i] == '\'')
+		/*if ((str[i] == '"' || str[i] == '\'') && flag == 0)
 		{
-			flag = 1;
+			if(str[i] == '"') 
+				flag = 1;
+			else if (str[i] == '\'')
+				flag = 2;
 			i++;
 		}
-		if ((str[i] == '"' || str[i] == '\'') && flag == 1)
-			flag = 0;
-		if (is_operator(str[i]) == 1 && i != 0 && is_separator(str[i - 1]) == 0 && (str[i - 1] != str[i]))
-			count++;
-		if (is_operator(str[i]) == 1 && ((size_t)i < ft_strlen(str)) && is_separator(str[i + 1]) == 0 && str[i + 1] != str[i])
-			count++;
-		i++;
+		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
+			flag = 0;*/
+		if (is_operator(str[i]) == 1) 
+		{
+            		if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i - 1]) == 0)
+				count++;
+            		if (i < ft_strlen(str) && (str[i + 1] == str[i]))
+				i += 1;
+            		 if (i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0)
+				count++;
+        	} 
+             	i++;
 	}
-	fstr = malloc(sizeof(char) * (i + count));
+	printf("str size : %zu\n", i);
+	printf("fstr size : %lu\n", i + count);
 	i = 0;
-	j = 0;
-	while(str[i])
+	fstr = malloc(sizeof(char) * (i + count + 1));
+	//flag = 0;
+	while (str[i]) 
 	{
-		if (is_separator(str[i]) == 0 && is_operator(str[i + 1]) == 1)
+		/*if ((str[i] == '"' || str[i] == '\'') && flag == 0)
 		{
-			if (is_operator(str[i]) == 0)
-			{
-				fstr[j] = str[i];
-				j++;
-				fstr[j] = ' ';
-			}
-			else
-				fstr[j] = str[i];
+			if(str[i] == '"') 
+				flag = 1;
+			else if (str[i] == '\'')
+				flag = 2;
+			i++;
 		}
-		else if (is_operator(str[i]) == 1 && is_separator(str[i + 1]) == 0 && is_operator(str[i - 1]) == 1)
+		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
+			flag = 0;*/
+		if (is_operator(str[i]) == 1)
 		{
-			fstr[j] = str[i];
-			j++;
-			fstr[j] = ' ';
-		}
-		else if (is_operator(str[i + 1]) == 0 || is_separator(str[i]) == 1)
-			fstr[j] = str[i];
+            		if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i - 1]) == 0)
+	   		{
+				if (is_operator(str[i - 1]) == 0)
+					fstr[j++] = ' ';
+				fstr[j] = str[i];
+	    		}
+            		else if (i < ft_strlen(str) && ((str[i + 1] == str[i]) || str[i] == str[i - 1]))
+				fstr[j] = str[i];
+            		if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0))
+	    		{
+				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i + 1]) == 1 && str[i] != str[i + 1]))
+				{	
+					
+					fstr[j] = str[i];
+					if (i + 1 < ft_strlen(str))
+                				fstr[++j] = ' '; 
+				}
+					
+            		}
+			else if (i < ft_strlen(str) && is_separator(str[i + 1]) == 1)
+				fstr[j] = str[i];
+        	}
+		else
+             		fstr[j] = str[i];
 		i++;
 		j++;
 	}
+    	fstr[j] = '\0';
 	return (fstr);
 }
 
@@ -200,18 +232,28 @@ int	ft_parse_line(t_msh *minish)
 	if (ft_quote_order(minish->line) == 2)
 		return (2);
 	minish->line = add_spaces(minish->line); // malloc
-	printf("str : \"%s\"\n", minish->line);
+	printf("str : _%s_\n", minish->line);
 	return (0);
 }
-/*int main(int ac, char **av)
-{
-	(void)ac;
-	if (!av[1])
-		return (2);
-	char *str;
-	ft_parse_chevron(av[1]);
-	ft_quote_order(av[1]);
-	str = add_spaces(av[1]); //malloc
-	printf("str : \"%s\"\n", str);
-	free(str);	
-}*/
+
+// int main(int ac, char **av)
+// {
+// 	char *str;
+// 	char *fstr;
+// 	(void)ac;
+// 	(void)av;
+// 	while (1)
+// 	{
+// 		str = readline("Oui$ "); //malloc
+// 		if (!str)
+// 			return (1);
+// 		//ft_parse_chevron(str);
+// 		//ft_quote_order(av[1]);
+// 		printf("str avant : \"%s\"\n", str);
+// 		fstr = add_spaces(str); //malloc
+// 		free(str);
+// 		printf("fstr apres : \"%s\"\n", fstr);
+// 		printf("--------------------------------\n");
+// 		free(fstr);
+// 	}	
+// }
