@@ -52,7 +52,7 @@ bonus : $(NAME)
 clean :
 	make -j clean -C ./libft
 	rm -f $(OBJS)
-	rm -r objs
+	rm -rf objs
 	rm -f $(DEPS)
 
 fclean : clean

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/08 16:40:25 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:21:31 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,28 @@ t_split	*ft_split_minish(char const *s)
 // 	char	str14[] = {'a', ' ', ' ', ' ', 'b', ' ','"', 39, ' ', ' ', 'a', ' ', ' ', 39, '"', 39, 'a', 'b', 39 , '"', 'a', 'b', '"' , ' ', 'a', ' ', ' ', ' ', 'b', ' ','"', 39, ' ', ' ', 'a', ' ', ' ', 39, '"', 39, 'a', 'b', 39 , '"', 'a', 'b', '"' ,'\0'};
 // 	char	str15[] = {'e', 'c', 'h', 'o', ' ', '"', '-', '"', '"', 'n', 'n', 39, 'n', 'n', 39, '"', ' ', 'a', ' ', ' ', ' ', 'b', ' ','"', 39, ' ', ' ', 'a', ' ', ' ', 39, '"', 39, 'a', 'b', 39 , '"', 'a', 'b', '"' , ' ', 'a', ' ', ' ', ' ', 'b', ' ','"', 39, ' ', ' ', 'a', ' ', ' ', 39, '"', 39, 'a', 'b', 39 , '"', 'a', 'b', '"' ,'\0'};
 // 	char	str16[] = {'e', 'c', 'h', 'o', ' ', '"', '"','\0'};
+// 	char	*str17 = "echo \"-n\" Hola";
+// 	char	*str18 = "echo \" \" | cat -e";
+// 	char	*str19 = "echo \"\" hola";
+// 	char	*str20 = "echo\" \" | cat -e";
+// 	char	*str21 = "echo \"\"hola";
+// 	char	*str22 = "export HOLA=\" -n bonjour \"";
+// 	char	*str23 = "export \"\" HOLA=bonjour";
+// 	char	*str24 = "echo \"\"\"$HOLA\"\"\" | cat -e";
+// 	char	*str25 = "export HOLA=\" hola et $HOLA\"$HOLA";
+// 	char	*str26 = "export HOLA=\" bonjour hey \"";
+// 	char	*str27 = "export HOLA=\' hola et $HOLA\'";
+// 	char	*str28 = "env | \"wc\" -l";
+// 	char	*str29 = "export \"\" || ls";
+// 	char	*str30 = "export \"\" && ls";
+// 	char	*str31 = "export \"\" && unset \"\"";
+// 	// char	*str32 = "";
+// 	// char	*str33 = "";
+// 	// char	*str34 = "";
+// 	// ""''echo hola""'''' que""'' tal""'' => SPLIT MAUVAIS echo doit avoir type 0 et les autres mots type 5
+// 	// echo $"" => SPLIT $ en type 5 au lieu de 0
+// 	// char	*str35 = "";
+// 	// char	*str36 = "";
 
 // 	printf("string = %s\nnb de mot = %d\n", str0, ft_countwords(str0));
 // 	t_split *strs = ft_split_minish(str0);
@@ -376,6 +398,201 @@ t_split	*ft_split_minish(char const *s)
 // //
 // 	printf("\nstring = %s\nnb de mot = %d\n", str16, ft_countwords(str16)); //count letter ne passe pas
 // 	strs = ft_split_minish(str16);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str17, ft_countwords(str17)); //count letter ne passe pas
+// 	strs = ft_split_minish(str17);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str18, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str18);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str19, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str19);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str20, ft_countwords(str20)); //count letter ne passe pas
+// 	strs = ft_split_minish(str20);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str21, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str21);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str22, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str22);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str23, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str23);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str24, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str24);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str25, ft_countwords(str25)); //count letter ne passe pas
+// 	strs = ft_split_minish(str25);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str26, ft_countwords(str16)); //count letter ne passe pas
+// 	strs = ft_split_minish(str26);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str27, ft_countwords(str27)); //count letter ne passe pas
+// 	strs = ft_split_minish(str27);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str28, ft_countwords(str28)); //count letter ne passe pas
+// 	strs = ft_split_minish(str28);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str29, ft_countwords(str29)); //count letter ne passe pas
+// 	strs = ft_split_minish(str29);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str30, ft_countwords(str30)); //count letter ne passe pas
+// 	strs = ft_split_minish(str30);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str31, ft_countwords(str31)); //count letter ne passe pas
+// 	strs = ft_split_minish(str31);
 // 	i = -1;
 // 	while (strs[++i].data)
 // 	{
