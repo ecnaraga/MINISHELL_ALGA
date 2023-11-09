@@ -1,0 +1,9 @@
+2- DOIT PASSER TEST PARSING MAIS EN EXEC : N IMPRIME RIEN + EXITSTATUS = 1 // AGERER DANS L EXEC
+	(( bravo )) = ((bravo))
+	(( ls && ls )) = ((ls && ls))
+	echo Bravo && ((ls && ls)) && echo hehe
+	echo Bravo && ((ls && ls)) || echo hehe
+
+4- DOIT PASSER TEST PARSING MAIS EN EXEC ERREUR: minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2 // AGERER DANS L EXEC
+	(( echo bravo )) = ((echo bravo)) => minishell: ((: echo bravo : syntax error in expression (error token is "bravo ")
+	ls && (( echo bravo )) || echo bravo => erreur sur le (( echo bravo)) a afficher pendanst exec
