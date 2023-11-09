@@ -38,17 +38,29 @@ OK:
 	ls && (( echo bravo )) || echo bravo => erreur sur le (( echo bravo)) a afficher pendanst exec
 
 A GERER GARANCE :
+	// OK POUR PAS GERER
 	echo((((bravo)))) -> pas le bon message d erreur
-
-
-A GERER ALIX :
+	//A GERER
     Tu vas me tuer : si la parenthese ouvrante est precedee par un chevron < ne pas ajouter d'espace avant la parenthese dans le parsing 
 	exemple : <( => <( et < ( => < (
+		<( => <( : la parenthese collee est consideree comme un infile donc c est exec qui s en occupera
+		< ( => < ( : erreur parsing exit code 2 car ( est consideree comme telle et non comme un infile potentiel
 
+A GERER ALIX :
+	//A GERER
+    Tu vas me tuer : si la parenthese ouvrante est precedee par un chevron < ne pas ajouter d'espace avant la parenthese dans le parsing 
+	exemple : <( => <( et < ( => < (
+		<( => <( : la parenthese collee est consideree comme un infile donc c est exec qui s en occupera
+		< ( => < ( : erreur parsing exit code 2 car ( est consideree comme telle et non comme un infile potentiel
+
+	//A GERER
 	echo """""yfguakhns"""jlask"""sajkns => GUILLEMET NON FERME
 	( echo bravo ) & &  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `&'
 	( echo bravo ) | |  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `|'
 	Sur les cmd du 3 => valgrind : Invalid read of size 1 qui se manifeste si c est la premiere comande mais pas avec toutes les comandes
+	
+
+	// POUR LES CHEVRONS OK POUR GERER > >> et a partir de trois erreur avec 1 seul > d affiche
 	a partir de 4 chevrons et plus >>>> => pas le bon message d erreur : minishell: syntax error near unexpected token `>>'
 	>>> => pas le bon message d erreur : minishell: syntax error near unexpected token `>'
 	cat Makefile >>> outfile => pas le bon message d erreur
@@ -56,6 +68,8 @@ A GERER ALIX :
 	<<<< => pas le bon message d erreur : minishell: syntax error near unexpected token `<'
 	<<<<< => pas le bon message d erreur : minishell: syntax error near unexpected token `<<'
 	a partir de 6 chevrons et plus <<<<<< => pas le bon message d erreur : minishell: syntax error near unexpected token `<<<'
+
+	//A GERER
 	< && allo = < && = <&& => doit renvoyer message erreur
 
 
