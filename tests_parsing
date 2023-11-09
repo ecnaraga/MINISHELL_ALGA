@@ -40,6 +40,41 @@ OK:
 A GERER GARANCE :
 	// OK POUR PAS GERER
 	echo((((bravo)))) -> pas le bon message d erreur
+
+	//A GERER SPLIT
+	echo "-n" Hola => Split mauvais
+	echo " " | cat -e => valgrind jump split
+	echo" "|cat -e =>Split mauvais
+	""''echo hola""'''' que""'' tal""'' => SPLIT MAUVAIS echo doit avoir type 0 et les autres mots type 5
+	echo $"" => SPLIT $ en type 5 au lieu de 0
+	echo "" hola => mauvais resultat split
+	echo ""hola
+	export HOLA=" -n bonjour "
+	export "" HOLA=bonjour
+	echo """$HOLA""" | cat -e
+	export HOLA=" hola et $HOLA"$HOLA
+	export HOLA=" bonjour hey " 
+	export HOLA=" bonjour hey "
+	export HOLA=' hola et $HOLA'
+	env|"wc" -l
+	export "" || ls
+	export ""|| ls
+	export "" && ls
+	export ""&& ls
+	export "" && unset ""
+
+	//A GERER parenthese
+	(ls && pwd) > hola = (ls&&pwd)>hola => renvoie erreur quand doit s executer
+	(ls && pwd | wc) > hola = (ls&&pwd|wc)>hola => renvoie erreur quand doit s executer
+	(ls && pwd | wc) >> hola => renvoie erreur quand doit s executer
+	(ls&&pwd|wc)>>hola => renvoie erreur quand doit s executer
+	(pwd | wc) < hola => renvoie erreur quand doit s executer
+	test 628 a 634 => renvoie erreur quand doit s executer
+	 (ls > Docs/hey && pwd) > hola => renvoie erreur quand doit s executer
+	> hola (ls && pwd) => pas le bon message d erreur
+	> pwd (ls) => pas le bon message d erreur
+
+
 	//A GERER
     Tu vas me tuer : si la parenthese ouvrante est precedee par un chevron < ne pas ajouter d'espace avant la parenthese dans le parsing 
 	exemple : <( => <( et < ( => < (
@@ -71,5 +106,10 @@ A GERER ALIX :
 
 	//A GERER
 	< && allo = < && = <&& => doit renvoyer message erreur
-
+	ls || <
+	ls && <
+	echo hola > > bonjour => mauvais message erreur, le token a imprimer est newline si fin de la lg mais sinon c est le token suivant
+	echo hola < < bonjour => doit renvoyer message d erreur
+	cat >> << => doit renvoyer message d erreur
+	cat >> > >> << >>
 
