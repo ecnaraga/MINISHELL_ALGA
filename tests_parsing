@@ -62,6 +62,37 @@ A GERER GARANCE :
 	export "" && ls
 	export ""&& ls
 	export "" && unset ""
+	echo “ ‘ $USER’” PARSING + TYPE
+
+	REVOIR SPLIT TYPE:
+	bash-5.1$ echo “ ‘ $USER’”
+“ ‘ galambey’”
+bash-5.1$ echo “ $USER”
+“ galambey”
+bash-5.1$ echo $USER
+galambey
+bash-5.1$ echo "$USER "
+galambey 
+bash-5.1$ echo "$US"ER 
+ER
+bash-5.1$ echo "'$USER'" 
+'galambey'
+bash-5.1$ echo " ' $USER '" 
+ ' galambey '
+bash-5.1$ echo "$USER"
+galambey
+bash-5.1$ echo '$USER'
+$USER
+bash-5.1$ echo "'$USER'"
+'galambey'
+
+=> Comprendre TESTS 762 A 765
+$> << $hola
+$> << $"hola"$"b"
+$> << $"$hola"$$"b"
+$> << ho$la$"$a"$$"b"
+
+ 
 
 	//A GERER parenthese
 	(ls && pwd) > hola = (ls&&pwd)>hola => renvoie erreur quand doit s executer
@@ -112,4 +143,5 @@ A GERER ALIX :
 	echo hola < < bonjour => doit renvoyer message d erreur
 	cat >> << => doit renvoyer message d erreur
 	cat >> > >> << >>
-
+	cat << 
+ => doit renvoyer erreur
