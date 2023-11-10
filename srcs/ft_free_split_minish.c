@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 09:39:11 by garance           #+#    #+#             */
-/*   Updated: 2023/10/31 13:16:16 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:26:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	*ft_free_split_minish(t_split *strs)
 	while (strs[i].data)
 	{
 		free(strs[i].data);
+		if (strs[i].type)
+			free(strs[i].type);
 		i++;
 	}
 	free(strs);

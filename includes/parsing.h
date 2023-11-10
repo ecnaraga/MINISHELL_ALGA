@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/07 16:43:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:25:08 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,12 @@ t_split	*ft_split_minish(char const *s); //MALLOC
 ft_split_minish_utils.c
 */
 void	*ft_free_strs(t_split *strs, int j);
-int		ft_test(char c, char c1, int d_q, int s_q);
+int		ft_test(char c, char c1, char cm1, int d_q, int s_q);
 int		ft_test_bis(char c, int d_q, int s_q);
 
 /*
 ft_strlcpy_minish.c
 */
-void	ft_strlcpy_minish(char *dst, const char *src, size_t size, int begin);
+void	ft_strlcpy_minish(t_split *strs, const char *src, size_t size, int begin);
 
 #endif

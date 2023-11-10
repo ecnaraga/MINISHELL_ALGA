@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/06 14:33:45 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/10 15:59:05 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,17 @@ typedef	struct s_node
 	
 }		t_node;
 
+typedef struct d_dollar
+{
+	int expnd;
+	int len_variable; // donne la len de la variable d environnement $ inclus
+}		t_dollar;
+
 typedef	struct s_split
 {
 	char *data;
-	int	type;
+	int	 dollar;
+	t_dollar	*type;
 }		t_split;
 
 typedef	struct s_msh
@@ -49,7 +56,13 @@ enum	e_split
 	OPERATOR,
 	CMD,
 	ARG,
-	EXPAND,
+};
+
+enum	e_expand
+{
+	EXPAND = 1,
+	NO_EXPAND = 2,
+	MULTI_DOLLAR = 3,
 };
 
 enum	e_parenthesis

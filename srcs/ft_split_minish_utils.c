@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/01 16:16:57 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:31:01 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	*ft_free_strs(t_split *strs, int j)
 	while (i < j)
 	{
 		free(strs[i].data);
+		if (strs[i].type)
+			free(strs[i].type);
 		i++;
 	}
 	free(strs);
@@ -57,25 +59,73 @@ void	*ft_free_strs(t_split *strs, int j)
 Teste les conditions de la boucle de ft_count_letter pour compter le nb de k
 Renvoie 0 si ok pour rentrer dans la boucle, sinon 1
 */
-int	ft_test(char c, char c1, int d_q, int s_q)
+int	ft_test(char c, char c1, char cm1, int d_q, int s_q)
 {
 	if (!c)
-		return (1);
+		{
+			// printf("c = %c c+1 = %c 0\n", c, c1);
+			return (1);
+		}
 	if (d_q % 2 == 1)
-		return (0);
+		{
+			// printf("c = %c c+1 = %c 1\n", c, c1);
+			return (0);
+		}
 	if (s_q % 2 == 1)
-		return (0);
+		{
+			// printf("c = %c c+1 = %c 2\n", c, c1);
+			return (0);
+		}
 	if (ft_is_isspace(c) == 0)
-		return (1);
+		{
+			// printf("c = %c c+1 = %c 3\n", c, c1);
+			return (1);
+		}
 	if (c != '"' && c != 39)
-		return (0);
-	if (c == '"' && (c1 && ft_is_isspace(c1) == 1))
-		return (0);
-	if (c == 39 && (c1 && ft_is_isspace(c1) == 1))
-		return (0);
+		{
+			// printf("c = %c c+1 = %c 4\n", c, c1);
+			return (0);
+		}
+	if (c == '"' && ((c1 && ft_is_isspace(c1) == 1) || (cm1 && ft_is_isspace(cm1) == 1)))
+		{
+			// printf("c = %c c+1 = %c 5\n", c, c1);
+			return (0);
+		}
+	if (c == 39 && ((c1 && ft_is_isspace(c1) == 1) || (cm1 && ft_is_isspace(cm1) == 1)))
+		{
+			// printf("c = %c c+1 = %c 6\n", c, c1);
+			return (0);
+		}
 	else
-		return (1);
+		{
+			// printf("c = %c c+1 = %c 7\n", c, c1);
+			return (1);
+		}
 }
+
+// /*
+// Teste les conditions de la boucle de ft_count_letter pour compter le nb de k
+// Renvoie 0 si ok pour rentrer dans la boucle, sinon 1
+// */
+// int	ft_test(char c, char c1, int d_q, int s_q)
+// {
+// 	if (!c)
+// 		return (1);
+// 	if (d_q % 2 == 1)
+// 		return (0);
+// 	if (s_q % 2 == 1)
+// 		return (0);
+// 	if (ft_is_isspace(c) == 0)
+// 		return (1);
+// 	if (c != '"' && c != 39)
+// 		return (0);
+// 	if (c == '"' && (c1 && ft_is_isspace(c1) == 1))
+// 		return (0);
+// 	if (c == 39 && (c1 && ft_is_isspace(c1) == 1))
+// 		return (0);
+// 	else
+// 		return (1);
+// }
 
 /*
 Teste les conditions de ft_count_letter pour compter le nb de lt
