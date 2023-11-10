@@ -42,26 +42,25 @@ A GERER GARANCE :
 	echo((((bravo)))) -> pas le bon message d erreur
 
 	//A GERER SPLIT
-	echo "-n" Hola => Split mauvais
-	echo " " | cat -e => valgrind jump split
-	echo" "|cat -e =>Split mauvais
+	//echo "-n" Hola => Split mauvais
+	//echo " " | cat -e => valgrind jump split
+	//echo" "|cat -e =>Split mauvais
 	""''echo hola""'''' que""'' tal""'' => SPLIT MAUVAIS echo doit avoir type 0 et les autres mots type 5
 	echo $"" => SPLIT $ en type 5 au lieu de 0
-	echo "" hola => mauvais resultat split
-	echo ""hola
-	export HOLA=" -n bonjour "
-	export "" HOLA=bonjour
-	echo """$HOLA""" | cat -e
-	export HOLA=" hola et $HOLA"$HOLA
-	export HOLA=" bonjour hey " 
-	export HOLA=" bonjour hey "
-	export HOLA=' hola et $HOLA'
+	//echo "" hola => mauvais resultat split
+	///echo ""hola
+	//export HOLA=" -n bonjour "
+	//export "" HOLA=bonjour
+	//echo """$HOLA""" | cat -e
+	//export HOLA=" hola et $HOLA"$HOLA
+	//export HOLA=" bonjour hey " 
+	//export HOLA=' hola et $HOLA'
 	env|"wc" -l
-	export "" || ls
+	//export "" || ls
 	export ""|| ls
-	export "" && ls
+	//export "" && ls
 	export ""&& ls
-	export "" && unset ""
+	//export "" && unset ""
 	echo “ ‘ $USER’” PARSING + TYPE
 
 	REVOIR SPLIT TYPE:
