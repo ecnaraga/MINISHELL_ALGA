@@ -5,122 +5,114 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/02 12:17:26 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/11 10:31:51 by garance          ###   ########.fr       */
+/*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
+/*   Updated: 2023/11/11 13:07:11 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_init_var(size_t *i, size_t *j, int *d_q, int *s_q)
+static void	ft_init_var(t_index *x, t_quote *q)
 {
-	*i = 1;
-	*j = 0;
-	*d_q = 0;
-	*s_q = 0;
+	x->i = 1;
+	x->j = 0;
+	x->d = 0;
+	q->d = 0;
+	q->s = 0;
 }
 
-static int	ft_test_ter(char c, int d_q, int s_q)
+static int	ft_test_ter(char c, t_quote q)
 {
 	if (!c)
 		return (1);
-	if (d_q % 2 == 1)
+	if (q.d % 2 == 1)
 		return (0);
-	if (s_q % 2 == 1)
+	if (q.s % 2 == 1)
 		return (0);
 	if (c != '"' && c != 39 && ft_is_isspace(c) == 1)
 		return (0);
-	// printf("retour 1 x src[i] = %c\n", c);
 	return (1);
 }
-/*
-Incremente les double quotes(d_q) si pas entre single quotes (s_q)
-Incremente les single quotes(s_q) si pas entre double quotes (d_q)
-Ps : 39 = single quote
-*/
-static void	ft_inc_quote_strlcpy(char c, int *d_q, int *s_q, char *f_q)
+
+static int ft_inc_d(t_split *strs, int *d, char c)
 {
-	if (*s_q % 2 == 0 && c == '"')
+	if (!strs->type)
+		return (1);
+	if (*d >= strs->dollar)
+		return (1);
+	if (strs->type[*d].expnd == TO_DEFINE)
+		return (1);
+	if (c != '\'' && c != '"' && ft_is_isspace(c) == 1)
+		return (1);
+	*d += 1;
+	return (0);
+}
+
+static void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q)
+{
+	if (src[x->i] == '$')
 	{
-		*d_q += 1;
-		*f_q = '"';
+		if (strs->type[x->d].expnd != TO_DEFINE)
+		{
+			if (src[x->i - 1] == '$')
+				strs->type[x->d].expnd = MULTI_DOLLAR;
+			if (src[x->i + 1] != '$')
+				x->d += 1;
+		}
+		else if (q.s % 2 == 0)
+			strs->type[x->d].expnd = EXPAND;
+		else
+			strs->type[x->d].expnd = NO_EXPAND;
+		strs->type[x->d].len_variable = 0;
 	}
-	else if (*d_q % 2 == 0 && c == 39)
-	{
-		*s_q += 1;
-		*f_q = '\'';
-	}
+}
+//if 1 on ne fait pas
+static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
+{
+	if (!strs->type)
+		return (1);
+	if (ft_inc_d(strs, &x->d, src[x->i]) == 0)
+		return (1);
+	if (x->d >= strs->dollar)
+		return (1);
+	if (strs->type[x->d].expnd != EXPAND)
+		return (1);
+	if	(src[x->i] != '$')
+		return (0);
+	else if (q.d % 2 == 1)
+		return (0);
+	else if (!src[x->i + 1] || (src[x->i + 1] != '"' && src[x->i + 1] != '\''))
+		return (0);
+	return (1);
 }
 
 /*
 Copie dans dst size - 1 char de src. Saute les quotes non compris entre quotes
 	et non suivi/precede d'un isspace selon si fermant ou ouvrant
 */
-void	ft_strlcpy_minish(t_split *strs, const char *src, size_t size, int begin)
+void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 {
-	size_t	i;
-	size_t	j;
-	int		d;
-	int		d_q;
-	int		s_q;
-	char	f_q; // possiblement pas besoin
+	t_index	x;
+	t_quote	q;
 
-	ft_init_var(&i, &j, &d_q, &s_q);
-	f_q = 0;
-	d = 0;
+	ft_init_var(&x, &q);
 	if (begin > -1)
-		ft_inc_quote_strlcpy(src[0], &d_q, &s_q, &f_q);
-	if (size > 0)
+		ft_inc_quote(src[0], &q.d, &q.s);
+	while (size > 0 && src[x.i] && x.j < (size - 1))
 	{
-		while (src[i] && j < (size - 1))
+		ft_inc_quote(src[x.i], &q.d, &q.s);
+		ft_dollar(strs, src, &x, q);
+		if (ft_test_ter(src[x.i], q) == 0)
 		{
-			ft_inc_quote_strlcpy(src[i], &d_q, &s_q, &f_q);
-			if (src[i] == '$')
-			{
-				if (strs->type[d].expnd != TO_DEFINE)
-				{
-					if (src[i - 1] == '$')
-						strs->type[d].expnd = MULTI_DOLLAR;
-					if (src[i + 1] != '$')
-						d++;
-				}
-				else if (s_q % 2 == 0)
-					strs->type[d].expnd = EXPAND;
-				else
-					strs->type[d].expnd = NO_EXPAND;
-				strs->type[d].len_variable = 0;
-			}
-			if (ft_test_ter(src[i], d_q, s_q) == 0)
-			{
-				// printf("src[%ld] = %c, d_q %d\n", i, src[i], d_q);
-				// ft_inc_quote(src[i], &d_q, &s_q);
-				// if (strs->dollar > 0)
-				// 	printf("IF src[%ld] = %c, strs->type[%d].expnd = %d\n", i, src[i], d, strs->type[d].expnd);
-				if (strs->type && d < strs->dollar && strs->type[d].expnd != TO_DEFINE && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
-					d++;
-				else if (strs->type && d < strs->dollar && strs->type[d].expnd == EXPAND)
-				{
-					if (src[i] != '$' || (src[i] == '$' && (d_q % 2 == 1 || (d_q % 2 == 0 && (!src[i + 1] || (src[i + 1] != '"' && src[i + 1] != '\''))))))
-						strs->type[d].len_variable += 1;
-				}
-				if (ft_test_bis(src[i], d_q, s_q) == 0)
-					strs->data[j++] = src[i++];
-				else
-				{
-					// if (strs->type && d < strs->dollar && strs->type[d].expnd == EXPAND && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
-					// 	d++;
-					i++;
-				}
-			}
+			if (ft_test_four(strs, src, &x, q) == 0)
+				strs->type[x.d].len_variable += 1;
+			if (ft_test_bis(src[x.i], q.d, q.s) == 0)
+				strs->data[x.j++] = src[x.i++];
 			else
-			{
-				// if (strs->dollar > 0)
-				// 	printf("ELSE src[%ld] = %c, strs->type[%d].expnd = %d\n", i, src[i], d, strs->type[d].expnd);
-				if (strs->type && d < strs->dollar && strs->type[d].expnd != TO_DEFINE && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
-					d++;
-				i++;
-			}
+				x.i++;
 		}
-		strs->data[j] = '\0';
+		else
+			ft_inc_d(strs, &x.d, src[x.i++]);
 	}
+	strs->data[x.j] = '\0';
 }

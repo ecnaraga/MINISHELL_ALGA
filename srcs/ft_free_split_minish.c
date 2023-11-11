@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_split_minish.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 09:39:11 by garance           #+#    #+#             */
-/*   Updated: 2023/11/10 14:26:58 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/11 11:05:47 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	*ft_free_split_minish(t_split *strs)
+void	*ft_free_split_msh(t_split *strs)
 {
 	int	i;
 

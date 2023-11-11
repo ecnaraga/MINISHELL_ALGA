@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/10 15:59:05 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/11 12:27:45 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,19 @@ typedef	struct s_quote
 	int d;
 	int s;
 }		t_quote;
+
+typedef struct s_letter
+{
+	int	lt;
+	int	k;
+}		t_letter;
+
+typedef	struct s_index
+{
+	size_t	i;
+	size_t	j;
+	int	d;
+}		t_index;
 
 enum	e_split
 {

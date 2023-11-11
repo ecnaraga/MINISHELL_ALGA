@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/10 14:25:08 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/11 11:43:01 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int		ft_structtablen(t_split *tab);
 int		ft_expand(t_msh *minish);
-void	*ft_free_split_minish(t_split *strs);
+void	*ft_free_split_msh(t_split *strs);
 
 /*
 ft_parse.c
@@ -39,18 +39,18 @@ void	ft_inc_quote(char c, int *d_q, int *s_q);
 /*
 ft_split_minish.c
 */
-t_split	*ft_split_minish(char const *s); //MALLOC
+t_split	*ft_split_msh(char const *s); //MALLOC
 
 /*
 ft_split_minish_utils.c
 */
 void	*ft_free_strs(t_split *strs, int j);
-int		ft_test(char c, char c1, char cm1, int d_q, int s_q);
+int		ft_test(char c, char c1, char cm1, t_quote *q);
 int		ft_test_bis(char c, int d_q, int s_q);
 
 /*
 ft_strlcpy_minish.c
 */
-void	ft_strlcpy_minish(t_split *strs, const char *src, size_t size, int begin);
+void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin);
 
 #endif
