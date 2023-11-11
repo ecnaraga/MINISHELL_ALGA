@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy_minish.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 12:17:26 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/10 17:24:23 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/11 10:31:51 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ void	ft_strlcpy_minish(t_split *strs, const char *src, size_t size, int begin)
 				{
 					if (src[i - 1] == '$')
 						strs->type[d].expnd = MULTI_DOLLAR;
-					if (src[i + 1] != '$') //revoir donc le comptage des dollars
+					if (src[i + 1] != '$')
 						d++;
 				}
-				else if (s_q % 2 == 0 /*&& strs->type[d].expnd == TO_DEFINE*/)
+				else if (s_q % 2 == 0)
 					strs->type[d].expnd = EXPAND;
 				else
 					strs->type[d].expnd = NO_EXPAND;
@@ -94,12 +94,15 @@ void	ft_strlcpy_minish(t_split *strs, const char *src, size_t size, int begin)
 			{
 				// printf("src[%ld] = %c, d_q %d\n", i, src[i], d_q);
 				// ft_inc_quote(src[i], &d_q, &s_q);
-				if (strs->dollar > 0)
-					printf("src[%ld] = %c, strs->type[%d].expnd = %d\n", i, src[i], d, strs->type[d].expnd);
-				if (strs->type && d < strs->dollar && strs->type[d].expnd == EXPAND && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
+				// if (strs->dollar > 0)
+				// 	printf("IF src[%ld] = %c, strs->type[%d].expnd = %d\n", i, src[i], d, strs->type[d].expnd);
+				if (strs->type && d < strs->dollar && strs->type[d].expnd != TO_DEFINE && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
 					d++;
 				else if (strs->type && d < strs->dollar && strs->type[d].expnd == EXPAND)
-					strs->type[d].len_variable += 1;
+				{
+					if (src[i] != '$' || (src[i] == '$' && (d_q % 2 == 1 || (d_q % 2 == 0 && (!src[i + 1] || (src[i + 1] != '"' && src[i + 1] != '\''))))))
+						strs->type[d].len_variable += 1;
+				}
 				if (ft_test_bis(src[i], d_q, s_q) == 0)
 					strs->data[j++] = src[i++];
 				else
@@ -111,8 +114,10 @@ void	ft_strlcpy_minish(t_split *strs, const char *src, size_t size, int begin)
 			}
 			else
 			{
-				// if (strs->type && d < strs->dollar && strs->type[d].expnd == EXPAND && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
-				// 	d++;
+				// if (strs->dollar > 0)
+				// 	printf("ELSE src[%ld] = %c, strs->type[%d].expnd = %d\n", i, src[i], d, strs->type[d].expnd);
+				if (strs->type && d < strs->dollar && strs->type[d].expnd != TO_DEFINE && (src[i] == '\'' || src[i] == '"' || ft_is_isspace(src[i]) == 0))
+					d++;
 				i++;
 			}
 		}
