@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/11 11:43:01 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/12 08:23:56 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ int		ft_parse_line(t_msh *minish);
 ft_parse_bis
 */
 int		ft_parse_bis(t_msh *minish);
-// int		ft_parse_bis(char *str);
 int ft_error_syntax(char *str, int exitstatus, int clean);
 
 
 /*
 ft_parse_utils.c
 */
-int		ft_is_isspace(char c);
+int	ft_is_isspace(char c); // remplacer par ft_isspace x norme (nom trop long)
+int	ft_isspace(char c);
 void	ft_inc_quote(char c, int *d_q, int *s_q);
 
 /*

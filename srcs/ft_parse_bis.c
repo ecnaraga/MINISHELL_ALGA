@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/08 16:58:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/12 08:27:38 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*ft_error_message(char *str)
 	else
 	{
 		while (str[++i])
-			if (ft_is_isspace(str[i]) == 0)
+			if (ft_isspace(str[i]) == 0)
 				break ;
 		str[i] = '\0';
 		message = ft_strjoin("minishell: syntax error near unexpected token `", str);
@@ -82,7 +82,7 @@ int ft_parse_bis(t_msh *minish)
 			while (minish->line[++i] && minish->line[i] != '\'');
 			prec_iss = OTHER;
 		}
-		else if (ft_is_isspace(minish->line[i]) == 0)
+		else if (ft_isspace(minish->line[i]) == 0)
 			i++;
 		else if (minish->line[i] == '(')
 		{
@@ -90,7 +90,7 @@ int ft_parse_bis(t_msh *minish)
 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
 			if (prec_iss == OTHER)
 			{
-				while (ft_is_isspace(minish->line[++i]) == 0);
+				while (ft_isspace(minish->line[++i]) == 0);
 				line = ft_error_message(minish->line + i); //MALLOC
 				//IF ERROR MALLOC
 				return (ft_error_syntax(line, 2, 1));
@@ -234,7 +234,7 @@ KO :
 // 			other_char = 1;
 // 			while (minish->line[++i] && minish->line[i] != '\'');
 // 		}
-// 		else if (ft_is_isspace(minish->line[i]) == 0)
+// 		else if (ft_isspace(minish->line[i]) == 0)
 // 		{
 // 			// if (multi_par_o > 0 && prec_iss == OTHER && cmd == 0)
 // 			// 	cmd = 1;
@@ -262,7 +262,7 @@ KO :
 // 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
 // 			if (prec_iss == OTHER)
 // 			{
-// 				while (ft_is_isspace(minish->line[++i]) == 0);
+// 				while (ft_isspace(minish->line[++i]) == 0);
 // 				line = ft_error_message(minish->line + i); //MALLOC
 // 				//IF ERROR MALLOC
 // 				return (ft_error_syntax(line, 2, 1));
@@ -413,7 +413,7 @@ KO :
 // 	prec = TO_DEFINE;
 // 	while (minish->line[i])
 // 	{
-// 		while (minish->line[i] && ft_is_isspace(minish->line[i]) == 0)
+// 		while (minish->line[i] && ft_isspace(minish->line[i]) == 0)
 // 		{
 // 			if (string_b == 2)
 // 				string_b = 3;

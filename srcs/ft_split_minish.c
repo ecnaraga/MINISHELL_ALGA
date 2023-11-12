@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/11 13:09:39 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/12 09:04:34 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,27 +34,30 @@ static int	ft_countwords(const char *s)
 	s_q = 0;
 	while (s[i])
 	{
-		while (s[i] && d_q % 2 == 0 && s_q % 2 == 0 && ft_is_isspace(s[i]) == 0)
+		while (s[i] && d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 0)
 			ft_inc_quote(s[i++], &d_q, &s_q);
 		if (s[i] && (d_q % 2 == 1 || s_q % 2 == 1
-			|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_is_isspace(s[i]) == 1)))
+			|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 1)))
 		{
 			ft_inc_quote(s[i++], &d_q, &s_q);
 			wd++;
 		}
 		while (s[i] && (d_q % 2 == 1 || s_q % 2 == 1
-			|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_is_isspace(s[i]) == 1)))
+			|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 1)))
 			ft_inc_quote(s[i++], &d_q, &s_q);
 	}
 	return (wd);
 }
 
 /*
-Compte le nb de char a copies et le renvoie
+Compte le nb de char a copies et le renvoie + compte le nb de potentielles
+	variables d'environnement 
 lt = nb de char a copies
 k = nb de char qui seront copiees + nb de quote(double et single) qui ne seront
 	pas copies car non suivies/ou precedees selon si fermant/ou ouvrant d'un
 	issspace
+dollar = nb de potentielles variables d environnement (qui commencent par un $)
+	ps : une suite de dollar est comptee comme un seul dollar
 */
 static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 {
@@ -65,7 +68,7 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 	q->s = 0;
 	l.k = 0;
 	while (s[*i] && q->d % 2 == 0 && q->s % 2 == 0
-		&& (s[*i] == '"' || s[*i] == 39 || ft_is_isspace(s[*i]) == 0))
+		&& (s[*i] == '"' || s[*i] == 39 || ft_isspace(s[*i]) == 0))
 	{
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		*i += 1;
@@ -83,6 +86,11 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 	return (l);
 }
 
+/*
+Alloue dynamiquement un tableau de structure de la taille du nb potentielles
+	variables d environnement (dollar) presentes dans le mot qui permettra de
+	preciser s'il faudra expand ou non la variable potentielle
+*/
 static int	ft_alloc_type(t_split *strs, int j)
 {
 	int	d;
@@ -103,8 +111,9 @@ static int	ft_alloc_type(t_split *strs, int j)
 /*
 Boucle tant que le nb de mots contenus dans s n'est pas atteint et alloue de la
 	memoire pour copie le nb de mots dans la data de la structure.
-Tableau de structure strs->type : strs[i]->type[d] 
-	Il y a autant de case que de dollar a interprete dans le mot :
+Tableau de structure strs->type : strs[i]->type[d]
+	Il sera rempli dans ft_strlcpy_msh
+	Il y a autant de case que de dollar a interpreter dans le mot :
 	1. Si strs[i]->type == NULL => PAS DE DOLLAR DANS LE MOT
 	2. Si strs[i]->type[d].expnd == EXPAND :
 		- Si strs[i]->type[d].len_variable == 0 -> Ne pas afficher le $

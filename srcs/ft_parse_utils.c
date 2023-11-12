@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:13:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/01 16:15:53 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/12 08:22:07 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,17 @@ void	ft_inc_quote(char c, int *d_q, int *s_q)
 Test si le char envoye est un isspace
 */
 int	ft_is_isspace(char c)
+{
+	if (c == ' ' || (c >= '\t' && c <= '\r'))
+		return (0);
+	else
+		return (1);
+}
+
+/*
+Test si le char envoye est un isspace
+*/
+int	ft_isspace(char c)
 {
 	if (c == ' ' || (c >= '\t' && c <= '\r'))
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/11 11:42:29 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/12 08:27:21 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,15 @@ int	ft_test(char c, char c1, char cm1, t_quote *q)
 		return (0);
 	if (q->s % 2 == 1)
 		return (0);
-	if (ft_is_isspace(c) == 0)
+	if (ft_isspace(c) == 0)
 		return (1);
 	if (c != '"' && c != 39)
 		return (0);
-	if (c == '"' && ((c1 && ft_is_isspace(c1) == 1)
-		|| (cm1 && ft_is_isspace(cm1) == 1)))
+	if (c == '"' && ((c1 && ft_isspace(c1) == 1)
+		|| (cm1 && ft_isspace(cm1) == 1)))
 		return (0);
-	if (c == 39 && ((c1 && ft_is_isspace(c1) == 1)
-		|| (cm1 && ft_is_isspace(cm1) == 1)))
+	if (c == 39 && ((c1 && ft_isspace(c1) == 1)
+		|| (cm1 && ft_isspace(cm1) == 1)))
 		return (0);
 	else
 		return (1);
@@ -72,13 +72,13 @@ int	ft_test(char c, char c1, char cm1, t_quote *q)
 // 		return (0);
 // 	if (s_q % 2 == 1)
 // 		return (0);
-// 	if (ft_is_isspace(c) == 0)
+// 	if (ft_isspace(c) == 0)
 // 		return (1);
 // 	if (c != '"' && c != 39)
 // 		return (0);
-// 	if (c == '"' && (c1 && ft_is_isspace(c1) == 1))
+// 	if (c == '"' && (c1 && ft_isspace(c1) == 1))
 // 		return (0);
-// 	if (c == 39 && (c1 && ft_is_isspace(c1) == 1))
+// 	if (c == 39 && (c1 && ft_isspace(c1) == 1))
 // 		return (0);
 // 	else
 // 		return (1);

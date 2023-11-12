@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2023/11/11 13:07:11 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/12 08:56:48 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,15 @@ static int	ft_test_ter(char c, t_quote q)
 		return (0);
 	if (q.s % 2 == 1)
 		return (0);
-	if (c != '"' && c != 39 && ft_is_isspace(c) == 1)
+	if (c != '"' && c != 39 && ft_isspace(c) == 1)
 		return (0);
 	return (1);
 }
 
+/*
+Incremente la case du tableau de struct strs.type lorsque est rencontree la fin
+	d'une potentielle variable d'environnement marquee par un quote ou isspace
+*/
 static int ft_inc_d(t_split *strs, int *d, char c)
 {
 	if (!strs->type)
@@ -42,12 +46,18 @@ static int ft_inc_d(t_split *strs, int *d, char c)
 		return (1);
 	if (strs->type[*d].expnd == TO_DEFINE)
 		return (1);
-	if (c != '\'' && c != '"' && ft_is_isspace(c) == 1)
+	if (c != '\'' && c != '"' && ft_isspace(c) == 1)
 		return (1);
 	*d += 1;
 	return (0);
 }
 
+/*
+Si le char courant (src[x->i]) == '$', definit le type de l expnd:
+MULTI_DOLLAR : Suite de dollar
+EXPAND : Variable d environnement
+NO_EXPAND : String normale 
+*/
 static void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q)
 {
 	if (src[x->i] == '$')
@@ -66,7 +76,13 @@ static void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q)
 		strs->type[x->d].len_variable = 0;
 	}
 }
-//if 1 on ne fait pas
+
+/*
+Fonction permettant de deficir si le char courant (src[x->i]) fait ou non parti
+	du nom de la variable d'environnement marquee par un $
+Renvoie 0 si OUI
+Renvoie 1 si NON 
+*/
 static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
 {
 	if (!strs->type)
@@ -89,6 +105,22 @@ static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
 /*
 Copie dans dst size - 1 char de src. Saute les quotes non compris entre quotes
 	et non suivi/precede d'un isspace selon si fermant ou ouvrant
++ Remplit le tableau de structure strs.type si 1 ou plusieurs dollars sont
+	presents dans le mot copie, et precise l'instruction a suivre quand il
+	faudra le traiter :
+	Il y a autant de case que de potentielles variables d'envirronement a
+	interpreter dans le mot :
+	1. Si strs[i]->type == NULL => PAS DE DOLLAR DANS LE MOT
+	2. Si strs[i]->type[d].expnd == EXPAND :
+		- Si strs[i]->type[d].len_variable == 0 -> Ne pas afficher le $
+		- Si strs[i]->type[d].len_variable == 1 -> Afficher 1 $
+		- Si strs[i]->type[d].len_variable > 1 -> Expand la variable.
+			Le nom de la variable sera compose des (len_variable - 1) char qui
+			suivent le $
+	3. Si strs[i]->type[d].expnd == NOT_EXPAND : Ne pas expand, afiicher
+		normalement le $ et les char qui suivent
+	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
+		suivants
 */
 void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 {
