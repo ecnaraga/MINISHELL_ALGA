@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/08 16:41:05 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/12 09:14:03 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,15 @@ static int	ft_quote_order(char *str)
 	char	*quote;
 	int		count;
 	int		i;
-	int sq;
-	int dq;
+	// int sq;
+	// int dq;
 	int flag;
 
 	(quote = malloc(sizeof(char) * ft_strlen(str)), ft_bzero(quote, sizeof(char)));
 	count = -1;
 	i = -1;
-	dq = 0;
-	sq = 0;
+	// dq = 0;
+	// sq = 0;
 	flag = 0;
 	while (str[++i])
 	{

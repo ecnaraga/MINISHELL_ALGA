@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/12 09:04:34 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/12 13:04:54 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 /*
 TO DO : A BIEN TESTER : VERIF COUNTWORD + FT_TEST mshELL ET STRLCPYmshELL
 PAS LES MME + FAIRE MASSE DE TESTS X VERIF QUE CA TIENT LA ROUTE
+
+ERREUR TEST : $LESS$VAR POUR LE TYPE
+
 */
 
 /*

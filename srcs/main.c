@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/08 14:26:12 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/12 09:22:29 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int main(int ac, char **av, char **env)
 			free(minish.line);
 			continue ; //verifier si on revient au debut de la boucle
 		}
-		minish.av = ft_split_minish(minish.line); //malloc
+		minish.av = ft_split_msh(minish.line); //malloc
 		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
@@ -65,12 +65,22 @@ int main(int ac, char **av, char **env)
 		while (minish.av[++i].data)
 		{
 			printf("minish.av[%d].data = |%s|\n", i, minish.av[i].data);
-			printf("minish.av[%d].type = |%d|\n", i, minish.av[i].type);
+			if (minish.av[i].type)
+			{
+				int d = -1;
+				while (++d < minish.av[i].dollar)
+					printf("minish.av[%d].type[%d].expnd = %d minish.av[%d].type[%d].len_variable = %d\n", i, d, minish.av[i].type[d].expnd, i, d, minish.av[i].type[d].len_variable);
+			}
 		}
 		printf("minish.av[%d].data = |%s|\n", i, minish.av[i].data);
-		printf("minish.av[%d].type = |%d|\n", i, minish.av[i].type);
+		if (minish.av[i].type)
+			{
+				int d = -1;
+				while (++d < minish.av[i].dollar)
+					printf("minish.av[%d].type[%d].expnd = %d minish.av[%d].type[%d].len_variable = %d\n", i, d, minish.av[i].type[d].expnd, i, d, minish.av[i].type[d].len_variable);
+			}
 		
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
-		ft_free_split_minish(minish.av);
+		ft_free_split_msh(minish.av);
 	} 
 }

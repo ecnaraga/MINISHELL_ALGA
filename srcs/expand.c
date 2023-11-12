@@ -6,12 +6,16 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/12 09:03:18 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/12 13:02:32 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+
+// TO DO : ATTENTION A CE TEST : echo $=HOME => Pour l instant traite dans parsing comme si variable d environnement a voir...
+//PENSER A EXPAND DANS LES RETOUR D ERREUR DE L EXEC ex $USER CMD NORT FOUNT
+// PENSER A GERE $? => represente exitstatus
 
 /*
 Pour savoir s'il comment traiter le dollar, se referer aux instructions dans le

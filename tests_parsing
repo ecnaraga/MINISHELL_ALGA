@@ -41,55 +41,55 @@ A GERER GARANCE :
 	// OK POUR PAS GERER
 	echo((((bravo)))) -> pas le bon message d erreur
 
-	//A GERER SPLIT
-	//echo "-n" Hola => Split mauvais
-	//echo " " | cat -e => valgrind jump split
-	//echo" "|cat -e =>Split mauvais
-	""''echo hola""'''' que""'' tal""'' => SPLIT MAUVAIS echo doit avoir type 0 et les autres mots type 5
-	echo $"" => SPLIT $ en type 5 au lieu de 0
-	//echo "" hola => mauvais resultat split
-	///echo ""hola
-	//export HOLA=" -n bonjour "
-	//export "" HOLA=bonjour
-	//echo """$HOLA""" | cat -e
-	//export HOLA=" hola et $HOLA"$HOLA
-	//export HOLA=" bonjour hey " 
-	//export HOLA=' hola et $HOLA'
-	env|"wc" -l
-	//export "" || ls
-	export ""|| ls
-	//export "" && ls
-	export ""&& ls
-	//export "" && unset ""
-	echo “ ‘ $USER’” PARSING + TYPE
+	OK// #A GERER SPLIT
+	# //echo "-n" Hola => Split mauvais
+	# //echo " " | cat -e => valgrind jump split
+	# //echo" "|cat -e =>Split mauvais
+	# ""''echo hola""'''' que""'' tal""'' => SPLIT MAUVAIS echo doit avoir type 0 et les autres mots type 5
+	# echo $"" => SPLIT $ en type 5 au lieu de 0
+	# //echo "" hola => mauvais resultat split
+	# ///echo ""hola
+	# //export HOLA=" -n bonjour "
+	# //export "" HOLA=bonjour
+	# //echo """$HOLA""" | cat -e
+	# //export HOLA=" hola et $HOLA"$HOLA
+	# //export HOLA=" bonjour hey " 
+	# //export HOLA=' hola et $HOLA'
+	# env|"wc" -l
+	# //export "" || ls
+	# export ""|| ls
+	# //export "" && ls
+	# export ""&& ls
+	# //export "" && unset ""
+	# echo “ ‘ $USER’” PARSING + TYPE
 
-	REVOIR SPLIT TYPE:
-	bash-5.1$ echo “ ‘ $USER’”
-“ ‘ galambey’”
-bash-5.1$ echo “ $USER”
-“ galambey”
-bash-5.1$ echo $USER
-galambey
-bash-5.1$ echo "$USER "
-galambey 
-bash-5.1$ echo "$US"ER 
-ER
-bash-5.1$ echo "'$USER'" 
-'galambey'
-bash-5.1$ echo " ' $USER '" 
- ' galambey '
-bash-5.1$ echo "$USER"
-galambey
-bash-5.1$ echo '$USER'
-$USER
-bash-5.1$ echo "'$USER'"
-'galambey'
+	OK// #REVOIR SPLIT TYPE:
+		# bash-5.1$ echo “ ‘ $USER’”
+		# “ ‘ galambey’”
+		# bash-5.1$ echo “ $USER”
+		# “ galambey”
+		# bash-5.1$ echo $USER
+		# galambey
+		# bash-5.1$ echo "$USER "
+		# galambey 
+		# bash-5.1$ echo "$US"ER 
+		# ER
+		# bash-5.1$ echo "'$USER'" 
+		# 'galambey'
+		# bash-5.1$ echo " ' $USER '" 
+		# ' galambey '
+		# bash-5.1$ echo "$USER"
+		# galambey
+		# bash-5.1$ echo '$USER'
+		# $USER
+		# bash-5.1$ echo "'$USER'"
+		# 'galambey'
 
 => Comprendre TESTS 762 A 765
-$> << $hola
-$> << $"hola"$"b"
-$> << $"$hola"$$"b"
-$> << ho$la$"$a"$$"b"
+	$> << $hola
+	$> << $"hola"$"b"
+	$> << $"$hola"$$"b"
+	$> << ho$la$"$a"$$"b"
 
  
 
