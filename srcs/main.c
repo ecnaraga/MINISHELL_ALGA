@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/12 09:22:29 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/13 17:35:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ int main(int ac, char **av, char **env)
 		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
-		
+		ft_token(&minish);
 		int i = -1;
 		while (minish.av[++i].data)
 		{
-			printf("minish.av[%d].data = |%s|\n", i, minish.av[i].data);
+			printf("minish.av[%d].data = |%s| minish.av[%d].token = %d\n", i, minish.av[i].data, i, minish.av[i].token);
 			if (minish.av[i].type)
 			{
 				int d = -1;
@@ -72,13 +72,13 @@ int main(int ac, char **av, char **env)
 					printf("minish.av[%d].type[%d].expnd = %d minish.av[%d].type[%d].len_variable = %d\n", i, d, minish.av[i].type[d].expnd, i, d, minish.av[i].type[d].len_variable);
 			}
 		}
-		printf("minish.av[%d].data = |%s|\n", i, minish.av[i].data);
+		printf("minish.av[%d].data = |%s| minish.av[%d].token = %d\n", i, minish.av[i].data, i, minish.av[i].token);
 		if (minish.av[i].type)
-			{
-				int d = -1;
-				while (++d < minish.av[i].dollar)
-					printf("minish.av[%d].type[%d].expnd = %d minish.av[%d].type[%d].len_variable = %d\n", i, d, minish.av[i].type[d].expnd, i, d, minish.av[i].type[d].len_variable);
-			}
+		{
+			int d = -1;
+			while (++d < minish.av[i].dollar)
+				printf("minish.av[%d].type[%d].expnd = %d minish.av[%d].type[%d].len_variable = %d\n", i, d, minish.av[i].type[d].expnd, i, d, minish.av[i].type[d].len_variable);
+		}
 		
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
 		ft_free_split_msh(minish.av);

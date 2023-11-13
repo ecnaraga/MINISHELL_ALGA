@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/12 08:27:38 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/13 13:56:35 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int ft_parse_bis(t_msh *minish)
 		}
 		else
 		{
-			if (prec_iss == PAR_CLOSE)
+			if (prec_iss == PAR_CLOSE && minish->line[i] != '>' && minish->line[i] != '<')
 			{
 				line = ft_error_message(minish->line + i); //MALLOC
 				//IF ERROR MALLOC

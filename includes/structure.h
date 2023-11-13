@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/11 12:27:45 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/13 17:13:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,30 @@
 
 typedef	struct s_node
 {
-	int nb_infile;
-	int nb_outfile;
+	int	nb_infile;
+	int	nb_outfile;
 	
 }		t_node;
 
 typedef struct d_dollar
 {
-	int expnd;
-	int len_variable; // donne la len de la variable d environnement $ inclus
+	int	expnd;
+	int	len_variable; // donne la len de la variable d environnement $ inclus
 }		t_dollar;
 
 typedef	struct s_split
 {
-	char *data;
-	int	 dollar;
+	char		*data;
+	int			token;
+	int			dollar;
 	t_dollar	*type;
 }		t_split;
 
 typedef	struct s_msh
 {
-	char **env;
-	char *line;	
-	int ac;
+	char	**env;
+	char	*line;	
+	int		ac;
 	t_split *av;
 	t_node	*node;
 }		t_msh;
@@ -61,12 +62,15 @@ typedef	struct s_index
 	int	d;
 }		t_index;
 
-enum	e_split
+enum	e_token
 {
 	TO_DEFINE,
 	INFILE,
 	OUTFILE,
+	HERE_DOC,
 	OPERATOR,
+	PAR_OPEN,
+	PAR_CLOSE,
 	CMD,
 	ARG,
 };
@@ -80,10 +84,8 @@ enum	e_expand
 
 enum	e_parenthesis
 {
-	PAR_OPEN = 1,
-	PAR_CLOSE = 2,
-	OTHER = 4,
-	ISS = 5,
+	OTHER = 9,
+	ISS = 10,
 };
 
 #endif

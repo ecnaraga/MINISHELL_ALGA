@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/13 11:44:47 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:34:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,10 @@ ft_strlcpy_minish_utils.c
 */
 int		ft_inc_d(t_split *strs, int *d, char c);
 void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q);
+
+/*
+ft_token.c
+*/
+void	ft_token(t_msh *msh);
 
 #endif

@@ -14,7 +14,8 @@ SRCS = main.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
 	   ft_strlcpy_minish_utils.c \
-	   ft_structtablen.c 
+	   ft_structtablen.c \
+	   ft_token.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

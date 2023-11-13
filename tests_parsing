@@ -17,6 +17,12 @@ OK:
 		< infile && cat = <infile&&cat
 		cat Makefile > outfile
 		cat Makefile >> outfile
+		(ls && pwd) > hola = (ls&&pwd)>hola
+		(ls && pwd | wc) > hola = (ls&&pwd|wc)>hola
+		(ls && pwd | wc) >> hola
+		(ls&&pwd|wc)>>hola
+		(ls > Docs/hey && pwd) > hola
+		(pwd | wc) < hola
 
 	2- DOIT PASSER TEST PARSING MAIS EN EXEC : N IMPRIME RIEN + EXITSTATUS = 1 // AGERER DANS L EXEC
 		(( bravo )) = ((bravo))
@@ -85,6 +91,10 @@ A GERER GARANCE :
 		# bash-5.1$ echo "'$USER'"
 		# 'galambey'
 
+// A GERE QQUEPART :
+(echo Bravo | wc) < hola cat -e => bash: syntax error near unexpected token `cat'
+(echo Bravo | wc) < hola && cat -e => exec ok
+
 => Comprendre TESTS 762 A 765
 	$> << $hola
 	$> << $"hola"$"b"
@@ -94,13 +104,8 @@ A GERER GARANCE :
  
 
 	//A GERER parenthese
-	(ls && pwd) > hola = (ls&&pwd)>hola => renvoie erreur quand doit s executer
-	(ls && pwd | wc) > hola = (ls&&pwd|wc)>hola => renvoie erreur quand doit s executer
-	(ls && pwd | wc) >> hola => renvoie erreur quand doit s executer
-	(ls&&pwd|wc)>>hola => renvoie erreur quand doit s executer
-	(pwd | wc) < hola => renvoie erreur quand doit s executer
 	test 628 a 634 => renvoie erreur quand doit s executer
-	 (ls > Docs/hey && pwd) > hola => renvoie erreur quand doit s executer
+	
 	> hola (ls && pwd) => pas le bon message d erreur
 	> pwd (ls) => pas le bon message d erreur
 

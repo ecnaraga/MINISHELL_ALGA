@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/13 12:57:30 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:22:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 		*i += 1;
 		l.k += 1;
 	}
-	printf("dollar %d\n", *dollar);
 	return (l);
 }
 
@@ -146,6 +145,7 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 		strs[j].data = (char *)malloc(sizeof(char) * (l.lt + 1)); // MALLOC DANS BOUCLE
 		if (strs[j].data == NULL)
 			return (ft_free_strs(strs, j));
+		strs[j].token = TO_DEFINE;
 		if (ft_alloc_type(strs, j) == 1) //MALLOC DANS BOUCLE
 			return (ft_free_strs(strs, j));
 		if (l.lt > 0)
