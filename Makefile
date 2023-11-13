@@ -13,6 +13,7 @@ SRCS = main.c \
 	   ft_split_minish_utils.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
+	   ft_strlcpy_minish_utils.c \
 	   ft_structtablen.c 
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)

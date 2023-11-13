@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy_minish.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2023/11/12 08:56:48 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/13 11:45:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,49 +35,6 @@ static int	ft_test_ter(char c, t_quote q)
 }
 
 /*
-Incremente la case du tableau de struct strs.type lorsque est rencontree la fin
-	d'une potentielle variable d'environnement marquee par un quote ou isspace
-*/
-static int ft_inc_d(t_split *strs, int *d, char c)
-{
-	if (!strs->type)
-		return (1);
-	if (*d >= strs->dollar)
-		return (1);
-	if (strs->type[*d].expnd == TO_DEFINE)
-		return (1);
-	if (c != '\'' && c != '"' && ft_isspace(c) == 1)
-		return (1);
-	*d += 1;
-	return (0);
-}
-
-/*
-Si le char courant (src[x->i]) == '$', definit le type de l expnd:
-MULTI_DOLLAR : Suite de dollar
-EXPAND : Variable d environnement
-NO_EXPAND : String normale 
-*/
-static void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q)
-{
-	if (src[x->i] == '$')
-	{
-		if (strs->type[x->d].expnd != TO_DEFINE)
-		{
-			if (src[x->i - 1] == '$')
-				strs->type[x->d].expnd = MULTI_DOLLAR;
-			if (src[x->i + 1] != '$')
-				x->d += 1;
-		}
-		else if (q.s % 2 == 0)
-			strs->type[x->d].expnd = EXPAND;
-		else
-			strs->type[x->d].expnd = NO_EXPAND;
-		strs->type[x->d].len_variable = 0;
-	}
-}
-
-/*
 Fonction permettant de deficir si le char courant (src[x->i]) fait ou non parti
 	du nom de la variable d'environnement marquee par un $
 Renvoie 0 si OUI
@@ -93,7 +50,7 @@ static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
 		return (1);
 	if (strs->type[x->d].expnd != EXPAND)
 		return (1);
-	if	(src[x->i] != '$')
+	if (src[x->i] != '$')
 		return (0);
 	else if (q.d % 2 == 1)
 		return (0);

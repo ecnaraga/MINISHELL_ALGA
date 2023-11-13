@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/12 13:04:54 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/13 12:57:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static int	ft_countwords(const char *s)
 		while (s[i] && d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 0)
 			ft_inc_quote(s[i++], &d_q, &s_q);
 		if (s[i] && (d_q % 2 == 1 || s_q % 2 == 1
-			|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 1)))
+				|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 1)))
 		{
 			ft_inc_quote(s[i++], &d_q, &s_q);
 			wd++;
 		}
 		while (s[i] && (d_q % 2 == 1 || s_q % 2 == 1
-			|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 1)))
+				|| (d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 1)))
 			ft_inc_quote(s[i++], &d_q, &s_q);
 	}
 	return (wd);
@@ -64,7 +64,7 @@ dollar = nb de potentielles variables d environnement (qui commencent par un $)
 */
 static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 {
-	t_letter l;
+	t_letter	l;
 
 	l.lt = 0;
 	q->d = 0;
@@ -86,6 +86,7 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 		*i += 1;
 		l.k += 1;
 	}
+	printf("dollar %d\n", *dollar);
 	return (l);
 }
 
@@ -97,7 +98,7 @@ Alloue dynamiquement un tableau de structure de la taille du nb potentielles
 static int	ft_alloc_type(t_split *strs, int j)
 {
 	int	d;
-	
+
 	strs[j].type = NULL;
 	if (strs[j].dollar > 0)
 	{
@@ -135,7 +136,6 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 	t_letter	l;
 	t_quote		q;
 	int			i;
-	// int			d;
 
 	i = 0;
 	j = -1;
@@ -239,6 +239,8 @@ t_split	*ft_split_msh(char const *s)
 // 	char	*str49 = "echo \'$\'\'\'"; //le dollar doit s afficher
 // 	char	*str50 = "echo $\'\'"; //le dollar ne devra pas s afficher
 // 	char	*str51 = "echo $\"\'USER\'\""; //le dollar ne devra pas s afficher
+// 	char	*str52 = "$USER$HELLOYOU"; //les dollars devront s afficher
+// 	char	*str53 = "$USER$LESS$$$$USER"; //les dollars devront s afficher
 // 	// ""''echo hola""'''' que""'' tal""'' => SPLIT MAUVAIS echo doit avoir type 0 et les autres mots type 5
 // 	// echo $"" => SPLIT $ en type 5 au lieu de 0
 
@@ -1264,6 +1266,46 @@ t_split	*ft_split_msh(char const *s)
 // //
 // 	printf("\nstring = %s\nnb de mot = %d\n", str51, ft_countwords(str51)); //count letter ne passe pas
 // 	strs = ft_split_msh(str51);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		// printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 		if (strs[i].type)
+// 		{
+// 			d = -1;
+// 			while (++d < strs[i].dollar)
+// 				printf("strs[%d].type[%d].expnd = %d strs[%d].type[%d].len_variable = %d\n", i, d, strs[i].type[d].expnd, i, d, strs[i].type[d].len_variable);
+// 			free(strs[i].type);
+// 		}
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	// printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str52, ft_countwords(str52)); //count letter ne passe pas
+// 	strs = ft_split_msh(str52);
+// 	i = -1;
+// 	while (strs[++i].data)
+// 	{
+// 		printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 		// printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 		free(strs[i].data);
+// 		if (strs[i].type)
+// 		{
+// 			d = -1;
+// 			while (++d < strs[i].dollar)
+// 				printf("strs[%d].type[%d].expnd = %d strs[%d].type[%d].len_variable = %d\n", i, d, strs[i].type[d].expnd, i, d, strs[i].type[d].len_variable);
+// 			free(strs[i].type);
+// 		}
+// 	}
+// 	printf("strs[%d].data = |%s|\n", i, strs[i].data);
+// 	// printf("strs[%d].type = |%d|\n", i, strs[i].type);
+// 	free(strs);
+// //
+// 	printf("\nstring = %s\nnb de mot = %d\n", str53, ft_countwords(str53)); //count letter ne passe pas
+// 	strs = ft_split_msh(str53);
 // 	i = -1;
 // 	while (strs[++i].data)
 // 	{
