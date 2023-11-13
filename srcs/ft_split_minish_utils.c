@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/13 11:40:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/13 13:11:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,30 +59,6 @@ int	ft_test(char c, char c1, char cm1, t_quote *q)
 	else
 		return (1);
 }
-
-// /*
-// Teste les conditions de la boucle de ft_count_letter pour compter le nb de k
-// Renvoie 0 si ok pour rentrer dans la boucle, sinon 1
-// */
-// int	ft_test(char c, char c1, int d_q, int s_q)
-// {
-// 	if (!c)
-// 		return (1);
-// 	if (d_q % 2 == 1)
-// 		return (0);
-// 	if (s_q % 2 == 1)
-// 		return (0);
-// 	if (ft_isspace(c) == 0)
-// 		return (1);
-// 	if (c != '"' && c != 39)
-// 		return (0);
-// 	if (c == '"' && (c1 && ft_isspace(c1) == 1))
-// 		return (0);
-// 	if (c == 39 && (c1 && ft_isspace(c1) == 1))
-// 		return (0);
-// 	else
-// 		return (1);
-// }
 
 /*
 Teste les conditions de ft_count_letter pour compter le nb de lt
