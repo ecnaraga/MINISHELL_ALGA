@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/13 17:39:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:22:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,20 @@ void	ft_token(t_msh *msh)
 			continue ;
 		if (msh->av[i].data[0] == '>' && msh->av[i + 1].data) //Attention au cas ">(" et "> ("
 		{
+			msh->av[i].token = CHEVRON;
 			if (msh->av[i].data[1] && msh->av[i].data[1] == '>')
-				msh->av[i + 1].token = HERE_DOC;
+				msh->av[i + 1].token = OUTFILE_NO_TRUNC;
 			// else if (msh->av[i].data[1] && msh->av[i].data[1] == '(')
 			else
-				msh->av[i + 1].token = OUTFILE;
+				msh->av[i + 1].token = OUTFILE_TRUNC;
 		}
 		else if (msh->av[i].data[0] == '<' && msh->av[i + 1].data) //Attention au cas "<(" et  "< ("
 		{
-			// if (msh->av[i].data[1] && msh->av[i].data[1] == '<')
-			// 	msh->av[i + 1].token = HERE_IN;
+			msh->av[i].token = CHEVRON;
+			if (msh->av[i].data[1] && msh->av[i].data[1] == '<')
+				msh->av[i + 1].token = HERE_DOC;
 			// else if (msh->av[i].data[1] && msh->av[i].data[1] == '(')
-			// else
+			else
 				msh->av[i + 1].token = INFILE;
 		}
 		else if (ft_strcmp(msh->av[i].data, "&&") == 0 || ft_strcmp(msh->av[i].data, "||") == 0 || ft_strcmp(msh->av[i].data, "|") == 0)

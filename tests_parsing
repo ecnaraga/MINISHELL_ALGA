@@ -61,7 +61,7 @@ A GERER GARANCE :
 	# //export HOLA=" hola et $HOLA"$HOLA
 	# //export HOLA=" bonjour hey " 
 	# //export HOLA=' hola et $HOLA'
-	# env|"wc" -l
+	# env|"w<<< is known as here-stringc" -l
 	# //export "" || ls
 	# export ""|| ls
 	# //export "" && ls

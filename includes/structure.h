@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/13 17:13:38 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/14 14:54:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,16 @@ typedef	struct s_index
 
 enum	e_token
 {
-	TO_DEFINE,
-	INFILE,
-	OUTFILE,
-	HERE_DOC,
-	OPERATOR,
-	PAR_OPEN,
-	PAR_CLOSE,
-	CMD,
-	ARG,
+	TO_DEFINE,// 0
+	INFILE,// 1
+	OUTFILE_TRUNC,// 2
+	OUTFILE_NO_TRUNC,// 3
+	HERE_DOC,// 4
+	OPERATOR,// 5
+	PAR_OPEN,// 6
+	PAR_CLOSE,// 7
+	CMD,// 8
+	CHEVRON,// 9
 };
 
 enum	e_expand
@@ -84,8 +85,8 @@ enum	e_expand
 
 enum	e_parenthesis
 {
-	OTHER = 9,
-	ISS = 10,
+	OTHER = 10,
+	ISS = 11,
 };
 
 #endif
