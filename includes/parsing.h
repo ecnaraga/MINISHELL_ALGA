@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/13 11:44:47 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:08:29 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ ft_parse_bis
 */
 int		ft_parse_bis(t_msh *minish);
 int 	ft_error_syntax(char *str, int exitstatus, int clean);
+char	*ft_error_message(char *str);
 
 
 /*

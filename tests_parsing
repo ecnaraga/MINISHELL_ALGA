@@ -119,10 +119,10 @@ A GERER ALIX :
 		< ( => < ( : erreur parsing exit code 2 car ( est consideree comme telle et non comme un infile potentiel
 
 	//A GERER
-	echo """""yfguakhns"""jlask"""sajkns => GUILLEMET NON FERME
-	( echo bravo ) & &  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `&'
-	( echo bravo ) | |  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `|'
-	Sur les cmd du 3 => valgrind : Invalid read of size 1 qui se manifeste si c est la premiere comande mais pas avec toutes les comandes
+	OK : echo """""yfguakhns"""jlask"""sajkns => GUILLEMET NON FERME
+	OK : ( echo bravo ) & &  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `&'
+	OK : ( echo bravo ) | |  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `|'
+	OK : Sur les cmd du 3 => valgrind : Invalid read of size 1 qui se manifeste si c est la premiere comande mais pas avec toutes les comandes
 	
 
 	// POUR LES CHEVRONS OK POUR GERER > >> et a partir de trois erreur avec 1 seul > d affiche
@@ -138,9 +138,9 @@ A GERER ALIX :
 	< && allo = < && = <&& => doit renvoyer message erreur
 	ls || <
 	ls && <
-	echo hola > > bonjour => mauvais message erreur, le token a imprimer est newline si fin de la lg mais sinon c est le token suivant
-	echo hola < < bonjour => doit renvoyer message d erreur
-	cat >> << => doit renvoyer message d erreur
-	cat >> > >> << >>
-	cat << 
+	//echo hola > > bonjour => mauvais message erreur, le token a imprimer est newline si fin de la lg mais sinon c est le token suivant
+	//echo hola < < bonjour => doit renvoyer message d erreur
+	//cat >> << => doit renvoyer message d erreur
+	//cat >> > >> << >>
+	//cat << 
  => doit renvoyer erreur
