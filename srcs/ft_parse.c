@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/14 15:18:52 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:57:00 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,8 @@ int	ft_parse_line(t_msh *minish)
 	if(ft_parse_chevron(minish->line) == 2)
 		return (2);
 	if (ft_quote_order(minish->line) == 2)
+		return (2);
+	if(operator_pairing(minish->line) == 2)
 		return (2);
 	minish->line = add_spaces(minish->line); // malloc
 	printf("str : _%s_\n", minish->line);
