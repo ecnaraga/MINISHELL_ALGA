@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 14:03:48 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:12:32 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ int	ft_parse_ter(t_msh *msh)
 {
 	int	i;
 	int	j;
-	char *line;
-	char *temp;
+	// char *line;
+	// char *temp;
 	char chev;
 
 	i = -1;
