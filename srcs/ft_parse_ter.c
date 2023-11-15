@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 16:53:27 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 17:35:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,12 @@ int	ft_parse_ter(t_msh *msh)
 			printf("test1\n");
 			while (msh->av[0].data[j] == chev && j < 6)
 				j++;
+			printf("j = %d\n", j);
 			if (j == 3 && chev == '>')
 				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
 			if (j > 3 && chev == '>')
 				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
+				
 			if (j == 4 && chev == '<')
 				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
 			if (j == 5 && chev == '<')
@@ -74,10 +76,12 @@ int	ft_parse_ter(t_msh *msh)
 	}
 	while (msh->av[++i].data)
 	{
+		chev = msh->av[i].data[0];
 		if (msh->av[i].token == CHEVRON && ft_strlen(msh->av[i].data) > 2)
 		{
 			while (msh->av[0].data[j] == chev && j < 6)
 				j++;
+			
 			if (j == 3 && chev == '>')
 				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
 			if (j > 3 && chev == '>')

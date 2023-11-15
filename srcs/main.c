@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 15:24:31 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 17:31:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,13 @@ int main(int ac, char **av, char **env)
 	minish.env = env;
 	while (1)
 	{
+		//if (signal (SIGINT, &ft_free) == - 1);
 		minish.line = readline("Minishell$ "); //malloc
 		if (!minish.line)
-			return (1); // CODE ERREUR A VERIFIER : One or more generic errors encountered upon exit
+		{
+			printf("exit\n");
+			return (1); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D // EOF
+		}
 		if (!minish.line[0]) // a verifier aussi pas la meme chose NE PAS RETURNNNNN
 		{
 			free(minish.line); // exit status doit etre == 0
