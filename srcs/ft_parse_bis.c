@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/13 13:56:35 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 11:16:01 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 //ATTENTION A GESTION ERREUR SI PARENTHESES OUVERTE...
 int ft_error_syntax(char *str, int exitstatus, int clean) // a modifier
 {
+	printf("str %s\n", str);
 	ft_putstr_fd(str, 2);
 	if (clean == 1)
 		free(str);

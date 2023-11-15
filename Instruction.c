@@ -15,3 +15,13 @@ echo Bravo > hola > baba coucou	  =>  => OK car un groupe de cmd (echo Bravo cou
 => erreur de parsing a gerer dans l arbre
 Les groupe de cmd doivent etre separes par des operateurs
 */
+
+/*EXPAND
+>> ex : un double pipe stockee dans 1 variable d environnement n est pas considere comme un operateur
+bash-5.1$ (ls $OPERATOR ls) || ls
+ls: cannot access '||': No such file or directory
+ls: cannot access 'ls': No such file or directory
+'code erreurs.odt'	      Instruction.c   MINI_700_TESTS.ods   parsing.odg
+'Erreurs a gerer dans EXEC'   libft	      minishell		   srcs
+ includes		      Makefile	      objs		   tests_parsing
+*/
