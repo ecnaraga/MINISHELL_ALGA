@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/14 15:57:00 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/14 16:58:24 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,40 +143,75 @@ Verifie que les " et ' sont bien apparies
 */
 static int	ft_quote_order(char *str)
 {
-	char	*quote;
-	int		count;
-	int		i;
-	int		flag;
-
-	quote = malloc(sizeof(char) * ft_strlen(str));
-	ft_bzero(quote, sizeof(char));
-	count = -1;
-	i = -1;
-	flag = 0;
-	while (str[++i])
+	int	dq = 0;
+	int	sq = 0;
+	int	i = 0;
+	
+	while (str[i])
 	{
-		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
-			flag = 0;
-		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		if (str[i++] == '"')
 		{
-			if (count >= 0 && quote[count] == str[i])
-				quote[count--] = '\0';
-			else
-				quote[++count] = str[i];
-			if (str[i] == '"')
-				flag = 1;
-			else if (str[i] == '\'')
-				flag = 2;
-			i++;
+			printf("str[%d] pour \" = %c\n", i, str[i]);
+			dq++;
+			while(str[i] != '"' && str[i])
+				i++;
+			if (str[i++] == '"')
+				dq++;
+			
 		}
+		printf("str[%d] apres \" = %c\n", i, str[i]);
+		if (str[i++] == '\'')
+		{
+			printf("str[%d] pour \' = %c\n", i, str[i]);
+			sq++;
+			while(str[i] != '\'' && str[i])
+				i++;
+			if (str[i++] == '\'')
+				sq++;
+		}
+		printf("str[%d] apres \' = %c\n", i, str[i]);
+		//i++;
 	}
-	if (count != -1)
-	{
-		printf("minishell: les guillemets ne sont pas correctement appariés.\n");
-		return (2);
-	}
-	free(quote);
+	printf("dq : %d\n", dq);
+	printf("sq : %d\n", sq);
+	if (dq % 2 != 0 || sq % 2 != 0)
+		printf("C'est d'la merde\n");
 	return (0);
+	// char	*quote;
+	// int		count;
+	// int		i;
+	// int		flag;
+
+	// quote = malloc(sizeof(char) * ft_strlen(str));
+	// ft_bzero(quote, sizeof(char));
+	// count = -1;
+	// i = -1;
+	// flag = 0;
+	// while (str[++i])
+	// {
+	// 	if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
+	// 	{
+	// 		flag = 0;
+	// 	}
+	// 	if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+	// 	{
+	// 		if (count >= 0 && quote[count] == str[i])
+	// 			quote[count--] = '\0';
+	// 		else
+	// 			quote[++count] = str[i];
+	// 		// if (str[i] == '"')
+	// 		// 	flag = 1;
+	// 		// else if (str[i] == '\'')
+	// 		// 	flag = 2;
+	// 	}
+	// }
+	// if (count != -1)
+	// {
+	// 	printf("minishell: les guillemets ne sont pas correctement appariés.\n");
+	// 	return (2);
+	// }
+	// free(quote);
+	// return (0);
 }
 
 /*

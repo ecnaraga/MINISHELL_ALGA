@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/13 17:35:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/14 16:43:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int main(int ac, char **av, char **env)
 			free(minish.line);
 			continue ; //verifier si on revient au debut de la boucle
 		}
-		printf("test\n");
+		//printf("test\n");
 		if (ft_parse_bis(&minish) != 0)
 		{
 			free(minish.line);
