@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/14 16:43:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:10:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 # include "../includes/minishell.h"
 
@@ -21,7 +22,10 @@ int main(int ac, char **av, char **env)
 	
 	(void) av;
 	(void) env;
-	if (ac != 1)
+
+	if (isatty(0) == 1)
+	// printf("Value of stdin %d value of stdout %d\n", stdin, stdout);
+{	if (ac != 1)
 	{
 		write(2, "No arguments needed\n", 21);
 		return (2); // CODE ERREUR A VERIFIER : Incorrect usage, such as invalid options or missing arguments
@@ -50,7 +54,7 @@ int main(int ac, char **av, char **env)
 			free(minish.line);
 			continue ; //verifier si on revient au debut de la boucle
 		}
-		//printf("test\n");
+		printf("PASSAGE ALIX TO GAGA\n");
 		if (ft_parse_bis(&minish) != 0)
 		{
 			free(minish.line);
@@ -61,6 +65,8 @@ int main(int ac, char **av, char **env)
 		if (!minish.av)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
 		ft_token(&minish);
+		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+		ft_parse_ter(&minish);
 		int i = -1;
 		while (minish.av[++i].data)
 		{
@@ -80,7 +86,7 @@ int main(int ac, char **av, char **env)
 				printf("minish.av[%d].type[%d].expnd = %d minish.av[%d].type[%d].len_variable = %d\n", i, d, minish.av[i].type[d].expnd, i, d, minish.av[i].type[d].len_variable);
 		}
 		
-		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+		// minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
 		ft_free_split_msh(minish.av);
 	} 
-}
+}}

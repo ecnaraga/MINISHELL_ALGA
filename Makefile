@@ -7,6 +7,7 @@ OBJ_DIR = objs
 SRCS = main.c \
 	   ft_parse.c \
 	   ft_parse_bis.c \
+	   ft_parse_ter.c \
 	   ft_parse_utils.c \
 	   ft_echo.c \
 	   ft_free_split_minish.c \

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/14 16:01:06 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:08:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef PARSING_H
 # define PARSING_H
@@ -29,6 +30,10 @@ int		ft_parse_bis(t_msh *minish);
 int 	ft_error_syntax(char *str, int exitstatus, int clean);
 char	*ft_error_message(char *str);
 
+/*
+ft_parse_ter.c
+*/
+int	ft_parse_ter(t_msh *msh);
 
 /*
 ft_parse_utils.c
