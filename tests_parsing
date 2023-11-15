@@ -125,7 +125,7 @@ A GERER ALIX :
 
 	//A GERER
 	OK : echo """""yfguakhns"""jlask"""sajkns => GUILLEMET NON FERME
-	OK : ( echo bravo ) & &  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `&'
+	OK : ( echo "(((bravo" ) & &  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `&'
 	OK : ( echo bravo ) | |  (     bravo ) -> doit renvoyer exit status 2: bash: syntax error near unexpected token `|'
 	OK : Sur les cmd du 3 => valgrind : Invalid read of size 1 qui se manifeste si c est la premiere comande mais pas avec toutes les comandes
 	
