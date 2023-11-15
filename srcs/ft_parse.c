@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/15 14:14:02 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:23:41 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,8 +235,8 @@ char	*add_spaces(char *str)
 		}
 		i++;
 	}
-	printf("size str : %zu\n", i);
-	printf("size fstr : %zu\n", i + count);
+	//printf("size str : %zu\n", i);
+	//printf("size fstr : %zu\n", i + count);
 	fstr = malloc(sizeof(char) * (i + count + 1));
 	i = 0;
 	flag = 0;
@@ -252,8 +252,8 @@ char	*add_spaces(char *str)
 		}
 		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
 			flag = 0;
-		printf("leak%zu\n", i);
-		printf("str[i] : %c\n", str[i]);
+		//printf("leak%zu\n", i);
+		//printf("str[i] : %c\n", str[i]);
 		if (is_operator(str[i]) == 1 && flag == 0)
 		{
 			if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i
@@ -264,8 +264,11 @@ char	*add_spaces(char *str)
 				fstr[j] = str[i];
 				
 			}	
-			else if (i < ft_strlen(str) && str[i - 1] && ((str[i + 1] == str[i])
-					|| str[i] == str[i - 1]))
+			else if (i < ft_strlen(str) && (str[i + 1] == str[i]))
+			{
+				fstr[j] = str[i];
+			}
+			else if (i < ft_strlen(str) && i > 0 && (str[i] == str[i - 1]))
 			{
 				fstr[j] = str[i];
 			}
