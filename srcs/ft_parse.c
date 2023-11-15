@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/15 14:13:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:17:59 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,35 +55,35 @@ static int	is_operator(char c)
 
 /*----------------------------------------------------------------------------*/
 
-static int	operator_pairing(char *str)
-{
-	int	i;
-	int 	flag;
+// static int	operator_pairing(char *str)
+// {
+// 	int	i;
+// 	int 	flag;
 
-	i = -1;
-	flag = 0;
-	while (str[++i])
-	{
-		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-		{
-			if (str[i] == '"')
-				flag = 1;
-			else if (str[i] == '\'')
-				flag = 2;
-			i++;
-		}
-		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
-			flag = 0;
-		if (((str[i] == '&' || str[i] == '|') && (is_separator(str[i + 1]) == 1)
-					&& str[i + 2] == str[i]) && flag == 0)
-		{
-			printf("minishell: syntax error near unexpected token `%c'\n",
-				str[i]);
-			return (2);
-		}
-	}
-	return (0);
-}
+// 	i = -1;
+// 	flag = 0;
+// 	while (str[++i])
+// 	{
+// 		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+// 		{
+// 			if (str[i] == '"')
+// 				flag = 1;
+// 			else if (str[i] == '\'')
+// 				flag = 2;
+// 			i++;
+// 		}
+// 		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
+// 			flag = 0;
+// 		if (((str[i] == '&' || str[i] == '|') && (is_separator(str[i + 1]) == 1)
+// 					&& str[i + 2] == str[i]) && flag == 0)
+// 		{
+// 			printf("minishell: syntax error near unexpected token `%c'\n",
+// 				str[i]);
+// 			return (2);
+// 		}
+// 	}
+// 	return (0);
+// }
 
 /*
 Verifie que les chevrons sont bien assortis a leurs arguments :
@@ -92,126 +92,104 @@ Verifie que les chevrons sont bien assortis a leurs arguments :
 	- si rien apres renvoie erreur 🗸
 	- espaces ignores 🗸
 */
-static int	ft_parse_chevron(char *str)
-{
-	int	i;
-	int	flag;
-	char *line;
+// static int	ft_parse_chevron(char *str)
+// {
+// 	int	i;
+// 	int	flag;
+// 	char *line;
 
-	i = -1;
-	flag = 0;
-	while (str[++i])
-	{
-		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-		{
-			if (str[i] == '"')
-				flag = 1;
-			else if (str[i] == '\'')
-				flag = 2;
-			i++;
-		}
-		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
-			flag = 0;
-		if (str[i] == '>')
-		{
-			if (str[i + 1] == '>')
-				i++;
-			i++;
-			while (str[i] == ' ')
-				i++;
-			if (!((str[i - 1] == ' ' || str[i - 1] == '>') && (str[i] >= 33
-						&& str[i] <= 126) && str[i] != '>'))
-			{
-				printf("coucou garance\n");
-				/*printf("minishell: ");
-				printf("syntax error near unexpected token `newline'\n");*/
-				while (is_separator(str[i++]) == 1);
-				line = ft_error_message(str + (i -1)); //MALLOC
-				//IF ERROR MALLOC
-				return (ft_error_syntax(line, 2, 1));
-				//return (2);
-			}
-		}
-	}
-	return (0);
-}
+// 	i = -1;
+// 	flag = 0;
+// 	while (str[++i])
+// 	{
+// 		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+// 		{
+// 			if (str[i] == '"')
+// 				flag = 1;
+// 			else if (str[i] == '\'')
+// 				flag = 2;
+// 			i++;
+// 		}
+// 		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
+// 			flag = 0;
+// 		if (str[i] == '>')
+// 		{
+// 			if (str[i + 1] == '>')
+// 				i++;
+// 			i++;
+// 			while (str[i] == ' ')
+// 				i++;
+// 			if (!((str[i - 1] == ' ' || str[i - 1] == '>') && (str[i] >= 33
+// 						&& str[i] <= 126) && str[i] != '>'))
+// 			{
+// 				printf("coucou garance\n");
+// 				/*printf("minishell: ");
+// 				printf("syntax error near unexpected token `newline'\n");*/
+// 				while (is_separator(str[i++]) == 1);
+// 				line = ft_error_message(str + (i -1)); //MALLOC
+// 				//IF ERROR MALLOC
+// 				return (ft_error_syntax(line, 2, 1));
+// 				//return (2);
+// 			}
+// 		}
+// 	}
+// 	return (0);
+// }
 
 /*
 Verifie que les " et ' sont bien apparies
 	- quote entre quote 🗸
 	- pouvoir ajouter plusieurs quote entre 2 mm quote : "'bra'vo" 🗸
 */
+
 static int	ft_quote_order(char *str)
 {
 	int	dq = 0;
 	int	sq = 0;
-	int	i = 0;
+	int	i = -1;
 	
-	while (str[i])
+	while (str[++i])
 	{
-		if (str[i++] == '"')
+		if (str[i] == '"')
 		{
-			printf("str[%d] pour \" = %c\n", i, str[i]);
+			i++;
+			//printf("dans \" : str[%d] |%c|\n", i, str[i]);
 			dq++;
 			while(str[i] != '"' && str[i])
 				i++;
-			if (str[i++] == '"')
+			if (str[i] == '"')
 				dq++;
+			if (str[i + 1])
+				i++;
 			
 		}
-		printf("str[%d] apres \" = %c\n", i, str[i]);
-		if (str[i++] == '\'')
+		//printf("apres \" : str[%d] |%c|\n", i, str[i]);
+		//printf("dq : %d\n", dq);
+		//printf("sq : %d\n", sq);
+		if (str[i] == '\'')
 		{
-			printf("str[%d] pour \' = %c\n", i, str[i]);
+			i++;
+			//printf("dans \' : str[%d] |%c|\n", i, str[i]);
 			sq++;
 			while(str[i] != '\'' && str[i])
 				i++;
-			if (str[i++] == '\'')
+			if (str[i] == '\'')
 				sq++;
+			if (str[i + 1])
+				i++;
 		}
-		printf("str[%d] apres \' = %c\n", i, str[i]);
-		//i++;
+		//printf("apres \' : str[%d] |%c|\n", i, str[i]);
+		//printf("dq : %d\n", dq);
+		//printf("sq : %d\n", sq);
 	}
-	printf("dq : %d\n", dq);
-	printf("sq : %d\n", sq);
+	//printf("dq final : %d\n", dq);
+	//printf("sq final : %d\n", sq);
 	if (dq % 2 != 0 || sq % 2 != 0)
-		printf("C'est d'la merde\n");
+	{
+		printf("minishell: les quote ne sont pas appariees\n");
+		return (2);
+	}
 	return (0);
-	// char	*quote;
-	// int		count;
-	// int		i;
-	// int		flag;
-
-	// quote = malloc(sizeof(char) * ft_strlen(str));
-	// ft_bzero(quote, sizeof(char));
-	// count = -1;
-	// i = -1;
-	// flag = 0;
-	// while (str[++i])
-	// {
-	// 	if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
-	// 	{
-	// 		flag = 0;
-	// 	}
-	// 	if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-	// 	{
-	// 		if (count >= 0 && quote[count] == str[i])
-	// 			quote[count--] = '\0';
-	// 		else
-	// 			quote[++count] = str[i];
-	// 		// if (str[i] == '"')
-	// 		// 	flag = 1;
-	// 		// else if (str[i] == '\'')
-	// 		// 	flag = 2;
-	// 	}
-	// }
-	// if (count != -1)
-	// {
-	// 	printf("minishell: les guillemets ne sont pas correctement appariés.\n");
-	// 	return (2);
-	// }
-	// free(quote);
-	// return (0);
 }
 
 /*
@@ -232,20 +210,20 @@ char	*add_spaces(char *str)
 	i = 0;
 	j = 0;
 	count = 0;
-	// int	flag = 0;
+	int	flag = 0;
 	while (str[i])
 	{
-		// if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-		// {
-		// 	if(str[i] == '"')
-		// 		flag = 1;
-		// 	else if (str[i] == '\'')
-		// 		flag = 2;
-		// 	i++;
-		// }
-		// if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
-		// 	flag = 0;
-		if (is_operator(str[i]) == 1)
+		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		{
+			if(str[i] == '"')
+				flag = 1;
+			else if (str[i] == '\'')
+				flag = 2;
+			i++;
+		}
+		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
+			flag = 0;
+		if (is_operator(str[i]) == 1 && flag == 0)
 		{
 			if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i
 					- 1]) == 0)
@@ -257,22 +235,26 @@ char	*add_spaces(char *str)
 		}
 		i++;
 	}
+	printf("size str : %zu\n", i);
+	printf("size fstr : %zu\n", i + count);
 	fstr = malloc(sizeof(char) * (i + count + 1));
 	i = 0;
-	// flag = 0;
+	flag = 0;
 	while (str[i])
 	{
-		// if ((str[i] == '"' || str[i] == '\'') && flag == 0)
-		// {
-		// 	if(str[i] == '"')
-		// 		flag = 1;
-		// 	else if (str[i] == '\'')
-		// 		flag = 2;
-		// 	i++;
-		// }
-		// if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
-		// 	flag = 0;
-		if (is_operator(str[i]) == 1)
+		if ((str[i] == '"' || str[i] == '\'') && flag == 0)
+		{
+			if(str[i] == '"')
+				flag = 1;
+			else if (str[i] == '\'')
+				flag = 2;
+			fstr[j++] = str[i++];
+		}
+		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
+			flag = 0;
+		printf("leak%zu\n", i);
+		printf("str[i] : %c\n", str[i]);
+		if (is_operator(str[i]) == 1 && flag == 0)
 		{
 			if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i
 					- 1]) == 0)
@@ -280,12 +262,14 @@ char	*add_spaces(char *str)
 				if (is_operator(str[i - 1]) == 0)
 					fstr[j++] = ' ';
 				fstr[j] = str[i];
-			}
-			else if (i < ft_strlen(str) && ((str[i + 1] == str[i])
+				
+			}	
+			else if (i < ft_strlen(str) && str[i - 1] && ((str[i + 1] == str[i])
 					|| str[i] == str[i - 1]))
 			{
 				fstr[j] = str[i];
 			}
+		
 			if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0))
 			{
 				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i
@@ -307,14 +291,15 @@ char	*add_spaces(char *str)
 	fstr[j] = '\0';
 	return (fstr);
 }
+//(echo "((((>>||bravo")("lfhrkjgbrg"
 
 int	ft_parse_line(t_msh *minish)
 {
-	if(ft_parse_chevron(minish->line) == 2)
-		return (2);
-	if (ft_quote_order(minish->line) == 2)
+	/*if(ft_parse_chevron(minish->line) == 2)
 		return (2);
 	if(operator_pairing(minish->line) == 2)
+		return (2);*/
+	if (ft_quote_order(minish->line) == 2)
 		return (2);
 	minish->line = add_spaces(minish->line); // malloc
 	printf("str : _%s_\n", minish->line);
@@ -334,10 +319,10 @@ int	ft_parse_line(t_msh *minish)
 // 		if (!str)
 // 			return (1);
 // 		printf("str avant : _%s_\n", str);
-// 		if (operator_pairing(str) != 2)
+// 		/*if (operator_pairing(str) != 2)
 // 		{
 // 			if (ft_parse_chevron(str) != 2)
-// 			{
+// 			{*/
 // 				if (ft_quote_order(str) != 2)
 // 				{
 // 					fstr = add_spaces(str); // malloc
@@ -345,8 +330,8 @@ int	ft_parse_line(t_msh *minish)
 // 					printf("fstr apres : _%s_\n", fstr);
 // 					free(fstr);
 // 				}
-// 			}
-// 		}
+// 			//}
+// 		//}
 // 		printf("--------------------------------\n");
 // 	}
 // }

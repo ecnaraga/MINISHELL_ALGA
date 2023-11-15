@@ -25,3 +25,23 @@ ls: cannot access 'ls': No such file or directory
 'Erreurs a gerer dans EXEC'   libft	      minishell		   srcs
  includes		      Makefile	      objs		   tests_parsing
 */
+
+/*bash-5.1$ << $MDR
+> $MDR
+bash-5.1$ > $DONTEXISY
+bash: $DONTEXISY: ambiguous redirect
+bash-5.1$ < $DONTEXUT
+bash: $DONTEXUT: ambiguous redirect
+bash-5.1$ << $DOT
+> $DOT
+bash-5.1$ > PATH
+bash-5.1$ > $PATH
+bash: /mnt/nfs/homes/athiebau/bin:/mnt/nfs/homes/athiebau/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin: No such file or directory
+bash-5.1$ export TRUC=hihi
+bash-5.1$ > $TRUC
+bash-5.1$ > $TRUC'mdr'
+bash-5.1$ > $TRUC='mdr'
+bash-5.1$ export 3i
+bash: export: `3i': not a valid identifier
+bash-5.1$ export i3
+bash-5.1$ */
