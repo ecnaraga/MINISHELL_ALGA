@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 14:12:32 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:40:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,14 @@ int	ft_parse_ter(t_msh *msh)
 
 	i = -1;
 	j = 0;
-	if (msh->av[0].token == CHEVRON && msh->ac == 0)
+	if (msh->av[0].token == CHEVRON && msh->ac == 1)
 	{
-		if (ft_strlen(msh->av[0].data) == 2)
+		printf("test0\n");
+		if (ft_strlen(msh->av[0].data) <= 2)
+		{
+			printf("test1\n");
 			return (ft_error_syntax(ft_error_message_bis(NULL, 0), 2, 1));
+		}
 		else
 		{
 			chev = msh->av[0].data[0];

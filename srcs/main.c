@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 14:10:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:37:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main(int ac, char **av, char **env)
 	(void) av;
 	(void) env;
 
-	if (isatty(0) == 1)
+	if (isatty(0) == 1) // A REGLER test ./minishell | ./minishell
 	// printf("Value of stdin %d value of stdout %d\n", stdin, stdout);
 {	if (ac != 1)
 	{
@@ -66,6 +66,7 @@ int main(int ac, char **av, char **env)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
 		ft_token(&minish);
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+		printf("minish.ac = %d\n", minish.ac);
 		ft_parse_ter(&minish);
 		int i = -1;
 		while (minish.av[++i].data)
