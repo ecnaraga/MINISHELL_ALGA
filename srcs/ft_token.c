@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 10:10:23 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 15:23:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,5 @@ void	ft_token(t_msh *msh)
 		else
 			msh->av[i].token = CMD;
 	}
+	msh->av[i].token = 0;
 }

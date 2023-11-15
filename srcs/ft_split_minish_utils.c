@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/13 13:11:23 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 15:27:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ c : char courant dans la string
 c1 : char + 1 dans la string
 cm1 : char -1 dans la string
 */
-int	ft_test(char c, char c1, char cm1, t_quote *q)
+int	ft_test(char c, const char *c1, const char *cm1, t_quote *q)
 {
 	if (!c)
 		return (1);
@@ -50,11 +50,11 @@ int	ft_test(char c, char c1, char cm1, t_quote *q)
 		return (1);
 	if (c != '"' && c != 39)
 		return (0);
-	if (c == '"' && ((c1 && ft_isspace(c1) == 1)
-			|| (cm1 && ft_isspace(cm1) == 1)))
+	if (c == '"' && ((c1 && *c1 && ft_isspace(*c1) == 1)
+			|| (cm1 && ft_isspace(*cm1) == 1)))
 		return (0);
-	if (c == 39 && ((c1 && ft_isspace(c1) == 1)
-			|| (cm1 && ft_isspace(cm1) == 1)))
+	if (c == 39 && ((c1 && *c1 && ft_isspace(*c1) == 1)
+			|| (cm1 && ft_isspace(*cm1) == 1)))
 		return (0);
 	else
 		return (1);

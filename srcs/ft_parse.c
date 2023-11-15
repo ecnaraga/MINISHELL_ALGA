@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/15 14:26:30 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/15 16:56:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	is_separator(char c)
 
 static int	is_operator(char c)
 {
-	if (c == '|' || c == '<' || c == '>' || c == '&' || c == '(' || c == ')')
+	if (c == '|' || c == '&' || c == '(' || c == ')')
 		return (1);
 	else
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/13 17:22:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/15 15:46:32 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,17 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		*i += 1;
 	}
-	while (s[*i] && ft_test(s[*i], s[*i + 1], s[*i - 1], q) == 0)
+	if (i == 0 && s[*i] && ft_test(s[*i], &s[*i + 1], NULL, q) == 0)
+	{
+		ft_inc_quote(s[*i], &q->d, &q->s);
+		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
+			*dollar += 1;
+		if (ft_test_bis(s[*i], q->d, q->s) == 0)
+			l.lt++;
+		*i += 1;
+		l.k += 1;
+	}
+	while (s[*i] && ft_test(s[*i], &s[*i + 1], &s[*i - 1], q) == 0)
 	{
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
