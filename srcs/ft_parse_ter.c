@@ -6,11 +6,32 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 15:26:05 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 16:02:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
+
+char	*ft_error_message_final()
+{
+	if (!tmp_bis[0])
+	{
+		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
+		if (!message)
+			return (NULL);
+	}
+	else
+	{
+		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
+		if (!message)
+			return (NULL);
+		tmp = message;
+		message = ft_strjoin(message, "'\n");
+		free(tmp);
+		if (!message)
+			return (NULL);
+	}
+}
 
 char	*ft_error_message_chevron(char *str, int skip)
 {
@@ -62,38 +83,42 @@ char	*ft_error_message_chevron(char *str, int skip)
 	return (message);
 }
 
-// char	*ft_error_message_operator(char *str, int skip)
-// {
-// 	int	i;
-// 	int	j;
-// 	char c;
-// 	char tmp_bis[4];
-// 	char *tmp;
-// 	char *message;
+char	*ft_error_message_operator(char *str, int skip)
+{
+	int	i;
+	int	j;
+	// char c;
+	char tmp_bis[4];
+	char *tmp;
+	char *message;
 
-// 	i = 0;
-// 	j = 0;
-// 	c = str[0];
-// 	if (str[0])
-// 	if (!tmp_bis[0])
-// 	{
-// 		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
-// 		if (!message)
-// 			return (NULL);
-// 	}
-// 	else
-// 	{
-// 		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
-// 		if (!message)
-// 			return (NULL);
-// 		tmp = message;
-// 		message = ft_strjoin(message, "'\n");
-// 		free(tmp);
-// 		if (!message)
-// 			return (NULL);
-// 	}
-// 	return (message);
-// }
+	i = 0;
+	j = 0;
+	// c = str[0];
+	if (str[0] == '&')
+	{
+		
+	}
+	
+	// if (!tmp_bis[0])
+	// {
+	// 	message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
+	// 	if (!message)
+	// 		return (NULL);
+	// }
+	// else
+	// {
+		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
+		if (!message)
+			return (NULL);
+		tmp = message;
+		message = ft_strjoin(message, "'\n");
+		free(tmp);
+		if (!message)
+			return (NULL);
+	// }
+	return (message);
+}
 
 int	ft_same_char(char *str)
 {
