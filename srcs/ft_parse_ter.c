@@ -6,109 +6,90 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 17:35:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 12:21:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
 
-char	*ft_error_message_bis(char *str, int len_token)
+char	*ft_error_message_chevron(char *str, int skip)
 {
 	int	i;
+	int	j;
+	char c;
+	char tmp_bis[4];
 	char *tmp;
 	char *message;
 
-	i = -1;
-	if (!str || !str[0])
-		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
-	//IF ERROR
+	i = 0;
+	j = 0;
+	c = str[0];
+	if (skip == 1)
+	{
+		if (c == '>')
+			while(str[++i] && str[i] == c && i < 2);
+		else if (c == '<')
+		{
+			while(str[++i] && str[i] == c && i < 3);
+			if (str[i] && i == 1)
+				i++;
+		}
+	}
+	if (str[i])
+		c = str[i];
+	while (str[i] && ((c == '>' && str[i] == c && j < 2) || (c == '<' && str[i] == c && j < 3)))
+		tmp_bis[j++] = str[i++];
+	if (str[i] && str[i] != c && j == 1)
+		tmp_bis[j++] = str[i++];
+	tmp_bis[j] = '\0';
+	if (!tmp_bis[0])
+	{
+		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
+		if (!message)
+			return (NULL);
+	}
 	else
 	{
-		printf("str |%s| len_token %d\n", str, len_token);
-		str[len_token] = '\0';
-		printf("str |%s|\n", str);
-		message = ft_strjoin("minishell: syntax error near unexpected token `", str);
-		//IF ERROR
+		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
+		if (!message)
+			return (NULL);
 		tmp = message;
 		message = ft_strjoin(message, "'\n");
-		//IF ERROR
 		free(tmp);
+		if (!message)
+			return (NULL);
 	}
-	printf("message |%s|\n", message);
 	return (message);
 }
 
+int	ft_same_char(char *str)
+{
+	char 	c;
+	int		i;
 
+	c = str[0];
+	i = -1;
+	while (str[++i] && str[i] == c);
+	if (str[i])
+		return (1);
+	return (0);
+}
 
 int	ft_parse_ter(t_msh *msh)
 {
 	int	i;
 	int	j;
-	char chev;
 
 	i = -1;
 	j = 0;
 	if (msh->av[0].token == CHEVRON && msh->ac == 1)
-	{
-		chev = msh->av[0].data[0];
-		if (ft_strlen(msh->av[0].data) <= 2 || (chev == '<' && ft_strlen(msh->av[0].data) == 3))
-			return (ft_error_syntax(ft_error_message_bis(NULL, 0), 2, 1));
-		else
-		{
-			printf("test1\n");
-			while (msh->av[0].data[j] == chev && j < 6)
-				j++;
-			printf("j = %d\n", j);
-			if (j == 3 && chev == '>')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
-			if (j > 3 && chev == '>')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
-				
-			if (j == 4 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
-			if (j == 5 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
-			if (j > 5 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 3), 2, 1);
-			if (j == 2 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
-		}
-	}
+		return (ft_error_syntax(ft_error_message_chevron(msh->av[0].data, 1), 2, 1)); // POUR GARANCE : ajouter secu dans ft_error syntax si malloc failed dans message chevron + dans fonction appelent parse_ter
 	while (msh->av[++i].data)
 	{
-		chev = msh->av[i].data[0];
-		if (msh->av[i].token == CHEVRON && ft_strlen(msh->av[i].data) > 2)
-		{
-			while (msh->av[0].data[j] == chev && j < 6)
-				j++;
-			
-			if (j == 3 && chev == '>')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
-			if (j > 3 && chev == '>')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
-			if (j == 4 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 1), 2, 1);
-			if (j == 5 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
-			if (j > 5 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 3), 2, 1);
-			if (j == 2 && chev == '<')
-				ft_error_syntax(ft_error_message_bis(msh->av[0].data, 2), 2, 1);
-		}
-		// if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == CHEVRON)
-		// {
-		// 	if (ft_strlen(msh->av[i + 1].data) > 3)
-		// 	{
-		// 		line = ft_strjoin("minishell: syntax error near unexpected token `", msh->av[i + 1].data);
-		// 		temp = line;
-		// 		line = ft_strjoin(line, "'\n");
-		// 		free(temp);
-		// 	}
-		// 	else if (msh->av[i + 1].data[0] == '<')
-		// 		line = ft_strdup("minishell: syntax error near unexpected token `<<<'");
-		// 	return (ft_error_syntax(line, 2, 1));
-		// }
-		
+		if (msh->av[i].token == CHEVRON && (ft_strlen(msh->av[i].data) > 2 || ft_same_char(msh->av[i].data) == 1))
+			return (ft_error_syntax(ft_error_message_chevron(msh->av[i].data, 1), 2, 1));
+		if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == CHEVRON)
+			return (ft_error_syntax(ft_error_message_chevron(msh->av[i + 1].data, 0), 2, 1));
 	}
 	return (0);
 }
