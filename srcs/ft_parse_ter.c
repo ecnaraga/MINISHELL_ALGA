@@ -6,31 +6,29 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 16:02:50 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 17:29:00 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
 
-char	*ft_error_message_final()
+char	*ft_error_message_final(char *str)
 {
-	if (!tmp_bis[0])
-	{
+	char *tmp;
+	char *message;
+
+	if (!str[0])
 		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
-		if (!message)
-			return (NULL);
-	}
 	else
 	{
-		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
+		message = ft_strjoin("minishell: syntax error near unexpected token `", str); //MALLOC
 		if (!message)
 			return (NULL);
 		tmp = message;
 		message = ft_strjoin(message, "'\n");
 		free(tmp);
-		if (!message)
-			return (NULL);
 	}
+	return (message); //en cas d erreur de malloc du IF ou du dernier malloc du ELSE message == NULL dans pas de secu
 }
 
 char	*ft_error_message_chevron(char *str, int skip)
@@ -38,9 +36,7 @@ char	*ft_error_message_chevron(char *str, int skip)
 	int	i;
 	int	j;
 	char c;
-	char tmp_bis[4];
-	char *tmp;
-	char *message;
+	char tmp[4];
 
 	i = 0;
 	j = 0;
@@ -59,65 +55,20 @@ char	*ft_error_message_chevron(char *str, int skip)
 	if (str[i])
 		c = str[i];
 	while (str[i] && ((c == '>' && str[i] == c && j < 2) || (c == '<' && str[i] == c && j < 3)))
-		tmp_bis[j++] = str[i++];
+		tmp[j++] = str[i++];
 	if (str[i] && str[i] != c && j == 1)
-		tmp_bis[j++] = str[i++];
-	tmp_bis[j] = '\0';
-	if (!tmp_bis[0])
-	{
-		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
-		if (!message)
-			return (NULL);
-	}
-	else
-	{
-		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
-		if (!message)
-			return (NULL);
-		tmp = message;
-		message = ft_strjoin(message, "'\n");
-		free(tmp);
-		if (!message)
-			return (NULL);
-	}
-	return (message);
+		tmp[j++] = str[i++];
+	tmp[j] = '\0';
+	return (ft_error_message_final(tmp)); // retour NULL de malloc foire dans error_message_final a proteger dans ft_error syntax
 }
 
-char	*ft_error_message_operator(char *str, int skip)
+char	*ft_error_message_operator(char *str)
 {
-	int	i;
-	int	j;
-	// char c;
-	char tmp_bis[4];
-	char *tmp;
-	char *message;
-
-	i = 0;
-	j = 0;
-	// c = str[0];
-	if (str[0] == '&')
-	{
-		
-	}
-	
-	// if (!tmp_bis[0])
-	// {
-	// 	message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
-	// 	if (!message)
-	// 		return (NULL);
-	// }
-	// else
-	// {
-		message = ft_strjoin("minishell: syntax error near unexpected token `", tmp_bis); //MALLOC
-		if (!message)
-			return (NULL);
-		tmp = message;
-		message = ft_strjoin(message, "'\n");
-		free(tmp);
-		if (!message)
-			return (NULL);
-	// }
-	return (message);
+	if (str[0] == '&' && str[1] && str[1] == '|')
+		str[1] = '\0';
+	else if (str[1])
+		str[2] = '\0';
+	return (ft_error_message_final(str)); // retour NULL de malloc foire dans error_message_final a proteger dans ft_error syntax
 }
 
 int	ft_same_char(char *str)
@@ -140,10 +91,11 @@ int	ft_parse_ter(t_msh *msh)
 
 	i = -1;
 	j = 0;
+	printf("test\n");
 	if (msh->av[0].token == CHEVRON && msh->ac == 1)
 		return (ft_error_syntax(ft_error_message_chevron(msh->av[0].data, 1), 2, 1)); // POUR GARANCE : ajouter secu dans ft_error syntax si malloc failed dans message chevron + dans fonction appelent parse_ter
-	if (msh->av[0].token == OPERATOR || msh->av[msh->ac - 1].token == OPERATOR)
-		return (ft_error_syntax("COMMENCE OU FINIT PAR UN OPERATOR\n", 2, 0));
+	if (msh->av[0].token == OPERATOR /*|| msh->av[msh->ac - 1].token == OPERATOR*/)
+		return (ft_error_syntax(ft_error_message_operator(msh->av[0].data), 2, 1));
 	while (msh->av[++i].data)
 	{
 		/*CHEVRON*/
@@ -151,12 +103,17 @@ int	ft_parse_ter(t_msh *msh)
 			return (ft_error_syntax(ft_error_message_chevron(msh->av[i].data, 1), 2, 1));
 		if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == CHEVRON)
 			return (ft_error_syntax(ft_error_message_chevron(msh->av[i + 1].data, 0), 2, 1));
+		if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == OPERATOR)
+			return (ft_error_syntax(ft_error_message_operator(msh->av[i + 1].data), 2, 1));
 		
 		/*OPERATOR*/
 		if (msh->av[i].token == OPERATOR && (ft_strlen(msh->av[i].data) > 2 || ft_same_char(msh->av[i].data) == 1))
-			return (ft_error_syntax("OPERATOR TOO LONG\n", 2, 0));
+			return (ft_error_syntax(ft_error_message_operator(msh->av[i].data), 2, 1));
 		if (msh->av[i + 1].data && msh->av[i].token == OPERATOR && msh->av[i + 1].token == OPERATOR)
-			return (ft_error_syntax("TO_MUCH OPERATOR\n", 2, 0));
+			return (ft_error_syntax(ft_error_message_operator(msh->av[i].data), 2, 1));
 	}
+	if (msh->av[msh->ac - 1].token == OPERATOR)
+		return (ft_error_syntax(ft_error_message_operator(msh->av[msh->ac - 1].data), 2, 1));
 	return (0);
 }
+
