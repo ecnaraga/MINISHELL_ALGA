@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 11:16:01 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 14:35:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ int ft_parse_bis(t_msh *minish)
 	}
 	if (par_c != par_o) // POUR GERER SI PARENTHESE OUVERTE
 	{
-		return (ft_error_syntax("parentheses ouvertes...", 2, 1));
+		return (ft_error_syntax("parentheses ouvertes...\n", 2, 0));
 		// line = readline("> ");
 		// tmp = minish->line;
 		// minish->line = ft_strjoin(minish->line, " "); // MALLOC

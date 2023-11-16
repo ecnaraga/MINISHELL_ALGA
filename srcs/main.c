@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 17:31:58 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 14:56:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ int main(int ac, char **av, char **env)
 			continue ; //verifier si on revient au debut de la boucle
 		}
 		printf("PASSAGE ALIX TO GAGA\n");
-		if (ft_parse_bis(&minish) != 0)
-		{
-			free(minish.line);
-			continue ; //verifier si on revient au debut de la boucle
-		}
+		// if (ft_parse_bis(&minish) != 0)
+		// {
+		// 	free(minish.line);
+		// 	continue ; //verifier si on revient au debut de la boucle
+		// }
 		minish.av = ft_split_msh(minish.line); //malloc
 		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)

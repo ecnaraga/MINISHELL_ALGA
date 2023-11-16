@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 12:21:17 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 14:55:44 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	ft_parse_ter(t_msh *msh)
 			return (ft_error_syntax(ft_error_message_chevron(msh->av[i].data, 1), 2, 1));
 		if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == CHEVRON)
 			return (ft_error_syntax(ft_error_message_chevron(msh->av[i + 1].data, 0), 2, 1));
+		// if (msh->av[i + 1].data && msh->av[i].token == OPERATOR && msh->av[i + 1].token == OPERATOR)
+		// 	return (ft_error_syntax("TO_MUCH OPERATOR\n", 2, 0))
 	}
 	return (0);
 }
