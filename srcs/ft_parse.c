@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/15 16:56:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 16:31:54 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	is_separator(char c)
 
 static int	is_operator(char c)
 {
-	if (c == '|' || c == '&' || c == '(' || c == ')')
+	if (c == '(' || c == ')' || c == '>' || c == '<')
 		return (1);
 	else
 		return (0);
@@ -226,18 +226,18 @@ char	*add_spaces(char *str)
 			flag = 0;
 		if (is_operator(str[i]) == 1 && flag == 0)
 		{
-			if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i
-					- 1]) == 0)
+			if ((i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i
+					- 1]) == 0))
 				count++;
 			if (i < ft_strlen(str) && (str[i + 1] == str[i]))
 				i += 1;
-			if (i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0)
+			if ((i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')))
 				count++;
 		}
 		i++;
 	}
-	//printf("size str : %zu\n", i);
-	//printf("size fstr : %zu\n", i + count);
+	printf("size str : %zu\n", i);
+	printf("size fstr : %zu\n", i + count);
 	fstr = malloc(sizeof(char) * (i + count + 1));
 	i = 0;
 	flag = 0;
@@ -274,7 +274,7 @@ char	*add_spaces(char *str)
 				fstr[j] = str[i];
 			}
 		
-			if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0))
+			if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')))
 			{
 				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i
 							+ 1]) == 1 && str[i] != str[i + 1]))
