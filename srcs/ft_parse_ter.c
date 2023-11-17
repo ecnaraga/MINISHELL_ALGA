@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_ter.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 17:29:00 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/17 10:51:05 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,9 @@ int	ft_same_char(char *str)
 int	ft_parse_ter(t_msh *msh)
 {
 	int	i;
-	int	j;
 
 	i = -1;
-	j = 0;
-	printf("test\n");
+	printf("PARSE_TER\n");
 	if (msh->av[0].token == CHEVRON && msh->ac == 1)
 		return (ft_error_syntax(ft_error_message_chevron(msh->av[0].data, 1), 2, 1)); // POUR GARANCE : ajouter secu dans ft_error syntax si malloc failed dans message chevron + dans fonction appelent parse_ter
 	if (msh->av[0].token == OPERATOR /*|| msh->av[msh->ac - 1].token == OPERATOR*/)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 15:54:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/17 11:10:52 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,13 @@ int main(int ac, char **av, char **env)
 		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
-		ft_token(&minish);
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+		if (minish.ac == 0)
+		{
+			ft_free_split_msh(minish.av);
+			continue ;
+		}
+		ft_token(&minish);
 		printf("minish.ac = %d\n", minish.ac);
 		ft_parse_ter(&minish);
 		int i = -1;
