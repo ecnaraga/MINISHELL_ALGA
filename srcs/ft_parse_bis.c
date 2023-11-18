@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 14:35:58 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/18 10:25:43 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,54 +65,89 @@ int ft_parse_bis(t_msh *minish)
 	int prec_iss;
 	char *line;
 	int	i;
+	int chev;
+	int prec;
+	int multi_par;
 	
 	i = 0;
 	par_o = 0;
 	par_c = 0;
 	prec_iss = 0;
-	
+	chev = 0;
+	prec = 0;
+	multi_par = 0;
+	(void) multi_par;
 	while (minish->line[i])
 	{
 		if (minish->line[i] == '"')
 		{
 			while (minish->line[++i] && minish->line[i] != '"');
 			prec_iss = OTHER;
+			prec = OTHER;
 		}
 		else if (minish->line[i] == '\'')
 		{
 			while (minish->line[++i] && minish->line[i] != '\'');
 			prec_iss = OTHER;
+			prec = OTHER;
 		}
 		else if (ft_isspace(minish->line[i]) == 0)
+		{
 			i++;
+			prec = ISS;
+		}
 		else if (minish->line[i] == '(')
 		{
-			if (prec_iss == PAR_CLOSE /*|| prec_iss == OTHER*/)
+			if (prec_iss == PAR_CLOSE || (prec_iss == OTHER && chev == 1))
+			{
+				printf("ERROR 1\n");
 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
+			}
 			if (prec_iss == OTHER)
 			{
 				while (ft_isspace(minish->line[++i]) == 0);
 				line = ft_error_message(minish->line + i); //MALLOC
 				//IF ERROR MALLOC
+				printf("ERROR 2\n");
 				return (ft_error_syntax(line, 2, 1));
 			}
+			if (prec == PAR_OPEN) //
+				multi_par = 1;
 			prec_iss = PAR_OPEN;
+			prec = PAR_OPEN;
 			par_o += 1;
 			i++;
 		}
 		else if (minish->line[i] == ')')
 		{
-			if (prec_iss == PAR_OPEN)
+			if (prec_iss == PAR_OPEN && multi_par == 0)
+			{
+				printf("ERROR 3\n");
 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+			}
 			if (par_o <= par_c)
+			{
+				printf("ERROR 4\n");
 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+			}
+			if (par_o - par_c == 1) //
+				multi_par = 0;
 			prec_iss = PAR_CLOSE;
+			prec = PAR_CLOSE;
 			par_c += 1;
 			i++;
 		}
 		else if (minish->line[i] == '&' || minish->line[i] == '|')
 		{
 			prec_iss = OPERATOR;
+			prec = OPERATOR;
+			chev = 0;
+			multi_par = 0;//
+			i++;
+		}
+		else if (minish->line[i] == '>' || minish->line[i] == '<')
+		{
+			chev = 1;
 			i++;
 		}
 		else
@@ -121,14 +156,17 @@ int ft_parse_bis(t_msh *minish)
 			{
 				line = ft_error_message(minish->line + i); //MALLOC
 				//IF ERROR MALLOC
+				printf("ERROR 5\n");
 				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax
 			}
 			prec_iss = OTHER;
+			prec = OTHER;
 			i++;
 		}
 	}
 	if (par_c != par_o) // POUR GERER SI PARENTHESE OUVERTE
 	{
+		printf("ERROR 6\n");
 		return (ft_error_syntax("parentheses ouvertes...\n", 2, 0));
 		// line = readline("> ");
 		// tmp = minish->line;
@@ -171,23 +209,40 @@ int ft_parse_bis(t_msh *minish)
 	(( ls && ls )) = ((ls && ls))
 	echo Bravo && ((ls && ls)) && echo hehe
 	echo Bravo && ((ls && ls)) || echo hehe
+	( ( (( )) ) )
+	(())
+	(( ))
+	
 
 3- bash: syntax error near unexpected token + EXIT STATUS 2
-	( bravo ) ( bravo ) = (bravo) (bravo) = (bravo)(bravo) = ( bravo )( bravo ) => minishell: syntax error near unexpected token `('
-	( echo bravo ) ( bravo ) = (echo bravo) (bravo) = (echo bravo)(bravo) = ( echo bravo )( bravo )=> minishell: syntax error near unexpected token `('
-	() = ( ) = (      ) => syntax error near unexpected token `)'
-	) =        ) = bravo ) => syntax error near unexpected token `)'
+	1. ( bravo ) ( bravo ) = (bravo) (bravo) = (bravo)(bravo) = ( bravo )( bravo ) => minishell: syntax error near unexpected token `('
+	1. ( echo bravo ) ( bravo ) = (echo bravo) (bravo) = (echo bravo)(bravo) = ( echo bravo )( bravo )=> minishell: syntax error near unexpected token `('
+	3. () = ( ) = (      ) => syntax error near unexpected token `)'
+	3. ( ( ) )  => bash: syntax error near unexpected token `)'
+	3.( ( ( ( ) ) ) )  => bash: syntax error near unexpected token `)'
+	4. ) =        ) = bravo ) => syntax error near unexpected token `)'
 	
-	( echo ( bravo ) ) = ( echo( bravo )) = ( echo(bravo)) = (echo (bravo)) = ( echoo ( bravo ) echo ) = ( echoo ( bravo ) echo) = (( echo ) bravo ) = ( ( echo ) bravo ) => minishell: syntax error near unexpected token `bravo'
-	(( bravo ) ( bravo )) = ( (bravo)  (bravo) ) = ((bravo)  (bravo)) = ((bravo)(bravo)) = ((bravo)(bravo) ) = ( (bravo)(bravo) ) => minishell: syntax error near unexpected token `('
+	2. ( echo ( bravo ) ) = ( echo( bravo )) = ( echo(bravo)) = (echo (bravo)) = ( echoo ( bravo ) echo ) = ( echoo ( bravo ) echo) = (( echo ) bravo ) = ( ( echo ) bravo ) => minishell: syntax error near unexpected token `bravo'
+	1. (( bravo ) ( bravo )) = ( (bravo)  (bravo) ) = ((bravo)  (bravo)) = ((bravo)(bravo)) = ((bravo)(bravo) ) = ( (bravo)(bravo) ) => minishell: syntax error near unexpected token `('
+	1. > hola (ls && pwd) => bash: syntax error near unexpected token `('
+	1. > pwd (ls)
 	
 4- minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2 // AGERER DANS L EXEC
 	(( echo bravo )) = ((echo bravo)) => minishell: ((: echo bravo : syntax error in expression (error token is "bravo ")
+	( (( ( ) )) ) => minishell: ((: ( ) : syntax error: operand expected (error token is ") ")
+	(((()))) => minishell: ((: (()): syntax error: operand expected (error token is "))")
 */
 
 /*
 KO : 
-(( echo bravo )) -> mauvaise erreur
+export HOLA=bon(jour
+export HOLA=bon()jour
+
+bash-5.2$ echo ( bravo )
+bash: syntax error near unexpected token `bravo'
+bash-5.2$ echo echo ( bravo )
+bash: syntax error near unexpected token `('
+ 
 */
 
 

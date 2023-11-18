@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/17 11:10:52 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/17 13:38:00 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int main(int ac, char **av, char **env)
 			continue ;
 		}
 		ft_token(&minish);
-		printf("minish.ac = %d\n", minish.ac);
+		// printf("minish.ac = %d\n", minish.ac);
 		ft_parse_ter(&minish);
 		int i = -1;
 		while (minish.av[++i].data)
