@@ -13,6 +13,51 @@ Tests a revoir :
 export HOLA=bon(jour
 export HOLA=bon()jour
 
+"export"'HOLAbon' (jour
+
+
+bash-5.2$ export HOLA=bon(jour
+bash: syntax error near unexpected token `('
+bash-5.2$ export HOLA=bon&&(jour
+> ^C
+bash-5.2$ export && HOLA=bon&&(jour
+> export && HOLA=bon&&(jour^C
+bash-5.2$ export && HOLA=bon(jour
+bash: syntax error near unexpected token `('
+bash-5.2$ export && HOLA=bon (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ export && HOLAbon (jour
+bash: syntax error near unexpected token `jour'
+bash-5.2$ "export"'HOLAbon' (jour
+bash: syntax error near unexpected token `jour'
+bash-5.2$ export < infile HOLAbon (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ export infile < HOLAbon (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ < HOLAbon (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ infile < HOLAbon (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ infile < HOLAbon < (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ < ( op
+bash: syntax error near unexpected token `('
+bash-5.2$ > ( op
+bash: syntax error near unexpected token `('
+bash-5.2$ > > ( po)
+bash: syntax error near unexpected token `>'
+bash-5.2$ > re (po)
+bash: syntax error near unexpected token `('
+bash-5.2$ re > (iw
+bash: syntax error near unexpected token `('
+bash-5.2$ "export"'HOLAbon' (jour
+bash: syntax error near unexpected token `jour'
+bash-5.2$ "export" 'HOLAbon' (jour
+bash: syntax error near unexpected token `('
+bash-5.2$ 
+
+ATTENTION A CE TEST : "ech" (
+
 
 
 */

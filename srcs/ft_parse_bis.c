@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/18 10:25:43 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/19 11:03:03 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,10 @@ char	*ft_error_message(char *str)
 	char *message;
 
 	i = -1;
-	if (!str[i])
+	if (!str[0])
 		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
-	//IF ERROR
+	if (!message) //IF ERROR
+		return (NULL);
 	else
 	{
 		while (str[++i])
@@ -48,11 +49,12 @@ char	*ft_error_message(char *str)
 				break ;
 		str[i] = '\0';
 		message = ft_strjoin("minishell: syntax error near unexpected token `", str);
-		//IF ERROR
+		if (!message)//IF ERROR
+			return (NULL);
 		tmp = message;
 		message = ft_strjoin(message, "'\n");
-		//IF ERROR
 		free(tmp);
+		// IF ERROR => pas besoin car si apres return message ou null du coup
 	}
 	return (message);
 }
@@ -68,6 +70,7 @@ int ft_parse_bis(t_msh *minish)
 	int chev;
 	int prec;
 	int multi_par;
+	int multi_cmd;
 	
 	i = 0;
 	par_o = 0;
@@ -76,29 +79,34 @@ int ft_parse_bis(t_msh *minish)
 	chev = 0;
 	prec = 0;
 	multi_par = 0;
-	(void) multi_par;
+	multi_cmd = 0;
+	(void) multi_cmd;
 	while (minish->line[i])
 	{
-		if (minish->line[i] == '"')
+		if (minish->line[i] == '"')//mettre multicmd
 		{
 			while (minish->line[++i] && minish->line[i] != '"');
+			i++;
+			if (prec == ISS && prec_iss == OTHER)
+				multi_cmd = 2;
 			prec_iss = OTHER;
 			prec = OTHER;
 		}
-		else if (minish->line[i] == '\'')
+		else if (minish->line[i] == '\'')//mettre multicmd
 		{
 			while (minish->line[++i] && minish->line[i] != '\'');
+			i++;
+			if (prec == ISS && prec_iss == OTHER)
+				multi_cmd = 2;
 			prec_iss = OTHER;
 			prec = OTHER;
 		}
-		else if (ft_isspace(minish->line[i]) == 0)
-		{
-			i++;
+		else if (ft_isspace(minish->line[i++]) == 0)
 			prec = ISS;
-		}
 		else if (minish->line[i] == '(')
 		{
-			if (prec_iss == PAR_CLOSE || (prec_iss == OTHER && chev == 1))
+			printf("prec_iss %d multi_cmd= %d\n", prec_iss, multi_cmd);
+			if (prec_iss == PAR_CLOSE || (prec_iss == OTHER && (chev == 1 || multi_cmd > 1)))
 			{
 				printf("ERROR 1\n");
 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
@@ -108,10 +116,10 @@ int ft_parse_bis(t_msh *minish)
 				while (ft_isspace(minish->line[++i]) == 0);
 				line = ft_error_message(minish->line + i); //MALLOC
 				//IF ERROR MALLOC
-				printf("ERROR 2\n");
+				printf("ERROR 2 line |%s| i %d\n", line, i);
 				return (ft_error_syntax(line, 2, 1));
 			}
-			if (prec == PAR_OPEN) //
+			if (prec == PAR_OPEN)
 				multi_par = 1;
 			prec_iss = PAR_OPEN;
 			prec = PAR_OPEN;
@@ -130,7 +138,7 @@ int ft_parse_bis(t_msh *minish)
 				printf("ERROR 4\n");
 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
 			}
-			if (par_o - par_c == 1) //
+			if (par_o - par_c == 1)
 				multi_par = 0;
 			prec_iss = PAR_CLOSE;
 			prec = PAR_CLOSE;
@@ -142,12 +150,15 @@ int ft_parse_bis(t_msh *minish)
 			prec_iss = OPERATOR;
 			prec = OPERATOR;
 			chev = 0;
-			multi_par = 0;//
+			multi_par = 0;
+			multi_cmd = 0; //
 			i++;
 		}
 		else if (minish->line[i] == '>' || minish->line[i] == '<')
 		{
 			chev = 1;
+			prec_iss = OTHER;
+			prec = OTHER;
 			i++;
 		}
 		else
@@ -160,6 +171,8 @@ int ft_parse_bis(t_msh *minish)
 				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax
 			}
 			prec_iss = OTHER;
+			if (prec != OTHER)//
+				multi_cmd += 1;
 			prec = OTHER;
 			i++;
 		}
