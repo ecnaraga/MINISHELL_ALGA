@@ -45,3 +45,10 @@ bash-5.1$ export 3i
 bash: export: `3i': not a valid identifier
 bash-5.1$ export i3
 bash-5.1$ */
+
+/*PIPE*/
+/*
+echo bravo | < NO_existing_infile echo hello > outfile | < outfile cat
+    bash: NO_existing_infile: No such file or directory
+    bash: outfile: No such file or directory
+*/

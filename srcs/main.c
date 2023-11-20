@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/20 14:40:48 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 16:49:16 by athiebau         ###   ########.fr       */
+/*   Created: 2023/11/20 12:19:01 by galambey          #+#    #+#             */
+/*   Updated: 2023/11/20 12:19:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 # include "../includes/minishell.h"
 
@@ -69,9 +68,14 @@ int main(int ac, char **av, char **env)
 		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
-		ft_token(&minish);
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
-		printf("minish.ac = %d\n", minish.ac);
+		if (minish.ac == 0)
+		{
+			ft_free_split_msh(minish.av);
+			continue ;
+		}
+		ft_token(&minish);
+		// printf("minish.ac = %d\n", minish.ac);
 		ft_parse_ter(&minish);
 		int i = -1;
 		while (minish.av[++i].data)

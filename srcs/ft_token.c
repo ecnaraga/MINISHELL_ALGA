@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 15:23:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 16:33:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void	ft_token(t_msh *msh)
 			else if (msh->av[i + 1].data)
 				msh->av[i + 1].token = INFILE;
 		}
-		else if (ft_strcmp(msh->av[i].data, "&&") == 0 || ft_strcmp(msh->av[i].data, "||") == 0 || ft_strcmp(msh->av[i].data, "|") == 0)
+		// else if (ft_strncmp(msh->av[i].data, "&&", 2) == 0 || ft_strncmp(msh->av[i].data, "||", 2) == 0 || ft_strcmp(msh->av[i].data, "|") == 0)
+		else if (msh->av[i].data[0] == '&' || msh->av[i].data[0] == '|')
 			msh->av[i].token = OPERATOR;
 		else if (msh->av[i].data[0] == '(')
 			msh->av[i].token = PAR_OPEN;
