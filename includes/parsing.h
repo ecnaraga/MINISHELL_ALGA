@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/15 15:16:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/16 16:36:03 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	*ft_free_split_msh(t_split *strs);
 ft_parse.c
 */
 int		ft_parse_line(t_msh *minish);
+void	ft_parse_bis_bis(t_msh *minish);
 
 /*
 ft_parse_bis

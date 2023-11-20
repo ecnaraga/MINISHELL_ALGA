@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/16 16:31:54 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/20 11:45:42 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	is_separator(char c)
 
 static int	is_operator(char c)
 {
-	if (c == '(' || c == ')' || c == '>' || c == '<')
+	if (c == '(' || c == ')' || c == '>' || c == '<' || c == '&' || c == '|')
 		return (1);
 	else
 		return (0);
@@ -231,13 +231,13 @@ char	*add_spaces(char *str)
 				count++;
 			if (i < ft_strlen(str) && (str[i + 1] == str[i]))
 				i += 1;
-			if ((i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')))
+			if ((i + 1 < ft_strlen(str) && is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')) && !((str[i] == '|' && str[i + 1] == '&') || (str[i] == '&' && str[i + 1] == '|')))
 				count++;
 		}
 		i++;
 	}
-	printf("size str : %zu\n", i);
-	printf("size fstr : %zu\n", i + count);
+	//printf("size str : %zu\n", i);
+	//printf("size fstr : %zu\n", i + count);
 	fstr = malloc(sizeof(char) * (i + count + 1));
 	i = 0;
 	flag = 0;
@@ -253,8 +253,6 @@ char	*add_spaces(char *str)
 		}
 		if ((str[i] == '"'  && flag == 1 ) || (str[i] == '\'' && flag == 2))
 			flag = 0;
-		//printf("leak%zu\n", i);
-		//printf("str[i] : %c\n", str[i]);
 		if (is_operator(str[i]) == 1 && flag == 0)
 		{
 			if (i > 0 && is_separator(str[i - 1]) == 0 && is_operator(str[i
@@ -265,26 +263,21 @@ char	*add_spaces(char *str)
 				fstr[j] = str[i];
 				
 			}	
-			else if (i < ft_strlen(str) && (str[i + 1] == str[i]))
-			{
+			else if (i < ft_strlen(str) && (str[i] == str[i + 1]))
 				fstr[j] = str[i];
-			}
 			else if (i < ft_strlen(str) && i > 0 && (str[i] == str[i - 1]))
-			{
 				fstr[j] = str[i];
-			}
-		
 			if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')))
 			{
-				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i
-							+ 1]) == 1 && str[i] != str[i + 1]))
+				
+				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i + 1]) == 1 && str[i] != str[i + 1]))
 				{
 					fstr[j] = str[i];
-					if (i + 1 < ft_strlen(str))
+					if (i + 1 < ft_strlen(str) && (!((str[i] == '|' && str[i + 1] == '&') || (str[i] == '&' && str[i + 1] == '|'))))
 						fstr[++j] = ' ';
 				}
 			}
-			else if (i < ft_strlen(str) && is_separator(str[i + 1]) == 1)
+			else if (i < ft_strlen(str))
 				fstr[j] = str[i];
 		}
 		else
@@ -306,7 +299,7 @@ int	ft_parse_line(t_msh *minish)
 	if (ft_quote_order(minish->line) == 2)
 		return (2);
 	minish->line = add_spaces(minish->line); // malloc
-	printf("str : _%s_\n", minish->line);
+	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
 }
 
