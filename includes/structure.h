@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 16:21:56 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/20 16:27:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef	struct s_split
 	int			token;
 	int			dollar;
 	t_dollar	*type;
-	t_alloc		*m;
 }		t_split;
 
 typedef	struct s_msh
@@ -49,6 +48,7 @@ typedef	struct s_msh
 	char	*line;	
 	int		ac;
 	t_split *av;
+	t_alloc		m;
 	t_node	*node;
 }		t_msh;
 

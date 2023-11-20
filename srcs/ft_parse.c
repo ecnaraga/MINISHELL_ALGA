@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/20 16:23:58 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/20 16:32:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ Ajouter des espaces avant et apres des operateurs
 	- calcul du malloc 🗸
 	- guillemets X
 */
-char	*add_spaces(char *str)
+char	*add_spaces(char *str, t_alloc *m)
 {
-	char	*fstr;
+	// char	*fstr;
 	size_t	i;
 	size_t	j;
 	int		count;
@@ -142,7 +142,7 @@ char	*add_spaces(char *str)
 	}
 	// printf("size str : %zu\n", i);
 	// printf("size fstr : %zu\n", i + count);
-	fstr = malloc(sizeof(char) * (i + count + 1));
+	m->fstr = malloc(sizeof(char) * (i + count + 1));
 	i = 0;
 	flag = 0;
 	while (str[i])
@@ -153,7 +153,7 @@ char	*add_spaces(char *str)
 				flag = 1;
 			else if (str[i] == '\'')
 				flag = 2;
-			fstr[j++] = str[i++];
+			m->fstr[j++] = str[i++];
 		}
 		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
 			flag = 0;
@@ -163,13 +163,13 @@ char	*add_spaces(char *str)
 					- 1]) == 0)
 			{
 				if (is_operator(str[i - 1]) == 0)
-					fstr[j++] = ' ';
-				fstr[j] = str[i];
+					m->fstr[j++] = ' ';
+				m->fstr[j] = str[i];
 			}
 			else if (i < ft_strlen(str) && (str[i] == str[i + 1]))
-				fstr[j] = str[i];
+				m->fstr[j] = str[i];
 			else if (i < ft_strlen(str) && i > 0 && (str[i] == str[i - 1]))
-				fstr[j] = str[i];
+				m->fstr[j] = str[i];
 			if (i < ft_strlen(str) && (ft_isspace(str[i + 1]) == 1)
 				&& !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<'
 						&& str[i + 1] == '>')) && !((str[i] == '>' && str[i
@@ -178,37 +178,37 @@ char	*add_spaces(char *str)
 				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i
 							+ 1]) == 1 && str[i] != str[i + 1]))
 				{
-					fstr[j] = str[i];
+					m->fstr[j] = str[i];
 					if (i + 1 < ft_strlen(str) && !((str[i] == '|' && str[i
 								+ 1] == '&') || (str[i] == '&' && str[i
 								+ 1] == '|')))
-						fstr[++j] = ' ';
+						m->fstr[++j] = ' ';
 				}
 			}
 			else if (i < ft_strlen(str))
-				fstr[j] = str[i];
+				m->fstr[j] = str[i];
 		}
 		else
-			fstr[j] = str[i];
+			m->fstr[j] = str[i];
 		i++;
 		j++;
 	}
-	fstr[j] = '\0';
-	return (fstr);
+	m->fstr[j] = '\0';
+	return (m->fstr);
 }
 
 int	ft_parse_line(t_msh *minish)
 {
-	char *tmp;
 	/*if(ft_parse_chevron(minish->line) == 2)
 		return (2);
 	if(operator_pairing(minish->line) == 2)
 		return (2);*/
 	if (ft_quote_order(minish->line) == 2)
 		return (2);
-	tmp = minish->line;
-	minish->line = add_spaces(minish->line); // malloc
-	free(tmp);
+	minish->m.tmp = minish->line;
+	minish->line = add_spaces(minish->line, &(minish)->m); // malloc
+	free(minish->m.tmp);
+	minish->m.tmp == NULL; // pour reinitialiser ptr en vue de free dans ctrlD
 	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
 }
