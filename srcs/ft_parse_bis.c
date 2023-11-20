@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 11:45:38 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/20 16:22:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,29 @@ char	*ft_error_message(char *str)
 		// IF ERROR => pas besoin car si apres return message ou null du coup
 	}
 	return (message);
+}
+
+int	ft_count_char(char *str)
+{
+	int i;
+	int count;
+	int err;
+	char c;
+
+	i = -1;
+	count = 0;
+	err = 0;
+	c = str[0];
+	while (str[++i] == c)
+		count++;
+	printf ("count %d\n", count);
+	if (!str[i] || (str[i] != c && ft_isspace(str[i]) != 0) || ((c == '>' || c == '&' || c == '|') && count > 2) || (count > 3 && c == '<'))
+	{
+		printf ("ERREUR c = %c str[%d] = %c\n", c, i, str[i]);
+		return (1);
+	}
+	return (0);
+	// if (!str[i] || (str[1] != c && ft_isspace(str[1]) != 0 )|| ((c == '>' || c == '&' || c == '|') && count > 2) || (count > 3 && c == '<'))
 }
 
 //penser a gerer les parentheses dans des quotes
@@ -152,6 +175,8 @@ int ft_parse_bis(t_msh *minish)
 		}
 		else if (minish->line[i] == '&' || minish->line[i] == '|')
 		{
+			if (((prec_iss == OPERATOR || prec_iss == CHEVRON) && prec == ISS) ||  ft_count_char(minish->line + i) == 1)
+				return (0);
 			prec_iss = OPERATOR;
 			prec = OPERATOR;
 			chev = 0;
@@ -162,7 +187,7 @@ int ft_parse_bis(t_msh *minish)
 		else if (minish->line[i] == '>' || minish->line[i] == '<')//passer en chevron
 		{
 			chev = 1;
-			if (prec_iss == CHEVRON && prec == ISS)
+			if ((prec_iss == CHEVRON && prec == ISS) ||  ft_count_char(minish->line + i) == 1)
 				return (0);
 			prec_iss = CHEVRON;
 			prec = CHEVRON;
@@ -184,7 +209,7 @@ int ft_parse_bis(t_msh *minish)
 			i++;
 		}
 	}
-	if (par_c != par_o) // POUR GERER SI PARENTHESE OUVERTE
+	if (par_c != par_o && prec_iss != OPERATOR) // POUR GERER SI PARENTHESE OUVERTE
 	{
 		printf("ERROR 6\n");
 		return (ft_error_syntax("parentheses ouvertes...\n", 2, 0));
@@ -266,7 +291,7 @@ echo Bravo && ((ls && ls)) || echo hehe
 (( ))
 	
 
-3- bash: syntax error near unexpected token + EXIT STATUS 2
+3- NE DOIT PAS PASSER DANS EXEC : bash: syntax error near unexpected token + EXIT STATUS 2
 1. 
 ( bravo ) ( bravo )
 (bravo) (bravo)
@@ -319,7 +344,7 @@ bravo )
 1. 
 > pwd (ls)
 
-4- minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2 // AGERER DANS L EXEC
+4- DOIT ALLER DANS EXEC ET ERREUR DU TYPE : minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2 // AGERER DANS L EXEC
 (( echo bravo ))
 ((echo bravo))
 	=> minishell: ((: echo bravo : syntax error in expression (error token is "bravo ")

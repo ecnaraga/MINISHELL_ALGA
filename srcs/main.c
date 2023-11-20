@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:19:01 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 12:19:07 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:17:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,27 @@ int main(int ac, char **av, char **env)
 		}
 		//ft_parse_bis_bis(&minish);
 		minish.av = ft_split_msh(minish.line); //malloc
-		free(minish.line); //free malloc main.c lg 32
 		if (!minish.av)
+		{
+			free(minish.line);
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
+		}
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
 		if (minish.ac == 0)
 		{
+			free(minish.line);
 			ft_free_split_msh(minish.av);
 			continue ;
 		}
 		ft_token(&minish);
 		// printf("minish.ac = %d\n", minish.ac);
-		ft_parse_ter(&minish);
+		if (ft_parse_ter(&minish) != 0)
+		{
+			free(minish.line);
+			ft_free_split_msh(minish.av);
+			continue ;
+		}
+		free(minish.line);
 		int i = -1;
 		while (minish.av[++i].data)
 		{
