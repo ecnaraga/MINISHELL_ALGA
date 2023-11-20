@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/20 11:45:42 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/20 12:01:18 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,13 +267,13 @@ char	*add_spaces(char *str)
 				fstr[j] = str[i];
 			else if (i < ft_strlen(str) && i > 0 && (str[i] == str[i - 1]))
 				fstr[j] = str[i];
-			if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')))
+			if (i < ft_strlen(str) && (is_separator(str[i + 1]) == 0) && !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<' && str[i + 1] == '>')) && !((str[i] == '>' && str[i + 1] == '(') || (str[i] == '<' && str[i + 1] == '(')))
 			{
 				
 				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i + 1]) == 1 && str[i] != str[i + 1]))
 				{
 					fstr[j] = str[i];
-					if (i + 1 < ft_strlen(str) && (!((str[i] == '|' && str[i + 1] == '&') || (str[i] == '&' && str[i + 1] == '|'))))
+					if (i + 1 < ft_strlen(str) && !((str[i] == '|' && str[i + 1] == '&') || (str[i] == '&' && str[i + 1] == '|')))
 						fstr[++j] = ' ';
 				}
 			}
