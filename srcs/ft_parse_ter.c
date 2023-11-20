@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_ter.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/17 13:36:56 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/20 15:27:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ char	*ft_error_message_chevron(char *str, int skip)
 		else if (c == '<')
 		{
 			while(str[++i] && str[i] == c && i < 3);
-			if (str[i] && i == 1)
-				i++;
+			// if (str[i] && i == 1)
+			// 	i++;
 		}
 	}
 	if (str[i])
@@ -94,6 +94,8 @@ int	ft_same_char(char *str)
 	return (0);
 }
 
+
+
 int	ft_parse_ter(t_msh *msh)
 {
 	int	i;
@@ -124,6 +126,49 @@ int	ft_parse_ter(t_msh *msh)
 	// 	return (ft_error_syntax(ft_error_message_operator(msh->av[msh->ac - 1].data, 0), 2, 1));
 	if (msh->av[msh->ac - 1].token == CHEVRON)
 		return (ft_error_syntax(ft_error_message_chevron(msh->av[msh->ac - 1].data, 1), 2, 1));
+
+	if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
+	{
+		ft_free_split_msh(msh->av);
+		char *line = readline("> ");
+		char *tmp = msh->line;
+		msh->line = ft_strjoin(msh->line, " "); // MALLOC
+		// IF ERROR MALLOC
+		free(tmp);
+		tmp = msh->line;
+		msh->line = ft_strjoin(msh->line, line); // MALLOC
+		// IF ERROR MALLOC
+		free(tmp);
+		free(line);
+		add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
+		ft_parse_line(msh); // MALLOC
+		// IF ERROR MALLOC
+		ft_parse_bis(msh); // MALLOC
+		// IF ERROR MALLOC
+		msh->av = ft_split_msh(msh->line); //malloc
+		if (!msh->av)
+		{
+			free(msh->line);
+			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
+		}
+		msh->ac = ft_structtablen(msh->av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+		if (msh->ac == 0)
+		{
+			free(msh->line);
+			ft_free_split_msh(msh->av);
+			return (1) ; //Verif quel exitstatus
+		}
+		ft_token(msh);
+		// printf("msh->ac = %d\n", msh->ac);
+		if (ft_parse_ter(msh) != 0)
+		{
+			free(msh->line);
+			ft_free_split_msh(msh->av);
+			return (1) ; //Verif quel exitstatus
+		}
+	}
 	return (0);
 }
+
+
 

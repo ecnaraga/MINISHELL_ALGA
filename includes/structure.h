@@ -6,12 +6,20 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/14 14:54:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/20 16:21:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTURE_H
 # define STRUCTURE_H
+
+typedef	struct s_alloc
+{
+	char *tmp; //parse_line && parse_bis/error_message&& parseter/message_final
+	char *fstr; //parse_line UNNIQUEMENT
+	char *message; //parse_bis/error_message && parseter/message_final
+}		t_alloc;
+
 
 typedef	struct s_node
 {
@@ -20,7 +28,7 @@ typedef	struct s_node
 	
 }		t_node;
 
-typedef struct d_dollar
+typedef struct s_dollar
 {
 	int	expnd;
 	int	len_variable; // donne la len de la variable d environnement $ inclus
@@ -32,6 +40,7 @@ typedef	struct s_split
 	int			token;
 	int			dollar;
 	t_dollar	*type;
+	t_alloc		*m;
 }		t_split;
 
 typedef	struct s_msh
