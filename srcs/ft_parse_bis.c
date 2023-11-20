@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/19 11:03:03 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/20 11:45:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,11 @@ char	*ft_error_message(char *str)
 
 	i = -1;
 	if (!str[0])
+	{
 		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
-	if (!message) //IF ERROR
-		return (NULL);
+		if (!message) //IF ERROR
+			return (NULL);
+	}
 	else
 	{
 		while (str[++i])
@@ -87,7 +89,7 @@ int ft_parse_bis(t_msh *minish)
 		{
 			while (minish->line[++i] && minish->line[i] != '"');
 			i++;
-			if (prec == ISS && prec_iss == OTHER)
+			if (prec == ISS && (prec_iss == OTHER || prec_iss == CHEVRON))
 				multi_cmd = 2;
 			prec_iss = OTHER;
 			prec = OTHER;
@@ -96,22 +98,25 @@ int ft_parse_bis(t_msh *minish)
 		{
 			while (minish->line[++i] && minish->line[i] != '\'');
 			i++;
-			if (prec == ISS && prec_iss == OTHER)
+			if (prec == ISS && (prec_iss == OTHER || prec_iss == CHEVRON))
 				multi_cmd = 2;
 			prec_iss = OTHER;
 			prec = OTHER;
 		}
-		else if (ft_isspace(minish->line[i++]) == 0)
+		else if (ft_isspace(minish->line[i]) == 0)
+		{
 			prec = ISS;
+			i++;
+		}
 		else if (minish->line[i] == '(')
 		{
-			printf("prec_iss %d multi_cmd= %d\n", prec_iss, multi_cmd);
-			if (prec_iss == PAR_CLOSE || (prec_iss == OTHER && (chev == 1 || multi_cmd > 1)))
+			printf("prec_iss %d multi_cmd= %d i = %d\n", prec_iss, multi_cmd, i);
+			if (prec_iss == PAR_CLOSE || ((prec_iss == OTHER || prec_iss == CHEVRON) && (chev == 1 || multi_cmd > 1)))
 			{
 				printf("ERROR 1\n");
 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
 			}
-			if (prec_iss == OTHER)
+			if (prec_iss == OTHER || prec_iss == CHEVRON)
 			{
 				while (ft_isspace(minish->line[++i]) == 0);
 				line = ft_error_message(minish->line + i); //MALLOC
@@ -154,11 +159,13 @@ int ft_parse_bis(t_msh *minish)
 			multi_cmd = 0; //
 			i++;
 		}
-		else if (minish->line[i] == '>' || minish->line[i] == '<')
+		else if (minish->line[i] == '>' || minish->line[i] == '<')//passer en chevron
 		{
 			chev = 1;
-			prec_iss = OTHER;
-			prec = OTHER;
+			if (prec_iss == CHEVRON && prec == ISS)
+				return (0);
+			prec_iss = CHEVRON;
+			prec = CHEVRON;
 			i++;
 		}
 		else
@@ -203,47 +210,123 @@ int ft_parse_bis(t_msh *minish)
 /*TESTS : 
 
 1- DOIT FONCTIONNER :
-	( bravo ) = (bravo)
-	( b ravo ) = (b ravo)
-	( bravo ) && ( bravo ) = (bravo) && (bravo)
-	( echo bravo ) && ( bravo ) = (echo bravo) && (bravo) = ( echo bravo )&&( bravo ) = (echo bravo)&&(bravo)
-	
-	( ( bravo ) ) = ( ( bravo )) = (( bravo ) ) = ( (bravo) ) = ((bravo) ) = (( bravo) )
-	( ( bravo ) ) && ( ( bravo ) )
-	( ( bravo ) && ( bravo ) ) = (( bravo ) && ( bravo )) = ((bravo ) && ( bravo)) = ((bravo) && (bravo)) = ((bravo)&&(bravo)) = ( (bravo)&&(bravo) )
-	( ( echo bravo ) ) = ((echo bravo) ) = ( (echo bravo)) = ( ( echo bravo )) = (( echo bravo ) )
-	(( bravo ) && bravo ) = ((bravo) && bravo) = ( (bravo) && bravo) = ( ( bravo ) && bravo )
-	( bravo && (bravo)) = ( bravo && (bravo) ) = ( bravo && ( bravo ) ) = ( bravo && ( bravo ))
-	( ( ls && ls ) ) = (( ls && ls ) ) = ( ( ls && ls ))
-	(( echo && ( bravo )) && la ) = (( echo && ( bravo ) ) && la ) = ( ( echo && ( bravo ) ) && la ) = ( ( echo && ( bravo )) && la )
+( bravo )
+(bravo)
+( b ravo )
+(b ravo)
+( bravo ) && ( bravo )
+(bravo) && (bravo)
+( echo bravo ) && ( bravo )
+(echo bravo) && (bravo)
+( echo bravo )&&( bravo )
+(echo bravo)&&(bravo)
+( ( bravo ) )
+( ( bravo ))
+(( bravo ) )
+( (bravo) )
+((bravo) )
+(( bravo) )
+( ( bravo ) ) && ( ( bravo ) )
+( ( bravo ) && ( bravo ) )
+(( bravo ) && ( bravo ))
+((bravo ) && ( bravo))
+((bravo) && (bravo))
+((bravo)&&(bravo))
+( (bravo)&&(bravo) )
+( ( echo bravo ) )
+((echo bravo) )
+( (echo bravo))
+( ( echo bravo ))
+(( echo bravo ) )
+(( bravo ) && bravo )
+((bravo) && bravo)
+( (bravo) && bravo)
+( ( bravo ) && bravo )
+( bravo && (bravo))
+( bravo && (bravo) )
+( bravo && ( bravo ) )
+( bravo && ( bravo ))
+( ( ls && ls ) )
+(( ls && ls ) )
+( ( ls && ls ))
+(( echo && ( bravo )) && la )
+(( echo && ( bravo ) ) && la )
+( ( echo && ( bravo ) ) && la )
+( ( echo && ( bravo )) && la )
 	
 2- DOIT PASSER TEST PARSING MAIS EN EXEC : N IMPRIME RIEN + EXITSTATUS = 1 // AGERER DANS L EXEC
-	(( bravo )) = ((bravo))
-	(( ls && ls )) = ((ls && ls))
-	echo Bravo && ((ls && ls)) && echo hehe
-	echo Bravo && ((ls && ls)) || echo hehe
-	( ( (( )) ) )
-	(())
-	(( ))
+(( bravo ))
+((bravo))
+(( ls && ls ))
+((ls && ls))
+echo Bravo && ((ls && ls)) && echo hehe
+echo Bravo && ((ls && ls)) || echo hehe
+( ( (( )) ) )
+(())
+(( ))
 	
 
 3- bash: syntax error near unexpected token + EXIT STATUS 2
-	1. ( bravo ) ( bravo ) = (bravo) (bravo) = (bravo)(bravo) = ( bravo )( bravo ) => minishell: syntax error near unexpected token `('
-	1. ( echo bravo ) ( bravo ) = (echo bravo) (bravo) = (echo bravo)(bravo) = ( echo bravo )( bravo )=> minishell: syntax error near unexpected token `('
-	3. () = ( ) = (      ) => syntax error near unexpected token `)'
-	3. ( ( ) )  => bash: syntax error near unexpected token `)'
-	3.( ( ( ( ) ) ) )  => bash: syntax error near unexpected token `)'
-	4. ) =        ) = bravo ) => syntax error near unexpected token `)'
-	
-	2. ( echo ( bravo ) ) = ( echo( bravo )) = ( echo(bravo)) = (echo (bravo)) = ( echoo ( bravo ) echo ) = ( echoo ( bravo ) echo) = (( echo ) bravo ) = ( ( echo ) bravo ) => minishell: syntax error near unexpected token `bravo'
-	1. (( bravo ) ( bravo )) = ( (bravo)  (bravo) ) = ((bravo)  (bravo)) = ((bravo)(bravo)) = ((bravo)(bravo) ) = ( (bravo)(bravo) ) => minishell: syntax error near unexpected token `('
-	1. > hola (ls && pwd) => bash: syntax error near unexpected token `('
-	1. > pwd (ls)
-	
+1. 
+( bravo ) ( bravo )
+(bravo) (bravo)
+(bravo)(bravo)
+( bravo )( bravo )
+	=> minishell: syntax error near unexpected token `('
+1. 
+( echo bravo ) ( bravo )
+(echo bravo) (bravo)
+(echo bravo)(bravo)
+( echo bravo )( bravo )=> minishell: syntax error near unexpected token `('
+3. 
+()
+( )
+(      )
+	=> syntax error near unexpected token `)'
+3. 
+( ( ) ) 
+	=> bash: syntax error near unexpected token `)'
+3.
+( ( ( ( ) ) ) ) 
+	=> bash: syntax error near unexpected token `)'
+4. 
+)
+		)
+bravo )
+=> syntax error near unexpected token `)'
+
+2. 
+( echo ( bravo ) )
+( echo( bravo ))
+( echo(bravo))
+(echo (bravo))
+( echoo ( bravo ) echo )
+( echoo ( bravo ) echo)
+(( echo ) bravo )
+( ( echo ) bravo )
+	=> minishell: syntax error near unexpected token `bravo'
+1. 
+(( bravo ) ( bravo ))
+( (bravo)  (bravo) )
+((bravo)  (bravo))
+((bravo)(bravo))
+((bravo)(bravo) )
+( (bravo)(bravo) )
+	=> minishell: syntax error near unexpected token `('
+1. 
+> hola (ls && pwd)
+	=> bash: syntax error near unexpected token `('
+1. 
+> pwd (ls)
+
 4- minishell: ((: bravo  bravo: syntax error in expression (error token is "bravo")  + EXIT STATUS 2 // AGERER DANS L EXEC
-	(( echo bravo )) = ((echo bravo)) => minishell: ((: echo bravo : syntax error in expression (error token is "bravo ")
-	( (( ( ) )) ) => minishell: ((: ( ) : syntax error: operand expected (error token is ") ")
-	(((()))) => minishell: ((: (()): syntax error: operand expected (error token is "))")
+(( echo bravo ))
+((echo bravo))
+	=> minishell: ((: echo bravo : syntax error in expression (error token is "bravo ")
+( (( ( ) )) )
+	=> minishell: ((: ( ) : syntax error: operand expected (error token is ") ")
+(((())))
+	=> minishell: ((: (()): syntax error: operand expected (error token is "))")
 */
 
 /*
