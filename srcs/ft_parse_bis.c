@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 16:22:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/21 10:11:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ int ft_error_syntax(char *str, int exitstatus, int clean) // a modifier
 	return (exitstatus);
 }
 
-char	*ft_error_message(char *str)
+char	*ft_error_message(t_msh *msh, char *str)
 {
 	int	i;
-	char *tmp;
-	char *message;
+	// char *tmp;
+	// char *message;
 
 	i = -1;
 	if (!str[0])
 	{
-		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
-		if (!message) //IF ERROR
+		msh->m.message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
+		if (!msh->m.message) //IF ERROR
 			return (NULL);
 	}
 	else
@@ -50,15 +50,16 @@ char	*ft_error_message(char *str)
 			if (ft_isspace(str[i]) == 0)
 				break ;
 		str[i] = '\0';
-		message = ft_strjoin("minishell: syntax error near unexpected token `", str);
-		if (!message)//IF ERROR
+		msh->m.message = ft_strjoin("minishell: syntax error near unexpected token `", str);
+		if (!msh->m.message)//IF ERROR
 			return (NULL);
-		tmp = message;
-		message = ft_strjoin(message, "'\n");
-		free(tmp);
+		msh->m.tmp = msh->m.message;
+		msh->m.message = ft_strjoin(msh->m.message, "'\n");
+		free(msh->m.tmp);
+		msh->m.tmp = NULL;
 		// IF ERROR => pas besoin car si apres return message ou null du coup
 	}
-	return (message);
+	return (msh->m.message);
 }
 
 int	ft_count_char(char *str)
@@ -85,7 +86,7 @@ int	ft_count_char(char *str)
 }
 
 //penser a gerer les parentheses dans des quotes
-int ft_parse_bis(t_msh *minish)
+int ft_parse_bis(t_msh *msh)
 {
 	int par_o;
 	int par_c;
@@ -106,32 +107,32 @@ int ft_parse_bis(t_msh *minish)
 	multi_par = 0;
 	multi_cmd = 0;
 	(void) multi_cmd;
-	while (minish->line[i])
+	while (msh->line[i])
 	{
-		if (minish->line[i] == '"')//mettre multicmd
+		if (msh->line[i] == '"')//mettre multicmd
 		{
-			while (minish->line[++i] && minish->line[i] != '"');
+			while (msh->line[++i] && msh->line[i] != '"');
 			i++;
 			if (prec == ISS && (prec_iss == OTHER || prec_iss == CHEVRON))
 				multi_cmd = 2;
 			prec_iss = OTHER;
 			prec = OTHER;
 		}
-		else if (minish->line[i] == '\'')//mettre multicmd
+		else if (msh->line[i] == '\'')//mettre multicmd
 		{
-			while (minish->line[++i] && minish->line[i] != '\'');
+			while (msh->line[++i] && msh->line[i] != '\'');
 			i++;
 			if (prec == ISS && (prec_iss == OTHER || prec_iss == CHEVRON))
 				multi_cmd = 2;
 			prec_iss = OTHER;
 			prec = OTHER;
 		}
-		else if (ft_isspace(minish->line[i]) == 0)
+		else if (ft_isspace(msh->line[i]) == 0)
 		{
 			prec = ISS;
 			i++;
 		}
-		else if (minish->line[i] == '(')
+		else if (msh->line[i] == '(')
 		{
 			printf("prec_iss %d multi_cmd= %d i = %d\n", prec_iss, multi_cmd, i);
 			if (prec_iss == PAR_CLOSE || ((prec_iss == OTHER || prec_iss == CHEVRON) && (chev == 1 || multi_cmd > 1)))
@@ -141,11 +142,12 @@ int ft_parse_bis(t_msh *minish)
 			}
 			if (prec_iss == OTHER || prec_iss == CHEVRON)
 			{
-				while (ft_isspace(minish->line[++i]) == 0);
-				line = ft_error_message(minish->line + i); //MALLOC
+				while (ft_isspace(msh->line[++i]) == 0);
+				// line = ft_error_message(msh, msh->line + i); //MALLOC
+				msh->m.message = ft_error_message(msh, msh->line + i); //MALLOC
 				//IF ERROR MALLOC
-				printf("ERROR 2 line |%s| i %d\n", line, i);
-				return (ft_error_syntax(line, 2, 1));
+				printf("ERROR 2 line |%s| i %d\n", msh->m.message, i);
+				return (ft_error_syntax(msh->m.message, 2, 1));
 			}
 			if (prec == PAR_OPEN)
 				multi_par = 1;
@@ -154,7 +156,7 @@ int ft_parse_bis(t_msh *minish)
 			par_o += 1;
 			i++;
 		}
-		else if (minish->line[i] == ')')
+		else if (msh->line[i] == ')')
 		{
 			if (prec_iss == PAR_OPEN && multi_par == 0)
 			{
@@ -173,9 +175,9 @@ int ft_parse_bis(t_msh *minish)
 			par_c += 1;
 			i++;
 		}
-		else if (minish->line[i] == '&' || minish->line[i] == '|')
+		else if (msh->line[i] == '&' || msh->line[i] == '|')
 		{
-			if (((prec_iss == OPERATOR || prec_iss == CHEVRON) && prec == ISS) ||  ft_count_char(minish->line + i) == 1)
+			if (((prec_iss == OPERATOR || prec_iss == CHEVRON) && prec == ISS) ||  ft_count_char(msh->line + i) == 1)
 				return (0);
 			prec_iss = OPERATOR;
 			prec = OPERATOR;
@@ -184,10 +186,10 @@ int ft_parse_bis(t_msh *minish)
 			multi_cmd = 0; //
 			i++;
 		}
-		else if (minish->line[i] == '>' || minish->line[i] == '<')//passer en chevron
+		else if (msh->line[i] == '>' || msh->line[i] == '<')//passer en chevron
 		{
 			chev = 1;
-			if ((prec_iss == CHEVRON && prec == ISS) ||  ft_count_char(minish->line + i) == 1)
+			if ((prec_iss == CHEVRON && prec == ISS) ||  ft_count_char(msh->line + i) == 1)
 				return (0);
 			prec_iss = CHEVRON;
 			prec = CHEVRON;
@@ -195,9 +197,9 @@ int ft_parse_bis(t_msh *minish)
 		}
 		else
 		{
-			if (prec_iss == PAR_CLOSE && minish->line[i] != '>' && minish->line[i] != '<')
+			if (prec_iss == PAR_CLOSE && msh->line[i] != '>' && msh->line[i] != '<')
 			{
-				line = ft_error_message(minish->line + i); //MALLOC
+				line = ft_error_message(msh, msh->line + i); //MALLOC
 				//IF ERROR MALLOC
 				printf("ERROR 5\n");
 				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax

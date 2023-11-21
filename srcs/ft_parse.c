@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/20 16:32:50 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/21 10:12:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ int	ft_parse_line(t_msh *minish)
 	minish->m.tmp = minish->line;
 	minish->line = add_spaces(minish->line, &(minish)->m); // malloc
 	free(minish->m.tmp);
-	minish->m.tmp == NULL; // pour reinitialiser ptr en vue de free dans ctrlD
+	minish->m.tmp = NULL; // pour reinitialiser ptr en vue de free dans ctrlD
 	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
 }
