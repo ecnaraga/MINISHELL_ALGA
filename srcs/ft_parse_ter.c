@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 15:27:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/21 10:26:15 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,16 +130,18 @@ int	ft_parse_ter(t_msh *msh)
 	if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	{
 		ft_free_split_msh(msh->av);
-		char *line = readline("> ");
-		char *tmp = msh->line;
+		msh->m.new_line = readline("> ");
+		msh->m.tmp = msh->line;
 		msh->line = ft_strjoin(msh->line, " "); // MALLOC
 		// IF ERROR MALLOC
-		free(tmp);
-		tmp = msh->line;
-		msh->line = ft_strjoin(msh->line, line); // MALLOC
+		free(msh->m.tmp);
+		msh->m.tmp = msh->line;
+		msh->line = ft_strjoin(msh->line, msh->m.new_line); // MALLOC
 		// IF ERROR MALLOC
-		free(tmp);
-		free(line);
+		free(msh->m.tmp);
+		msh->m.tmp = NULL;
+		free(msh->m.new_line);
+		msh->m.new_line = NULL;
 		add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
 		ft_parse_line(msh); // MALLOC
 		// IF ERROR MALLOC

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/21 10:12:38 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 10:49:55 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_inc_quote(char c, int *d_q, int *s_q);
 /*
 ft_split_minish.c
 */
-t_split	*ft_split_msh(char const *s); //MALLOC
+t_split	*ft_split_msh(/*t_msh *msh, */char const *s); //MALLOC
 
 /*
 ft_split_minish_utils.c
@@ -70,5 +70,11 @@ void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q);
 ft_token.c
 */
 void	ft_token(t_msh *msh);
+
+/*
+ft_magic_malloc.c
+*/
+void *ft_magic_malloc(int rule, size_t size, void *addr);
+
 
 #endif

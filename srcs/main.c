@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 12:19:01 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 15:17:07 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 11:57:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,19 @@
 /*TO DO
 - return, exit, ATTENTION AU CODE ERREURS RETOURNES*/
 
+void	ft_init_pointer(t_msh *msh, int env)
+{
+	if (env == 0)
+		msh->env = NULL;
+	msh->line = NULL;
+	msh->av = NULL;
+	msh->m.tmp = NULL;
+	msh->m.fstr = NULL;
+	msh->m.message = NULL;
+	msh->m.new_line = NULL;
+	msh->m.strs = NULL;
+}
+
 int main(int ac, char **av, char **env)
 {
 	t_msh	minish;
@@ -22,6 +35,7 @@ int main(int ac, char **av, char **env)
 	(void) av;
 	(void) env;
 
+	ft_init_pointer(&minish, 0);
 	if (isatty(0) == 1) // A REGLER test ./minishell | ./minishell
 	// printf("Value of stdin %d value of stdout %d\n", stdin, stdout);
 {	if (ac != 1)
@@ -33,6 +47,7 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		//if (signal (SIGINT, &ft_free) == - 1);
+		ft_init_pointer(&minish, 1);
 		minish.line = readline("Minishell$ "); //malloc
 		if (!minish.line)
 		{
@@ -42,6 +57,7 @@ int main(int ac, char **av, char **env)
 		if (!minish.line[0]) // a verifier aussi pas la meme chose NE PAS RETURNNNNN
 		{
 			free(minish.line); // exit status doit etre == 0
+			minish.line = NULL;
 			continue ;	
 		}
 		add_history(minish.line);
@@ -55,26 +71,32 @@ int main(int ac, char **av, char **env)
 		if (ft_parse_line(&minish) != 0)
 		{
 			free(minish.line);
+			minish.line = NULL;
 			continue ; //verifier si on revient au debut de la boucle
 		}
 		printf("PASSAGE ALIX TO GAGA\n");
 		if (ft_parse_bis(&minish) != 0)
 		{
 			free(minish.line);
+			minish.line = NULL;
 			continue ; //verifier si on revient au debut de la boucle
 		}
 		//ft_parse_bis_bis(&minish);
-		minish.av = ft_split_msh(minish.line); //malloc
+		minish.av = ft_split_msh(/*&minish, */minish.line); //malloc
 		if (!minish.av)
 		{
 			free(minish.line);
+			minish.line = NULL;
 			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
 		}
 		minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
 		if (minish.ac == 0)
 		{
 			free(minish.line);
-			ft_free_split_msh(minish.av);
+			minish.line = NULL;
+			// ft_free_split_msh(minish.av);
+			minish.av = NULL;
+			ft_magic_malloc(FLUSH, 0, NULL);
 			continue ;
 		}
 		ft_token(&minish);
@@ -82,7 +104,8 @@ int main(int ac, char **av, char **env)
 		if (ft_parse_ter(&minish) != 0)
 		{
 			free(minish.line);
-			ft_free_split_msh(minish.av);
+			// ft_free_split_msh(minish.av);
+			ft_magic_malloc(FLUSH, 0, NULL);
 			continue ;
 		}
 		free(minish.line);
@@ -106,6 +129,8 @@ int main(int ac, char **av, char **env)
 		}
 		
 		// minish.ac = ft_structtablen(minish.av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
-		ft_free_split_msh(minish.av);
+		// ft_free_split_msh(minish.av);
+		ft_magic_malloc(PRINT, 0, NULL);
+		ft_magic_malloc(FLUSH, 0, NULL);
 	} 
 }}

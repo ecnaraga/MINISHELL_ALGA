@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free_split_minish.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 09:39:11 by garance           #+#    #+#             */
-/*   Updated: 2023/11/11 11:05:47 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/21 10:21:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ void	*ft_free_split_msh(t_split *strs)
 		i++;
 	}
 	free(strs);
+	strs = NULL;
 	return (NULL);
 }

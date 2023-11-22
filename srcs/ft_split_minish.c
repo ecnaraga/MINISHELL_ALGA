@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/15 15:46:32 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 10:49:24 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ static int	ft_alloc_type(t_split *strs, int j)
 	strs[j].type = NULL;
 	if (strs[j].dollar > 0)
 	{
-		strs[j].type = (t_dollar *)malloc(sizeof(t_dollar) * strs[j].dollar); // MALLOC
+		// strs[j].type = (t_dollar *)malloc(sizeof(t_dollar) * strs[j].dollar); // MALLOC
+		strs[j].type = ft_magic_malloc(MALLOC, sizeof(t_dollar) * strs[j].dollar, NULL); // MALLOC
 		if (strs[j].type == NULL)
 			return (1);
 		d = -1;
@@ -152,7 +153,8 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 	{
 		strs[j].dollar = 0;
 		l = ft_count_letter(s, &q, &i, &strs[j].dollar);
-		strs[j].data = (char *)malloc(sizeof(char) * (l.lt + 1)); // MALLOC DANS BOUCLE
+		// strs[j].data = (char *)malloc(sizeof(char) * (l.lt + 1)); // MALLOC DANS BOUCLE
+		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL); // MALLOC DANS BOUCLE
 		if (strs[j].data == NULL)
 			return (ft_free_strs(strs, j));
 		strs[j].token = TO_DEFINE;
@@ -173,7 +175,7 @@ type = Voir explication de ft_split_strs (ci-dessus)
 Separateurs = Isspaces si PAS entre double ou single quote(d_q ou s_q)
 Renvoie NULL en cas d'erreur de malloc
 */
-t_split	*ft_split_msh(char const *s)
+t_split	*ft_split_msh(/*t_msh *msh, */char const *s)
 {
 	int		wd;
 	t_split	*strs;
@@ -181,7 +183,8 @@ t_split	*ft_split_msh(char const *s)
 	if (!s)
 		return (NULL);
 	wd = ft_countwords(s);
-	strs = (t_split *)malloc(sizeof(t_split) * (wd + 1)); //MALLOC
+	// msh->m.strs = (t_split *)malloc(sizeof(t_split) * (wd + 1)); //MALLOC
+	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL); //MALLOC
 	if (strs == NULL)
 		return (NULL);
 	if (ft_split_strs(s, strs, wd) == NULL) //MALLOC
