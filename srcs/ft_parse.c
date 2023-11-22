@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/21 10:12:07 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 11:11:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@
 // 	}
 // }
 
+/*----------------------------------------------------------------------------*/
+
 static int	is_operator(char c)
 {
 	if (c == '(' || c == ')' || c == '>' || c == '<' || c == '&' || c == '|')
@@ -44,8 +46,6 @@ static int	is_operator(char c)
 	else
 		return (0);
 }
-
-/*----------------------------------------------------------------------------*/
 
 /*
 Verifie que les " et ' sont bien apparies
@@ -199,10 +199,6 @@ char	*add_spaces(char *str, t_alloc *m)
 
 int	ft_parse_line(t_msh *minish)
 {
-	/*if(ft_parse_chevron(minish->line) == 2)
-		return (2);
-	if(operator_pairing(minish->line) == 2)
-		return (2);*/
 	if (ft_quote_order(minish->line) == 2)
 		return (2);
 	minish->m.tmp = minish->line;
