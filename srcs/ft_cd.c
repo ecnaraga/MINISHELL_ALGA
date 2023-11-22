@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/22 12:00:37 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/22 16:16:38 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,33 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 /*----------------------------------------------------------------------------*/
 
-char	*get_old_pwd()
+char	*get_cwd(char **env)
+{
+	int	i;
+	char	*str;
+	
+	i = -1;
+	str = NULL;
+	while (env[++i])
+	{
+		if (!ft_strncmp(env[i], "PWD=", 4))
+		{
+			str = env[i] + 4;
+			break ;
+		}
+	}
+	return (str);
+}
+
+char	*get_old_pwd(char **env)
 {
 	char	*tmp;
 	char	*old_pwd;
 
-	tmp = getcwd(NULL, 0); //malloc
+	tmp = get_cwd(env);
 	if (!tmp)
 	{
-		perror("minishell:");
+		//ERROR MESSAGE
 		return (NULL);
 	}
 	else
@@ -77,11 +95,9 @@ char	*get_old_pwd()
 		old_pwd = ft_strjoin("OLDPWD=", tmp); //malloc
 		if (!old_pwd)
 		{
-			//free(tmp);
 			perror("minishell:");
 			return (NULL);
 		}
-		free(tmp);
 		return (old_pwd);
 	}
 }
@@ -101,13 +117,18 @@ char	*get_path(char	**str)
 	return (path);
 }
 
+// void	change_env(char *old_pwd)
+// {
+	
+// }
+
 void	builtin_cd(char **str, char **env)
 {
 	char	*path;
 	char	*old_pwd;
 	(void)env;
 
-	old_pwd = get_old_pwd(); //malloc
+	old_pwd = get_old_pwd(env); //malloc
 	printf("old_pwd : %s\n", old_pwd);
 	if (!old_pwd)
 		return;
@@ -116,13 +137,15 @@ void	builtin_cd(char **str, char **env)
 	if (!path)
 	{
 		free(old_pwd);
-		perror("minishell:");
 		return;
 	}
 	if (chdir(path) == 0)
+	{
+		printf("oui\n"); 
 		change_env(old_pwd);
+	}
 	else
-		//free ?
+		perror("minishell");
 	free(old_pwd);
 }
 
