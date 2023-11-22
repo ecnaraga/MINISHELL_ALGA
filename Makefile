@@ -16,7 +16,8 @@ SRCS = main.c \
 	   ft_strlcpy_minish.c \
 	   ft_strlcpy_minish_utils.c \
 	   ft_structtablen.c \
-	   ft_token.c
+	   ft_token.c \
+	   ft_magic_malloc.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)
@@ -25,7 +26,7 @@ OBJS := $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 #DEPS := $(OBJS_BONUS:.o=.d)
 CC = cc
-C_FLAGS = -Wall -Wextra -Werror  -MMD
+C_FLAGS = -Wall -Wextra -Werror -g3 -MMD
 LIB_FLAGS = -lreadline
 INC_LIBFT = ./libft/libft.a
 DIR_DUP     = mkdir -p $(@D)

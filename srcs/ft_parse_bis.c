@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/21 10:11:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 16:22:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,25 @@ int ft_error_syntax(char *str, int exitstatus, int clean) // a modifier
 	printf("str %s\n", str);
 	ft_putstr_fd(str, 2);
 	if (clean == 1)
-		free(str);
+	{
+		ft_magic_malloc(FREE, 0, str);
+		str = NULL;
+	}
 	return (exitstatus);
 }
 
 char	*ft_error_message(t_msh *msh, char *str)
 {
 	int	i;
-	// char *tmp;
-	// char *message;
+	char *tmp;
+	char *message;
 
 	i = -1;
+	(void) msh;
 	if (!str[0])
 	{
-		msh->m.message = ft_strdup("minishell: syntax error near unexpected token `newline'\n");
-		if (!msh->m.message) //IF ERROR
+		message = ft_magic_malloc(ADD, 0, ft_strdup("minishell: syntax error near unexpected token `newline'\n"));
+		if (!message)
 			return (NULL);
 	}
 	else
@@ -50,16 +54,14 @@ char	*ft_error_message(t_msh *msh, char *str)
 			if (ft_isspace(str[i]) == 0)
 				break ;
 		str[i] = '\0';
-		msh->m.message = ft_strjoin("minishell: syntax error near unexpected token `", str);
-		if (!msh->m.message)//IF ERROR
+		message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str));
+		if (!message)
 			return (NULL);
-		msh->m.tmp = msh->m.message;
-		msh->m.message = ft_strjoin(msh->m.message, "'\n");
-		free(msh->m.tmp);
-		msh->m.tmp = NULL;
-		// IF ERROR => pas besoin car si apres return message ou null du coup
+		tmp = message;
+		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
+		ft_magic_malloc(FREE, 0, tmp);
 	}
-	return (msh->m.message);
+	return (message);
 }
 
 int	ft_count_char(char *str)
@@ -75,14 +77,9 @@ int	ft_count_char(char *str)
 	c = str[0];
 	while (str[++i] == c)
 		count++;
-	printf ("count %d\n", count);
 	if (!str[i] || (str[i] != c && ft_isspace(str[i]) != 0) || ((c == '>' || c == '&' || c == '|') && count > 2) || (count > 3 && c == '<'))
-	{
-		printf ("ERREUR c = %c str[%d] = %c\n", c, i, str[i]);
 		return (1);
-	}
 	return (0);
-	// if (!str[i] || (str[1] != c && ft_isspace(str[1]) != 0 )|| ((c == '>' || c == '&' || c == '|') && count > 2) || (count > 3 && c == '<'))
 }
 
 //penser a gerer les parentheses dans des quotes
@@ -91,12 +88,12 @@ int ft_parse_bis(t_msh *msh)
 	int par_o;
 	int par_c;
 	int prec_iss;
-	char *line;
 	int	i;
 	int chev;
 	int prec;
 	int multi_par;
 	int multi_cmd;
+	char *message;
 	
 	i = 0;
 	par_o = 0;
@@ -134,20 +131,16 @@ int ft_parse_bis(t_msh *msh)
 		}
 		else if (msh->line[i] == '(')
 		{
-			printf("prec_iss %d multi_cmd= %d i = %d\n", prec_iss, multi_cmd, i);
 			if (prec_iss == PAR_CLOSE || ((prec_iss == OTHER || prec_iss == CHEVRON) && (chev == 1 || multi_cmd > 1)))
-			{
-				printf("ERROR 1\n");
 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
-			}
 			if (prec_iss == OTHER || prec_iss == CHEVRON)
 			{
 				while (ft_isspace(msh->line[++i]) == 0);
 				// line = ft_error_message(msh, msh->line + i); //MALLOC
-				msh->m.message = ft_error_message(msh, msh->line + i); //MALLOC
+				message = ft_error_message(msh, msh->line + i); //MALLOC
 				//IF ERROR MALLOC
-				printf("ERROR 2 line |%s| i %d\n", msh->m.message, i);
-				return (ft_error_syntax(msh->m.message, 2, 1));
+				printf("ERROR 2 line |%s| i %d\n", message, i);
+				return (ft_error_syntax(message, 2, 1));
 			}
 			if (prec == PAR_OPEN)
 				multi_par = 1;
@@ -199,10 +192,10 @@ int ft_parse_bis(t_msh *msh)
 		{
 			if (prec_iss == PAR_CLOSE && msh->line[i] != '>' && msh->line[i] != '<')
 			{
-				line = ft_error_message(msh, msh->line + i); //MALLOC
+				msh->m.message = ft_error_message(msh, msh->line + i); //MALLOC
 				//IF ERROR MALLOC
 				printf("ERROR 5\n");
-				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax
+				return (ft_error_syntax(msh->m.message, 2, 1)); // a free dans la fonction error_syntax
 			}
 			prec_iss = OTHER;
 			if (prec != OTHER)//

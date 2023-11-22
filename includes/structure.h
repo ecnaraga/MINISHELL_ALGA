@@ -6,19 +6,13 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 16:27:16 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:59:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTURE_H
 # define STRUCTURE_H
 
-typedef	struct s_alloc
-{
-	char *tmp; //parse_line && parse_bis/error_message&& parseter/message_final
-	char *fstr; //parse_line UNNIQUEMENT
-	char *message; //parse_bis/error_message && parseter/message_final
-}		t_alloc;
 
 
 typedef	struct s_node
@@ -41,6 +35,16 @@ typedef	struct s_split
 	int			dollar;
 	t_dollar	*type;
 }		t_split;
+
+typedef	struct s_alloc
+{
+	char *tmp; //parse_line && parse_bis/error_message&& parseter/message_final
+	char *fstr; //parse_line UNNIQUEMENT
+	char *message; //parse_bis/error_message && parseter/message_final
+	char *new_line;
+	t_split *strs; // UNIQUEMENT POUR SPLIT
+}		t_alloc;
+
 
 typedef	struct s_msh
 {
@@ -96,6 +100,15 @@ enum	e_parenthesis
 {
 	OTHER = 10,
 	ISS = 11,
+};
+
+enum	e_malloc
+{
+	MALLOC,
+	ADD,
+	FREE,
+	FLUSH,
+	PRINT,//a effacer
 };
 
 #endif

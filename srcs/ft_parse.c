@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/22 11:11:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/22 14:26:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ Ajouter des espaces avant et apres des operateurs
 	- calcul du malloc 🗸
 	- guillemets X
 */
-char	*add_spaces(char *str, t_alloc *m)
+char	*add_spaces(char *str)
 {
-	// char	*fstr;
+	char	*fstr;
 	size_t	i;
 	size_t	j;
 	int		count;
@@ -142,7 +142,7 @@ char	*add_spaces(char *str, t_alloc *m)
 	}
 	// printf("size str : %zu\n", i);
 	// printf("size fstr : %zu\n", i + count);
-	m->fstr = malloc(sizeof(char) * (i + count + 1));
+	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL);
 	i = 0;
 	flag = 0;
 	while (str[i])
@@ -153,7 +153,7 @@ char	*add_spaces(char *str, t_alloc *m)
 				flag = 1;
 			else if (str[i] == '\'')
 				flag = 2;
-			m->fstr[j++] = str[i++];
+			fstr[j++] = str[i++];
 		}
 		if ((str[i] == '"' && flag == 1) || (str[i] == '\'' && flag == 2))
 			flag = 0;
@@ -163,13 +163,13 @@ char	*add_spaces(char *str, t_alloc *m)
 					- 1]) == 0)
 			{
 				if (is_operator(str[i - 1]) == 0)
-					m->fstr[j++] = ' ';
-				m->fstr[j] = str[i];
+					fstr[j++] = ' ';
+				fstr[j] = str[i];
 			}
 			else if (i < ft_strlen(str) && (str[i] == str[i + 1]))
-				m->fstr[j] = str[i];
+				fstr[j] = str[i];
 			else if (i < ft_strlen(str) && i > 0 && (str[i] == str[i - 1]))
-				m->fstr[j] = str[i];
+				fstr[j] = str[i];
 			if (i < ft_strlen(str) && (ft_isspace(str[i + 1]) == 1)
 				&& !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<'
 						&& str[i + 1] == '>')) && !((str[i] == '>' && str[i
@@ -178,33 +178,31 @@ char	*add_spaces(char *str, t_alloc *m)
 				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i
 							+ 1]) == 1 && str[i] != str[i + 1]))
 				{
-					m->fstr[j] = str[i];
+					fstr[j] = str[i];
 					if (i + 1 < ft_strlen(str) && !((str[i] == '|' && str[i
 								+ 1] == '&') || (str[i] == '&' && str[i
 								+ 1] == '|')))
-						m->fstr[++j] = ' ';
+						fstr[++j] = ' ';
 				}
 			}
 			else if (i < ft_strlen(str))
-				m->fstr[j] = str[i];
+				fstr[j] = str[i];
 		}
 		else
-			m->fstr[j] = str[i];
+			fstr[j] = str[i];
 		i++;
 		j++;
 	}
-	m->fstr[j] = '\0';
-	return (m->fstr);
+	fstr[j] = '\0';
+	ft_magic_malloc(FREE, 0, str);
+	return (fstr);
 }
 
 int	ft_parse_line(t_msh *minish)
 {
 	if (ft_quote_order(minish->line) == 2)
 		return (2);
-	minish->m.tmp = minish->line;
-	minish->line = add_spaces(minish->line, &(minish)->m); // malloc
-	free(minish->m.tmp);
-	minish->m.tmp = NULL; // pour reinitialiser ptr en vue de free dans ctrlD
+	minish->line = add_spaces(minish->line); // malloc
 	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
 }

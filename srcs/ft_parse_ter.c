@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/20 15:27:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 16:33:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ char	*ft_error_message_final(char *str)
 	char *message;
 
 	if (!str[0])
-		message = ft_strdup("minishell: syntax error near unexpected token `newline'\n"); //MALLOC
+		message = ft_magic_malloc(ADD, 0, ft_strdup("minishell: syntax error near unexpected token `newline'\n")); //MALLOC
 	else
 	{
-		message = ft_strjoin("minishell: syntax error near unexpected token `", str); //MALLOC
+		message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str)); //MALLOC
 		if (!message)
 			return (NULL);
 		tmp = message;
-		message = ft_strjoin(message, "'\n");
-		free(tmp);
+		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
+		ft_magic_malloc(FREE, 0, tmp);
 	}
 	return (message); //en cas d erreur de malloc du IF ou du dernier malloc du ELSE message == NULL dans pas de secu
 }
@@ -127,46 +127,58 @@ int	ft_parse_ter(t_msh *msh)
 	if (msh->av[msh->ac - 1].token == CHEVRON)
 		return (ft_error_syntax(ft_error_message_chevron(msh->av[msh->ac - 1].data, 1), 2, 1));
 
-	if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
-	{
-		ft_free_split_msh(msh->av);
-		char *line = readline("> ");
-		char *tmp = msh->line;
-		msh->line = ft_strjoin(msh->line, " "); // MALLOC
-		// IF ERROR MALLOC
-		free(tmp);
-		tmp = msh->line;
-		msh->line = ft_strjoin(msh->line, line); // MALLOC
-		// IF ERROR MALLOC
-		free(tmp);
-		free(line);
-		add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
-		ft_parse_line(msh); // MALLOC
-		// IF ERROR MALLOC
-		ft_parse_bis(msh); // MALLOC
-		// IF ERROR MALLOC
-		msh->av = ft_split_msh(msh->line); //malloc
-		if (!msh->av)
-		{
-			free(msh->line);
-			return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
-		}
-		msh->ac = ft_structtablen(msh->av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
-		if (msh->ac == 0)
-		{
-			free(msh->line);
-			ft_free_split_msh(msh->av);
-			return (1) ; //Verif quel exitstatus
-		}
-		ft_token(msh);
-		// printf("msh->ac = %d\n", msh->ac);
-		if (ft_parse_ter(msh) != 0)
-		{
-			free(msh->line);
-			ft_free_split_msh(msh->av);
-			return (1) ; //Verif quel exitstatus
-		}
-	}
+	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
+	// {
+	// 	ft_free_split_msh(msh->av);
+	// 	char *new_line;
+	// 	char *tmp;
+		
+	// 	new_line = readline("> ");
+	// 	new_line = ft_magic_malloc(ADD, 0, new_line);
+	// 	tmp = msh->line;
+	// 	msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, " ")); // MALLOC
+	// 	ft_magic_malloc(FREE, 0, tmp);
+	// 	// IF ERROR MALLOC
+	// 	// free(tmp);
+	// 	tmp = msh->line;
+	// 	msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, new_line)); // MALLOC
+	// 	// IF ERROR MALLOC
+	// 	// free(tmp);
+	// 	ft_magic_malloc(FREE, 0, tmp);
+	// 	// tmp = NULL;
+	// 	ft_magic_malloc(FREE, 0, new_line);
+	// 	// free(new_line);
+	// 	// new_line = NULL;
+	// 	add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
+	// 	ft_parse_line(msh); // MALLOC
+	// 	// IF ERROR MALLOC
+	// 	ft_parse_bis(msh); // MALLOC
+	// 	// IF ERROR MALLOC
+	// 	msh->av = ft_split_msh(msh->line); //malloc
+	// 	if (!msh->av)
+	// 	{
+	// 		ft_magic_malloc(FLUSH, 0, NULL);
+	// 		// free(msh->line);
+	// 		return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
+	// 	}
+	// 	msh->ac = ft_structtablen(msh->av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+	// 	if (msh->ac == 0)
+	// 	{
+	// 		// free(msh->line);
+	// 		// ft_free_split_msh(msh->av);
+	// 		ft_magic_malloc(FLUSH, 0, NULL);
+	// 		return (1) ; //Verif quel exitstatus
+	// 	}
+	// 	ft_token(msh);
+	// 	// printf("msh->ac = %d\n", msh->ac);
+	// 	if (ft_parse_ter(msh) != 0)
+	// 	{
+	// 		// free(msh->line);
+	// 		// ft_free_split_msh(msh->av);
+	// 		ft_magic_malloc(FLUSH, 0, NULL);
+	// 		return (1) ; //Verif quel exitstatus
+	// 	}
+	// }
 	return (0);
 }
 

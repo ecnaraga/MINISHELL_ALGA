@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_par_bis_bis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/20 14:36:41 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/22 16:20:57 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ char	*ft_parse_bis_bis(char *str)
 		}
 		i++;
 	}
-	//printf("size str : %zu\n", i);
-	//printf("size fstr : %zu\n", i + count);
-	fstr = malloc(sizeof(char) * (i + count + 1));
+	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL);
 	i = 0;
 	flag = 0;
 	while (str[i])

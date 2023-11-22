@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:44:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/10/20 16:36:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/22 12:15:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <errno.h>
+#include <signal.h>
 
 #endif
