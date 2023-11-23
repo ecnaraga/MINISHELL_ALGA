@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 12:22:02 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/23 14:11:47 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,22 +56,50 @@ static void	get_final_size(int *count, int *flag, char *str, size_t *i)
 			if (((*i) + 1 < ft_strlen(str) && ft_isspace(str[(*i) + 1]) == 1)
 				&& !((str[*i] == '>' && str[(*i) + 1] == '<') || (str[*i] == '<'
 						&& str[(*i) + 1] == '>')) && !((str[*i] == '|'
-						&& str[(*i) + 1] == '&') || (str[*i] == '&'
-						&& str[(*i) + 1] == '|')))
+						&& str[(*i) + 1] == '&') || (str[*i] == '&' && str[(*i)
+							+ 1] == '|')))
 				*count += 1;
 		}
 		*i += 1;
 	}
 }
 
+
+static void	get_final_str2(size_t *i, size_t *j, char *str, char *fstr)
+{
+	if (is_operator(str[(*i) + 1]) == 0 || (is_operator(str[(*i) + 1]) == 1
+			&& str[*i] != str[(*i) + 1]))
+	{
+		fstr[(*j)] = str[(*i)];
+		if ((*i) + 1 < ft_strlen(str) && !((str[*i] == '|'
+					&& str[(*i) + 1] == '&') || (str[*i] == '&'
+					&& str[(*i) + 1] == '|')))
+		{
+			*j += 1;
+			fstr[*j] = ' ';
+		}
+	}
+}
+
 static void	get_final_str(size_t *i, size_t *j, char *str, char *fstr)
 {
-	if (is_operator(str[(*i) - 1]) == 0)
+	if (*i > 0 && ft_isspace(str[(*i) - 1]) == 1 && is_operator(str[(*i) - 1]) == 0)
 	{
-		fstr[*j] = ' ';
-		*j += 1;
+		if (is_operator(str[*i - 1]) == 0)
+		{
+			fstr[*j] = ' ';
+			*j += 1;
+		}
+		fstr[*j] = str[*i];
 	}
-	fstr[*j] = str[*i];
+	else if (*i < ft_strlen(str) && (str[*i] == str[(*i) + 1]))
+		fstr[*j] = str[*i];
+	else if (*i < ft_strlen(str) && *i > 0 && (str[*i] == str[(*i) - 1]))
+		fstr[*j] = str[*i];
+	if (*i < ft_strlen(str) && (ft_isspace(str[(*i) + 1]) == 1) && !((str[*i] == '>' && str[(*i) + 1] == '<') || (str[*i] == '<' && str[(*i) + 1] == '>')) && !((str[*i] == '>' && str[(*i) + 1] == '(') || (str[*i] == '<' && str[(*i) + 1] == '(')))
+		get_final_str2(i, j, str, fstr);
+	else if (*i < ft_strlen(str))
+		fstr[*j] = str[*i];
 }
 
 static char	*add_spaces(char *str)
@@ -94,37 +122,7 @@ static char	*add_spaces(char *str)
 	{
 		flag_handler(&flag, str[i]);
 		if (is_operator(str[i]) == 1 && flag == 0)
-		{
-			if (i > 0 && ft_isspace(str[i - 1]) == 1 && is_operator(str[i
-					- 1]) == 0)
-			{
-				get_final_str(&i, &j, str, fstr);
-				/*if (is_operator(str[i - 1]) == 0)
-					fstr[j++] = ' ';
-				fstr[j] = str[i];*/
-			}
-			else if (i < ft_strlen(str) && (str[i] == str[i + 1]))
-				fstr[j] = str[i];
-			else if (i < ft_strlen(str) && i > 0 && (str[i] == str[i - 1]))
-				fstr[j] = str[i];
-			if (i < ft_strlen(str) && (ft_isspace(str[i + 1]) == 1)
-				&& !((str[i] == '>' && str[i + 1] == '<') || (str[i] == '<'
-						&& str[i + 1] == '>')) && !((str[i] == '>' && str[i
-						+ 1] == '(') || (str[i] == '<' && str[i + 1] == '(')))
-			{
-				if (is_operator(str[i + 1]) == 0 || (is_operator(str[i
-							+ 1]) == 1 && str[i] != str[i + 1]))
-				{
-					fstr[j] = str[i];
-					if (i + 1 < ft_strlen(str) && !((str[i] == '|' && str[i
-								+ 1] == '&') || (str[i] == '&' && str[i
-								+ 1] == '|')))
-						fstr[++j] = ' ';
-				}
-			}
-			else if (i < ft_strlen(str))
-				fstr[j] = str[i];
-		}
+			get_final_str(&i, &j, str, fstr);
 		else
 			fstr[j] = str[i];
 		i++;
