@@ -6,14 +6,14 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/21 14:59:33 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 10:41:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTURE_H
 # define STRUCTURE_H
 
-
+extern int	status;
 
 typedef	struct s_node
 {

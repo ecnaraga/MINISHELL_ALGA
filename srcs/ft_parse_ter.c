@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/22 16:33:11 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 11:52:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,18 +135,23 @@ int	ft_parse_ter(t_msh *msh)
 		
 	// 	new_line = readline("> ");
 	// 	new_line = ft_magic_malloc(ADD, 0, new_line);
-	// 	tmp = msh->line;
-	// 	msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, " ")); // MALLOC
-	// 	ft_magic_malloc(FREE, 0, tmp);
-	// 	// IF ERROR MALLOC
-	// 	// free(tmp);
-	// 	tmp = msh->line;
-	// 	msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, new_line)); // MALLOC
-	// 	// IF ERROR MALLOC
-	// 	// free(tmp);
-	// 	ft_magic_malloc(FREE, 0, tmp);
-	// 	// tmp = NULL;
-	// 	ft_magic_malloc(FREE, 0, new_line);
+	// 	if (status == 0)
+	// 	{
+	// 		tmp = msh->line;
+	// 		msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, " ")); // MALLOC
+	// 		ft_magic_malloc(FREE, 0, tmp);
+	// 		// IF ERROR MALLOC
+	// 		// free(tmp);
+	// 		tmp = msh->line;
+	// 		msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, new_line)); // MALLOC
+	// 		// IF ERROR MALLOC
+	// 		// free(tmp);
+	// 		ft_magic_malloc(FREE, 0, tmp);
+	// 		// tmp = NULL;
+	// 		ft_magic_malloc(FREE, 0, new_line);
+	// 	}
+	// 	else
+	// 		msh->line = new_line;
 	// 	// free(new_line);
 	// 	// new_line = NULL;
 	// 	add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
