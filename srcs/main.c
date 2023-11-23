@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 12:17:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 12:23:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int status = 0;
 	
 // }
 
-int	ft_handle_eof(void)
+void	ft_handle_eof(void)
 {
 	printf("exit\n");
 	ft_magic_malloc(FLUSH, 0, NULL);

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:41:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/10/31 14:26:50 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 12:21:53 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "structure.h"
 # include "parsing.h"
 # include "builtin.h"
+# include "signal.h"
 # include "../libft/includes/libft.h"
 
 // void	ft_prompt(int ac, char **av, char **env);
