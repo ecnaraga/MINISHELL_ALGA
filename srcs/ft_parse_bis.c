@@ -6,42 +6,37 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/22 16:22:11 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:06:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
 
-/*QUESTIONS x ALIX : 
-( ( bravo ) ) => Dans ce cas est ce que tu mets un espace entre les doubles parentheses?
-*/
-
 //TO DO : UNE FOIS ECHO ET EXEC IMPLEMENTER PENSER A VERIFIER EXIT STATUS X TOUS LES CAS D ERREUR
 
-//TO DO : DIRE A ALIX QU ELLE VA ME TUER MAIS DE NE METTRE aucun espace apres les parentheses si elles sont suivies de la meme parentheses...
-
-
 //ATTENTION A GESTION ERREUR SI PARENTHESES OUVERTE...
-int ft_error_syntax(char *str, int exitstatus, int clean) // a modifier
+
+int ft_error_syntax(char *str, int clean) // a modifier
 {
-	printf("str %s\n", str);
+	if (!str)
+		return (1);
 	ft_putstr_fd(str, 2);
 	if (clean == 1)
 	{
-		ft_magic_malloc(FREE, 0, str);
+		// ft_magic_malloc(FLUSH, 0, NULL);
 		str = NULL;
 	}
-	return (exitstatus);
+	return (1);
 }
 
-char	*ft_error_message(t_msh *msh, char *str)
+// echo ( ls )
+char	*ft_error_message(char *str)
 {
 	int	i;
 	char *tmp;
 	char *message;
 
 	i = -1;
-	(void) msh;
 	if (!str[0])
 	{
 		message = ft_magic_malloc(ADD, 0, ft_strdup("minishell: syntax error near unexpected token `newline'\n"));
@@ -55,11 +50,13 @@ char	*ft_error_message(t_msh *msh, char *str)
 				break ;
 		str[i] = '\0';
 		message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str));
+		// message = ft_magic_malloc(ADD, 0, NULL);
 		if (!message)
 			return (NULL);
 		tmp = message;
 		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
 		ft_magic_malloc(FREE, 0, tmp);
+		// printf("message |%s|\n", message);
 	}
 	return (message);
 }
@@ -85,144 +82,120 @@ int	ft_count_char(char *str)
 //penser a gerer les parentheses dans des quotes
 int ft_parse_bis(t_msh *msh)
 {
-	int par_o;
-	int par_c;
-	int prec_iss;
+	t_par	p;
 	int	i;
-	int chev;
-	int prec;
-	int multi_par;
-	int multi_cmd;
-	char *message;
 	
 	i = 0;
-	par_o = 0;
-	par_c = 0;
-	prec_iss = 0;
-	chev = 0;
-	prec = 0;
-	multi_par = 0;
-	multi_cmd = 0;
-	(void) multi_cmd;
+	p.par_o = 0;
+	p.par_c = 0;
+	p.prec_iss = 0;
+	p.chev = 0;
+	p.prec = 0;
+	p.multi_par = 0;
+	p.multi_cmd = 0;
 	while (msh->line[i])
 	{
 		if (msh->line[i] == '"')//mettre multicmd
 		{
 			while (msh->line[++i] && msh->line[i] != '"');
 			i++;
-			if (prec == ISS && (prec_iss == OTHER || prec_iss == CHEVRON))
-				multi_cmd = 2;
-			prec_iss = OTHER;
-			prec = OTHER;
+			if (p.prec == ISS && (p.prec_iss == OTHER || p.prec_iss == CHEVRON))
+				p.multi_cmd = 2;
+			p.prec_iss = OTHER;
+			p.prec = OTHER;
 		}
 		else if (msh->line[i] == '\'')//mettre multicmd
 		{
 			while (msh->line[++i] && msh->line[i] != '\'');
 			i++;
-			if (prec == ISS && (prec_iss == OTHER || prec_iss == CHEVRON))
-				multi_cmd = 2;
-			prec_iss = OTHER;
-			prec = OTHER;
+			if (p.prec == ISS && (p.prec_iss == OTHER || p.prec_iss == CHEVRON))
+				p.multi_cmd = 2;
+			p.prec_iss = OTHER;
+			p.prec = OTHER;
 		}
 		else if (ft_isspace(msh->line[i]) == 0)
 		{
-			prec = ISS;
+			p.prec = ISS;
 			i++;
 		}
 		else if (msh->line[i] == '(')
 		{
-			if (prec_iss == PAR_CLOSE || ((prec_iss == OTHER || prec_iss == CHEVRON) && (chev == 1 || multi_cmd > 1)))
-				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
-			if (prec_iss == OTHER || prec_iss == CHEVRON)
+			if (p.prec_iss == PAR_CLOSE || ((p.prec_iss == OTHER || p.prec_iss == CHEVRON) && (p.chev == 1 || p.multi_cmd > 1)))
+				return (status = 2, ft_error_syntax("syntax error near unexpected token `('\n", 0));
+			if (p.prec_iss == OTHER || p.prec_iss == CHEVRON)
 			{
 				while (ft_isspace(msh->line[++i]) == 0);
-				// line = ft_error_message(msh, msh->line + i); //MALLOC
-				message = ft_error_message(msh, msh->line + i); //MALLOC
+				// message = ft_error_message(msh->line + i); //MALLOC
 				//IF ERROR MALLOC
-				printf("ERROR 2 line |%s| i %d\n", message, i);
-				return (ft_error_syntax(message, 2, 1));
+				// printf("ERROR 2 line |%s| i %d\n", message, i);
+				return (status = 2, ft_error_syntax(ft_error_message(msh->line + i), 1));
 			}
-			if (prec == PAR_OPEN)
-				multi_par = 1;
-			prec_iss = PAR_OPEN;
-			prec = PAR_OPEN;
-			par_o += 1;
+			if (p.prec == PAR_OPEN)
+				p.multi_par = 1;
+			p.prec_iss = PAR_OPEN;
+			p.prec = PAR_OPEN;
+			p.par_o += 1;
 			i++;
 		}
 		else if (msh->line[i] == ')')
 		{
-			if (prec_iss == PAR_OPEN && multi_par == 0)
+			if ((p.prec_iss == PAR_OPEN || p.prec_iss == CHEVRON ) && p.multi_par == 0)
 			{
 				printf("ERROR 3\n");
-				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+				return (status = 2, ft_error_syntax("syntax error near unexpected token `)'\n", 0));
 			}
-			if (par_o <= par_c)
+			if (p.par_o <= p.par_c)
 			{
 				printf("ERROR 4\n");
-				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+				return (status = 2, ft_error_syntax("syntax error near unexpected token `)'\n", 0));
 			}
-			if (par_o - par_c == 1)
-				multi_par = 0;
-			prec_iss = PAR_CLOSE;
-			prec = PAR_CLOSE;
-			par_c += 1;
+			if (p.par_o - p.par_c == 1)
+				p.multi_par = 0;
+			p.prec_iss = PAR_CLOSE;
+			p.prec = PAR_CLOSE;
+			p.par_c += 1;
 			i++;
 		}
 		else if (msh->line[i] == '&' || msh->line[i] == '|')
 		{
-			if (((prec_iss == OPERATOR || prec_iss == CHEVRON) && prec == ISS) ||  ft_count_char(msh->line + i) == 1)
+			if (((p.prec_iss == OPERATOR || p.prec_iss == CHEVRON) && p.prec == ISS) ||  ft_count_char(msh->line + i) == 1)
 				return (0);
-			prec_iss = OPERATOR;
-			prec = OPERATOR;
-			chev = 0;
-			multi_par = 0;
-			multi_cmd = 0; //
+			p.prec_iss = OPERATOR;
+			p.prec = OPERATOR;
+			p.chev = 0;
+			p.multi_par = 0;
+			p.multi_cmd = 0; //
 			i++;
 		}
 		else if (msh->line[i] == '>' || msh->line[i] == '<')//passer en chevron
 		{
-			chev = 1;
-			if ((prec_iss == CHEVRON && prec == ISS) ||  ft_count_char(msh->line + i) == 1)
+			p.chev = 1;
+			if ((p.prec_iss == CHEVRON && p.prec == ISS) ||  ft_count_char(msh->line + i) == 1)
 				return (0);
-			prec_iss = CHEVRON;
-			prec = CHEVRON;
+			p.prec_iss = CHEVRON;
+			p.prec = CHEVRON;
 			i++;
 		}
 		else
 		{
-			if (prec_iss == PAR_CLOSE && msh->line[i] != '>' && msh->line[i] != '<')
+			if (p.prec_iss == PAR_CLOSE && msh->line[i] != '>' && msh->line[i] != '<')
 			{
-				msh->m.message = ft_error_message(msh, msh->line + i); //MALLOC
+				// message = ft_error_message(msh->line + i); //MALLOC
 				//IF ERROR MALLOC
 				printf("ERROR 5\n");
-				return (ft_error_syntax(msh->m.message, 2, 1)); // a free dans la fonction error_syntax
+				return (status = 2, ft_error_syntax(ft_error_message(msh->line + i), 1)); // a free dans la fonction error_syntax
 			}
-			prec_iss = OTHER;
-			if (prec != OTHER)//
-				multi_cmd += 1;
-			prec = OTHER;
+			p.prec_iss = OTHER;
+			if (p.prec != OTHER)//
+				p.multi_cmd += 1;
+			p.prec = OTHER;
 			i++;
 		}
 	}
-	if (par_c != par_o && prec_iss != OPERATOR) // POUR GERER SI PARENTHESE OUVERTE
+	if (p.par_c != p.par_o && p.prec_iss != OPERATOR) // POUR GERER SI PARENTHESE OUVERTE
 	{
 		printf("ERROR 6\n");
-		return (ft_error_syntax("parentheses ouvertes...\n", 2, 0));
-		// line = readline("> ");
-		// tmp = minish->line;
-		// minish->line = ft_strjoin(minish->line, " "); // MALLOC
-		// // IF ERROR MALLOC
-		// free(tmp);
-		// tmp = minish->line;
-		// minish->line = ft_strjoin(minish->line, line); // MALLOC
-		// // IF ERROR MALLOC
-		// free(tmp);
-		// free(line);
-		// add_history(line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
-		// ft_parse_line(minish); // MALLOC
-		// // IF ERROR MALLOC
-		// ft_parse_bis(minish); // MALLOC
-		// // IF ERROR MALLOC
+		return (status = 2, ft_error_syntax("parentheses ouvertes...\n", 0));
 	}
 	return (0);
 }

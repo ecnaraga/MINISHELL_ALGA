@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/22 16:20:45 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 15:42:36 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,26 @@ t_list	*ft_lstnew_malloc(size_t size)
 {
 	t_list	*temp;
 
-	temp = NULL;
 	temp = malloc(sizeof(t_list));
 	if (temp == NULL)
 		return (NULL);
 	temp->content = malloc(size);
+	if (temp->content == NULL)
+		return (free(temp), NULL);
+	temp->next = NULL;
+	return (temp);
+}
+
+t_list	*ft_lstnew_add(void *addr)
+{
+	t_list	*temp;
+
+	if (!addr)
+		return (NULL);
+	temp = malloc(sizeof(t_list));
+	if (temp == NULL)
+		return (free(addr), NULL);
+	temp->content = addr;
 	temp->next = NULL;
 	return (temp);
 }
@@ -95,18 +110,15 @@ void *ft_magic_malloc(int rule, size_t size, void *addr)
 	t_list	*tmp;
 	int i;
 	
-	(void) rule;
-	(void) size;
-	(void) head;
 	if (rule == MALLOC || rule == ADD)
 	{
 		head = mlc;
 		if (rule == MALLOC)
 			tmp = ft_lstnew_malloc(size);
-		// else if (!addr)
 		else
-			tmp = ft_lstnew(addr);
-		// if (!tmp)
+			tmp = ft_lstnew_add(addr);
+		if (!tmp)
+			return (ft_putstr_fd("Error malloc\n", 2), status = 130, NULL);
 		if (mlc)
 		{
 			while (mlc->next)
