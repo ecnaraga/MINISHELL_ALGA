@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 12:23:42 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 14:09:44 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,27 @@
 int status = 0;
 
 
-// int ft_minishell(t_msh *msh, char **av, char **env)
-// {
-	
-// }
-
+int ft_parsing(t_msh *msh)
+{
+	status = ft_parse_line(msh);
+	if (status != 0)
+		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	printf("PASSAGE ALIX TO GAGA\n");
+	status = ft_parse_bis(msh);
+	if (status != 0) // NE PAS MAJ EXIT STATUS
+		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	msh->av = ft_split_msh(msh->line); // TO DO RECUPERER EXIT STATUS DANS SPLIT
+	if (!msh->av)
+		return (ft_magic_malloc(FLUSH, 0, NULL), status = 128 + 6); // verifier si status 128 + 6 bien retourne
+	msh->ac = ft_structtablen(msh->av);
+	if (msh->ac == 0) // NE PAS MAJ EXIT STATUS
+		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	ft_token(msh);
+	status = ft_parse_ter(msh);
+	if (status != 0)
+		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	return (0);
+}
 void	ft_handle_eof(void)
 {
 	printf("exit\n");
@@ -46,15 +62,8 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		ft_signal_handler_msh();
-		// if(signal (SIGINT, &ft_free) == SIG_ERR)
-		// 	printf("ctrl c marche pas\n");
-		// if (signal (SIGQUIT, &ft_free) == SIG_ERR)
-		// 	printf("ctrl / marche pas\n");
 		msh.line = ft_magic_malloc(ADD, 0, readline("Minishell$ ")); // malloc
 		if (!msh.line) // EOF
-			// printf("exit\n");
-			// ft_magic_malloc(FLUSH, 0, NULL);
-			// rl_clear_history();
 			return (ft_handle_eof(), status); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
 		if (!msh.line[0])
 		{
@@ -62,39 +71,8 @@ int main(int ac, char **av, char **env)
 			continue ;	
 		}
 		add_history(msh.line);
-		status = ft_parse_line(&msh);
-		if (status != 0)
-		{
-			ft_magic_malloc(FLUSH, 0, NULL);
-			continue ;
-		}
-		printf("PASSAGE ALIX TO GAGA\n");
-		status = ft_parse_bis(&msh);
-		if (status != 0) // NE PAS MAJ EXIT STATUS
-		{
-			ft_magic_malloc(FLUSH, 0, NULL);
-			continue ;
-		}
-		msh.av = ft_split_msh(msh.line); // TO DO RECUPERER EXIT STATUS DANS SPLIT
-		if (!msh.av)
-		{
-			ft_magic_malloc(FLUSH, 0, NULL);
-			status = 128 + 6;
-			continue ; //6 = SIGABRT =>Verifier si signal ok
-		}
-		msh.ac = ft_structtablen(msh.av);
-		if (msh.ac == 0) // NE PAS MAJ EXIT STATUS
-		{
-			ft_magic_malloc(FLUSH, 0, NULL);
-			continue ;
-		}
-		ft_token(&msh);
-		status = ft_parse_ter(&msh);
-		if (status != 0)
-		{
-			ft_magic_malloc(FLUSH, 0, NULL);
-			continue ;
-		}
+		if (ft_parsing(&msh) != 0)
+			continue;
 		
 		// int i = -1;
 		// while (msh.av[++i].data)
