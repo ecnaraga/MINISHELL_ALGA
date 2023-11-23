@@ -6,11 +6,19 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 11:47:49 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/23 14:36:03 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	is_operator(char c)
+{
+	if (c == '(' || c == ')' || c == '>' || c == '<' || c == '&' || c == '|')
+		return (1);
+	else
+		return (0);
+}
 
 /*
 Verifie que les " et ' sont bien apparies
@@ -29,7 +37,7 @@ static void	ft_quote_order_bis(char *str, char c, int *i, int *nb_q)
 		*i += 1;
 }
 
-int	ft_quote_order(char *str)
+static int	ft_quote_order(char *str)
 {
 	int	dq;
 	int	sq;
@@ -55,5 +63,14 @@ int	ft_quote_order(char *str)
 		printf("minishell: les quote ne sont pas appariees\n");
 		return (2);
 	}
+	return (0);
+}
+
+int	ft_parse_line(t_msh *minish)
+{
+	if (ft_quote_order(minish->line) == 2)
+		return (2);
+	minish->line = add_spaces(minish->line);
+	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
 }
