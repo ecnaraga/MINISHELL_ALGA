@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 12:25:09 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 16:30:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	ft_quote_order(char *str);
 ft_parse_bis
 */
 int		ft_parse_bis(t_msh *minish);
-int 	ft_error_syntax(char *str, int exitstatus, int clean);
-char	*ft_error_message(t_msh *msh, char *str);
+int 	ft_error_syntax(char *str, int clean);
+char	*ft_error_message(char *str);
 
 /*
 ft_parse_ter.c
@@ -47,7 +47,7 @@ void	ft_inc_quote(char c, int *d_q, int *s_q);
 /*
 ft_split_minish.c
 */
-t_split	*ft_split_msh(/*t_msh *msh, */char const *s); //MALLOC
+t_split	*ft_split_msh(char const *s); //MALLOC
 
 /*
 ft_split_minish_utils.c
