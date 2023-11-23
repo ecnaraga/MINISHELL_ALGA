@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_par_bis_bis.c                                   :+:      :+:    :+:   */
+/*   ft_parse_str_ter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/22 16:20:57 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:29:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ char	*ft_parse_bis_bis(char *str)
 		i++;
 	}
 	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL);
+	if (!fstr)
+		return (NULL);
 	i = 0;
 	flag = 0;
 	while (str[i])
@@ -94,6 +96,7 @@ char	*ft_parse_bis_bis(char *str)
 		j++;
 	}
 	fstr[j] = '\0';
+	ft_magic_malloc(FREE, 0, str);
 	return (fstr);
 }
 

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 17:21:47 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:35:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_operator(char c);
 ft_parse_bis
 */
 int		ft_parse_bis(t_msh *minish);
-int 	ft_error_syntax(char *str, int clean);
+int 	ft_error_syntax(char *str);
 char	*ft_error_message(char *str);
 
 /*

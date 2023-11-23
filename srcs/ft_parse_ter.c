@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 16:33:04 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:35:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,29 +99,29 @@ int	ft_parse_ter(t_msh *msh)
 	i = -1;
 	printf("PARSE_TER\n");
 	if (msh->av[0].token == CHEVRON && msh->ac == 1)
-		return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[0].data, 1), 1)); // POUR GARANCE : ajouter secu dans ft_error syntax si malloc failed dans message chevron + dans fonction appelent parse_ter
+		return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[0].data, 1))); // POUR GARANCE : ajouter secu dans ft_error syntax si malloc failed dans message chevron + dans fonction appelent parse_ter
 	if (msh->av[0].token == OPERATOR /*|| msh->av[msh->ac - 1].token == OPERATOR*/)
-		return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[0].data, 0), 1));
+		return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[0].data, 0)));
 	while (msh->av[++i].data)
 	{
 		/*CHEVRON*/
 		if (msh->av[i].token == CHEVRON && (ft_strlen(msh->av[i].data) > 2 || ft_same_char(msh->av[i].data) == 1))
-			return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[i].data, 1), 1));
+			return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[i].data, 1)));
 		if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == CHEVRON)
-			return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[i + 1].data, 0), 1));
+			return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[i + 1].data, 0)));
 		if (msh->av[i + 1].data && msh->av[i].token == CHEVRON && msh->av[i + 1].token == OPERATOR)
-			return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[i + 1].data, 0), 1));
+			return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[i + 1].data, 0)));
 		
 		/*OPERATOR*/
 		if (msh->av[i].token == OPERATOR && (ft_strlen(msh->av[i].data) > 2 || ft_same_char(msh->av[i].data) == 1))
-			return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[i].data, 1), 1));
+			return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[i].data, 1)));
 		if (msh->av[i + 1].data && msh->av[i].token == OPERATOR && msh->av[i + 1].token == OPERATOR)
-			return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[i].data, 0), 1));
+			return (status = 2, ft_error_syntax(ft_error_message_operator(msh->av[i].data, 0)));
 	}
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// 	return (ft_error_syntax(ft_error_message_operator(msh->av[msh->ac - 1].data, 0), 2, 1));
 	if (msh->av[msh->ac - 1].token == CHEVRON)
-		return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[msh->ac - 1].data, 1), 1));
+		return (status = 2, ft_error_syntax(ft_error_message_chevron(msh->av[msh->ac - 1].data, 1)));
 
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// {

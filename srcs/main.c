@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 17:14:54 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:40:27 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int ft_parsing(t_msh *msh)
 		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	printf("PASSAGE ALIX TO GAGA\n");
 	if (ft_parse_bis(msh) != 0) // NE PAS MAJ EXIT STATUS
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1); ///////////////////////////////////////CHECK ARRETE LA
 	msh->av = ft_split_msh(msh->line); // TO DO RECUPERER EXIT STATUS DANS SPLIT
 	if (!msh->av)
 		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
