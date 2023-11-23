@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 12:17:06 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/23 12:22:02 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	get_final_size(int *count, int *flag, char *str, size_t *i)
 	}
 }
 
-static void	get_final_str(int *i, int *j, char *str, char *fstr)
+static void	get_final_str(size_t *i, size_t *j, char *str, char *fstr)
 {
 	if (is_operator(str[(*i) - 1]) == 0)
 	{
