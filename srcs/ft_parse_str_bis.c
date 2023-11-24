@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 14:36:03 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/23 15:53:51 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,16 @@ static int	ft_quote_order(char *str)
 	}
 	if (dq % 2 != 0 || sq % 2 != 0)
 	{
-		printf("minishell: les quote ne sont pas appariees\n");
-		return (2);
+		ft_putstr_fd("minishell: les quote ne sont pas appariees\n", 2);
+		return (status = 2, 1);
 	}
 	return (0);
 }
 
 int	ft_parse_line(t_msh *minish)
 {
-	if (ft_quote_order(minish->line) == 2)
-		return (2);
+	if (ft_quote_order(minish->line) == 1)
+		return (1);
 	minish->line = add_spaces(minish->line);
 	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
