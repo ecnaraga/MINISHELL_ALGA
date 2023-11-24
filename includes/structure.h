@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 16:40:47 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 14:23:21 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+# include "../libft/includes/libft.h"
 
 #ifndef STRUCTURE_H
 # define STRUCTURE_H
@@ -38,7 +40,7 @@ typedef	struct s_split
 
 typedef	struct s_msh
 {
-	char	**env;
+	t_list	**env;
 	char	*line;	
 	int		ac;
 	t_split *av;

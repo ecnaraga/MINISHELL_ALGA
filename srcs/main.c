@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 11:33:45 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 14:35:09 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,9 @@ void	ft_handle_eof(void)
 int main(int ac, char **av, char **env)
 {
 	t_msh msh;
-
+	
 	(void)av;
+	msh.env = get_env(env);
 	if (isatty(0) == 1) //A REGLER test ./minishell | ./minishell
 	{
 		printf("stdin : %d\n", isatty(0));
@@ -54,7 +55,6 @@ int main(int ac, char **av, char **env)
 	}
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
-	msh.env = env;
 	while (1)
 	{
 		ft_signal_handler_msh();

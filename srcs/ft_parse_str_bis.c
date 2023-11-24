@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str_bis.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/11/23 15:53:51 by athiebau         ###   ########.fr       */
-=======
-/*   Updated: 2023/11/23 17:26:05 by galambey         ###   ########.fr       */
->>>>>>> 6db213816f1599eeca8bcf0b46aa0d010fd22cab
+/*   Updated: 2023/11/24 14:17:10 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,22 +61,14 @@ static int	ft_quote_order(char *str)
 	if (dq % 2 != 0 || sq % 2 != 0)
 	{
 		ft_putstr_fd("minishell: les quote ne sont pas appariees\n", 2);
-<<<<<<< HEAD
-		return (status = 2, 1);
-=======
 		return (2);
->>>>>>> 6db213816f1599eeca8bcf0b46aa0d010fd22cab
 	}
 	return (0);
 }
 
 int	ft_parse_line(t_msh *minish)
 {
-<<<<<<< HEAD
-	if (ft_quote_order(minish->line) == 1)
-=======
 	if (ft_quote_order(minish->line) == 2)
->>>>>>> 6db213816f1599eeca8bcf0b46aa0d010fd22cab
 		return (1);
 	minish->line = add_spaces(minish->line);
 	if (!minish->line)
