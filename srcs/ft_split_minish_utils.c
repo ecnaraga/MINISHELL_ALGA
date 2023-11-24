@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/22 14:47:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:29:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 /*
 Free en cas d 'erreur de malloc
 */
-void	*ft_free_strs(t_split *strs, int j)
-{
-	int	i;
+// void	*ft_free_strs(t_split *strs, int j)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < j)
-	{
-		ft_magic_malloc(FREE, 0, strs[i].data);
-		if (strs[i].type)
-			ft_magic_malloc(FREE, 0, strs[i].type);
-		i++;
-	}
-	ft_magic_malloc(FREE, 0, strs);
-	return (NULL);
-}
+// 	i = 0;
+// 	while (i < j)
+// 	{
+// 		ft_magic_malloc(FREE, 0, strs[i].data);
+// 		if (strs[i].type)
+// 			ft_magic_malloc(FREE, 0, strs[i].type);
+// 		i++;
+// 	}
+// 	ft_magic_malloc(FREE, 0, strs);
+// 	return (NULL);
+// }
 
 /*
 Teste les conditions de la boucle de ft_count_letter pour compter le nb de k

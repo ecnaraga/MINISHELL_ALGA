@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 17:35:42 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:30:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_split	*ft_split_msh(char const *s); //MALLOC
 /*
 ft_split_minish_utils.c
 */
-void	*ft_free_strs(t_split *strs, int j);
+// void	*ft_free_strs(t_split *strs, int j);
 int		ft_test(char c, const char *c1, const char *cm1, t_quote *q);
 int		ft_test_bis(char c, int d_q, int s_q);
 

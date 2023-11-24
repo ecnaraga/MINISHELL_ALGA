@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 17:39:18 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:31:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int ft_error_syntax(char *str) // a modifier
 char	*ft_error_message(char *str)
 {
 	int	i;
-	char *tmp;
+	// char *tmp;
 	char *message;
 
 	i = -1;

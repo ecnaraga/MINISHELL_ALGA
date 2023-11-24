@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 17:35:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:38:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 char	*ft_error_message_final(char *str)
 {
-	char *tmp;
 	char *message;
 
 	if (!str[0])
@@ -24,9 +23,7 @@ char	*ft_error_message_final(char *str)
 		message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str)); //MALLOC
 		if (!message)
 			return (NULL);
-		tmp = message;
 		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
-		ft_magic_malloc(FREE, 0, tmp);
 	}
 	return (message); //en cas d erreur de malloc du IF ou du dernier malloc du ELSE message == NULL dans pas de secu
 }
