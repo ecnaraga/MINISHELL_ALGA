@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 11:31:09 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 16:20:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 //ATTENTION A GESTION ERREUR SI PARENTHESES OUVERTE...
 
-int ft_error_syntax(char *str) // a modifier
+int err_syntax(char *str) // a modifier
 {
 	if (!str)
 		return (1);
@@ -108,14 +108,14 @@ int ft_parse_bis(t_msh *msh)
 		else if (msh->line[i] == '(')
 		{
 			if (p.prec_iss == PAR_CLOSE || ((p.prec_iss == OTHER || p.prec_iss == CHEVRON) && (p.chev == 1 || p.multi_cmd > 1)))
-				return (status = 2, ft_error_syntax("syntax error near unexpected token `('\n"));
+				return (status = 2, err_syntax("syntax error near unexpected token `('\n"));
 			if (p.prec_iss == OTHER || p.prec_iss == CHEVRON)
 			{
 				while (ft_isspace(msh->line[++i]) == 0);
 				// message = ft_error_message(msh->line + i); //MALLOC
 				//IF ERROR MALLOC
 				// printf("ERROR 2 line |%s| i %d\n", message, i);
-				return (status = 2, ft_error_syntax(ft_error_message(msh->line + i)));
+				return (status = 2, err_syntax(ft_error_message(msh->line + i)));
 			}
 			if (p.prec == PAR_OPEN)
 				p.multi_par = 1;
@@ -129,12 +129,12 @@ int ft_parse_bis(t_msh *msh)
 			if ((p.prec_iss == PAR_OPEN || p.prec_iss == CHEVRON ) && p.multi_par == 0)
 			{
 				printf("ERROR 3\n");
-				return (status = 2, ft_error_syntax("syntax error near unexpected token `)'\n"));
+				return (status = 2, err_syntax("syntax error near unexpected token `)'\n"));
 			}
 			if (p.par_o <= p.par_c)
 			{
 				printf("ERROR 4\n");
-				return (status = 2, ft_error_syntax("syntax error near unexpected token `)'\n"));
+				return (status = 2, err_syntax("syntax error near unexpected token `)'\n"));
 			}
 			if (p.par_o - p.par_c == 1)
 				p.multi_par = 0;
@@ -170,7 +170,7 @@ int ft_parse_bis(t_msh *msh)
 				// message = ft_error_message(msh->line + i); //MALLOC
 				//IF ERROR MALLOC
 				printf("ERROR 5\n");
-				return (status = 2, ft_error_syntax(ft_error_message(msh->line + i))); // a free dans la fonction error_syntax
+				return (status = 2, err_syntax(ft_error_message(msh->line + i))); // a free dans la fonction error_syntax
 			}
 			p.prec_iss = OTHER;
 			if (p.prec != OTHER)//
@@ -182,7 +182,7 @@ int ft_parse_bis(t_msh *msh)
 	if (p.par_c != p.par_o && p.prec_iss != OPERATOR) // POUR GERER SI PARENTHESE OUVERTE
 	{
 		printf("ERROR 6\n");
-		return (status = 2, ft_error_syntax("parentheses ouvertes...\n"));
+		return (status = 2, err_syntax("parentheses ouvertes...\n"));
 	}
 	return (0);
 }
@@ -391,13 +391,13 @@ bash: syntax error near unexpected token `('
 // 			else
 // 				prec_type_par = 1;
 // 			if (prec_iss == PAR_CLOSE /*|| prec_iss == OTHER*/)
-// 				return (ft_error_syntax("syntax error near unexpected token `('\n", 2, 0));
+// 				return (err_syntax("syntax error near unexpected token `('\n", 2, 0));
 // 			if (prec_iss == OTHER)
 // 			{
 // 				while (ft_isspace(minish->line[++i]) == 0);
 // 				line = ft_error_message(minish->line + i); //MALLOC
 // 				//IF ERROR MALLOC
-// 				return (ft_error_syntax(line, 2, 1));
+// 				return (err_syntax(line, 2, 1));
 // 			}
 // 			prec = PAR_OPEN;
 // 			prec_iss = PAR_OPEN;
@@ -412,11 +412,11 @@ bash: syntax error near unexpected token `('
 // 			printf(") BEF: minish->line[%d] = <%c>, prec = %d, prec_iss = %d, par_and_oper = %d, multi_par_o = %d, par_o = %d, multi_par_condition_close = %d, par_c = %d, par = %d\n", 
 // 			i, minish->line[i], prec, prec_iss, par_and_oper, multi_par_o, par_o, multi_par_condition_close, par_c, par);
 // 			if (prec_iss == PAR_OPEN)
-// 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+// 				return (err_syntax("syntax error near unexpected token `)'\n", 2, 0));
 // 			if (par_o <= par_c)
-// 				return (ft_error_syntax("syntax error near unexpected token `)'\n", 2, 0));
+// 				return (err_syntax("syntax error near unexpected token `)'\n", 2, 0));
 // 			if (prec == PAR_CLOSE && multi_par_o > 0 && prec_type_par == 2)
-// 				return (ft_error_syntax("", 2, 0));
+// 				return (err_syntax("", 2, 0));
 // 			if (multi_par_o > 0 && 2 * multi_par_o == par)
 // 				multi_par_condition_close += 1;
 // 			// if (multi_par_condition_close == 1 && prec == PAR_CLOSE)//manque quelque chose
@@ -461,7 +461,7 @@ bash: syntax error near unexpected token `('
 // 			{
 // 				line = ft_error_message(minish->line + i); //MALLOC
 // 				//IF ERROR MALLOC
-// 				return (ft_error_syntax(line, 2, 1)); // a free dans la fonction error_syntax
+// 				return (err_syntax(line, 2, 1)); // a free dans la fonction error_syntax
 // 			}
 // 			if (cmd == 1)
 // 				cmd = 2;
@@ -476,7 +476,7 @@ bash: syntax error near unexpected token `('
 // 	if (multi_par_o != 0 && multi_par_c == multi_par_o) //UTILE???
 // 	{
 // 		printf("multi_par_o %d\n", multi_par_o);
-// 		return (ft_error_syntax("", 2, 0));
+// 		return (err_syntax("", 2, 0));
 // 	}
 // 	// while (minish->line[i])
 // 	// {
@@ -488,7 +488,7 @@ bash: syntax error near unexpected token `('
 // 	// 	else if (minish->line[i] == ')')
 // 	// 	{
 // 	// 		if (par_o <= par_c)
-// 	// 			 return (ft_error_syntax("syntax error near unexpected token `)'\n", 2));
+// 	// 			 return (err_syntax("syntax error near unexpected token `)'\n", 2));
 // 	// 		par_c += 1;
 // 	// 		i++;
 // 	// 	}
@@ -576,7 +576,7 @@ bash: syntax error near unexpected token `('
 // 		{
 // 			printf("minish->line[%d] = %c prec = %d\n", i, minish->line[i], prec);
 // 			if (string_a == 1 || prec == PAR_CLOSE)
-// 				return (ft_error_syntax("minishell: syntax error near unexpected token `('\n", 2));
+// 				return (err_syntax("minishell: syntax error near unexpected token `('\n", 2));
 // 			if (par > 0 && ((par_c + 1 != par_o) || par_c == 0) && (string_b == 0 || string_b == 3))
 // 				string_b = 1;
 // 			par += 1;
@@ -588,16 +588,16 @@ bash: syntax error near unexpected token `('
 // 		{
 // 			printf("minish->line[%d] = %c prec = %d\n", i, minish->line[i], prec);
 // 			if (/*par % 2 == 0 &&*/ par == 0) //attention ne gere pas les doubles parenthese donc si 2 par ouverte rentre dedans
-// 				return (ft_error_syntax("minishell: syntax error near unexpected token `)'\n", 2));
+// 				return (err_syntax("minishell: syntax error near unexpected token `)'\n", 2));
 // 			if (string_a == 0)
-// 				return (ft_error_syntax("minishell: syntax error near unexpected token `)'\n", 2));
+// 				return (err_syntax("minishell: syntax error near unexpected token `)'\n", 2));
 // 			if (string_b == 1 || string_b == 2 || ((string_b == 3 || string_b == 5) && par_c + 1 == par_o))
 // 			{
 // 				printf("string_a = %d string_b = %d par_c = %d par_o = %d\n", string_a, string_b, par_c, par_o);
-// 				return (ft_error_syntax("erreur a ne pas imprimer\n", 1)); //revoir exitstatus
+// 				return (err_syntax("erreur a ne pas imprimer\n", 1)); //revoir exitstatus
 // 			}
 // 			if (string_b == 4)
-// 				return (ft_error_syntax("erreur exit status 1\n", 1)); //revoir exitstatus
+// 				return (err_syntax("erreur exit status 1\n", 1)); //revoir exitstatus
 // 			// else if (fonction pour traiter le parsing post fermeture pparenthese)
 // 			par -= 1;
 // 			par_c += 1;

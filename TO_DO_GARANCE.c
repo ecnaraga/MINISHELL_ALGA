@@ -56,7 +56,12 @@ bash-5.2$ "export" 'HOLAbon' (jour
 bash: syntax error near unexpected token `('
 bash-5.2$ 
 
-ATTENTION A CE TEST : "ech" (
+ATTENTION A CE TEST : bash-5.1$ echo $USER$LESS$$$$USER
+galambey-R834741834741USER
+bash-5.1$ echo $USER$LESS$$$$$USER
+galambey-R834741834741galambey
+bash-5.1$ echo $USER$LESS$$$USER
+galambey-R834741galambey
 
 
 

@@ -6,19 +6,19 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/24 11:29:20 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 14:36:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/*
-TO DO : A BIEN TESTER : VERIF COUNTWORD + FT_TEST mshELL ET STRLCPYmshELL
-PAS LES MME + FAIRE MASSE DE TESTS X VERIF QUE CA TIENT LA ROUTE
-
-ERREUR TEST : $LESS$VAR POUR LE TYPE
-
-*/
+static void	ft_init_var(int *n1, int *n2, int *n3, int *n4)
+{
+	*n1 = 0;
+	*n2 = 0;
+	*n3 = 0;
+	*n4 = 0;
+}
 
 /*
 Compte le nb de mots et le renvoie
@@ -31,10 +31,7 @@ static int	ft_countwords(const char *s)
 	int	d_q;
 	int	s_q;
 
-	wd = 0;
-	i = 0;
-	d_q = 0;
-	s_q = 0;
+	ft_init_var(&wd, &i, &d_q, &s_q);
 	while (s[i])
 	{
 		while (s[i] && d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 0)
@@ -66,24 +63,17 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 {
 	t_letter	l;
 
-	l.lt = 0;
-	q->d = 0;
-	q->s = 0;
-	l.k = 0;
+	ft_init_var(&l.lt, &l.k, &q->d, &q->s);
 	while (s[*i] && q->d % 2 == 0 && q->s % 2 == 0
 		&& (s[*i] == '"' || s[*i] == 39 || ft_isspace(s[*i]) == 0))
-	{
-		ft_inc_quote(s[*i], &q->d, &q->s);
-		*i += 1;
-	}
+		ft_inc_quote(s[(*i)++], &q->d, &q->s);
 	if (i == 0 && s[*i] && ft_test(s[*i], &s[*i + 1], NULL, q) == 0)
 	{
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
 			*dollar += 1;
-		if (ft_test_bis(s[*i], q->d, q->s) == 0)
+		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
 			l.lt++;
-		*i += 1;
 		l.k += 1;
 	}
 	while (s[*i] && ft_test(s[*i], &s[*i + 1], &s[*i - 1], q) == 0)
@@ -91,34 +81,11 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
 			*dollar += 1;
-		if (ft_test_bis(s[*i], q->d, q->s) == 0)
+		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
 			l.lt++;
-		*i += 1;
 		l.k += 1;
 	}
 	return (l);
-}
-
-/*
-Alloue dynamiquement un tableau de structure de la taille du nb potentielles
-	variables d environnement (dollar) presentes dans le mot qui permettra de
-	preciser s'il faudra expand ou non la variable potentielle
-*/
-static int	ft_alloc_type(t_split *strs, int j)
-{
-	int	d;
-
-	strs[j].type = NULL;
-	if (strs[j].dollar > 0)
-	{
-		strs[j].type = ft_magic_malloc(MALLOC, sizeof(t_dollar) * strs[j].dollar, NULL); // MALLOC
-		if (strs[j].type == NULL)
-			return (1);
-		d = -1;
-		while (++d < strs[j].dollar)
-			strs[j].type[d].expnd = TO_DEFINE;
-	}
-	return (0);
 }
 
 /*
@@ -152,12 +119,11 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 	{
 		strs[j].dollar = 0;
 		l = ft_count_letter(s, &q, &i, &strs[j].dollar);
-		// strs[j].data = (char *)malloc(sizeof(char) * (l.lt + 1)); // MALLOC DANS BOUCLE
-		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL); // MALLOC DANS BOUCLE
+		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL);
 		if (strs[j].data == NULL)
 			return (NULL);
 		strs[j].token = TO_DEFINE;
-		if (ft_alloc_type(strs, j) == 1) //MALLOC DANS BOUCLE
+		if (ft_alloc_type(strs, j) == 1)
 			return (NULL);
 		if (l.lt > 0)
 			ft_strlcpy_msh(&strs[j], s + i - l.k - 1, l.lt + 1, i - l.k - 1);
@@ -174,7 +140,7 @@ type = Voir explication de ft_split_strs (ci-dessus)
 Separateurs = Isspaces si PAS entre double ou single quote(d_q ou s_q)
 Renvoie NULL en cas d'erreur de malloc
 */
-t_split	*ft_split_msh(/*t_msh *msh, */char const *s)
+t_split	*ft_split_msh(char const *s)
 {
 	int		wd;
 	t_split	*strs;
@@ -182,11 +148,10 @@ t_split	*ft_split_msh(/*t_msh *msh, */char const *s)
 	if (!s)
 		return (NULL);
 	wd = ft_countwords(s);
-	// msh->m.strs = (t_split *)malloc(sizeof(t_split) * (wd + 1)); //MALLOC
-	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL); //MALLOC
+	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL);
 	if (strs == NULL)
 		return (NULL);
-	if (ft_split_strs(s, strs, wd) == NULL) //MALLOC
+	if (ft_split_strs(s, strs, wd) == NULL)
 		return (NULL);
 	strs[wd].data = NULL;
 	strs[wd].type = NULL;

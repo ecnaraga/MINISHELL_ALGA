@@ -6,13 +6,15 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/16 16:33:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 16:30:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
 
 // INCLURE l'expand
+//Attention au cas ">(" et "> ("
+//Attention au cas "<(" et  "< ("
 
 void	ft_token(t_msh *msh)
 {
@@ -21,9 +23,9 @@ void	ft_token(t_msh *msh)
 	i = -1;
 	while (msh->av[++i].data )
 	{
-		if (!msh->av[i].data[0] /*|| msh->av[i].token != TO_DEFINE*/)
+		if (!msh->av[i].data[0])
 			continue ;
-		if (msh->av[i].data[0] == '>') //Attention au cas ">(" et "> ("
+		if (msh->av[i].data[0] == '>') 
 		{
 			msh->av[i].token = CHEVRON;
 			if (msh->av[i + 1].data && msh->av[i].data[1] && msh->av[i].data[1] == '>')
@@ -32,7 +34,7 @@ void	ft_token(t_msh *msh)
 			else if (msh->av[i + 1].data)
 				msh->av[i + 1].token = OUTFILE_TRUNC;
 		}
-		else if (msh->av[i].data[0] == '<') //Attention au cas "<(" et  "< ("
+		else if (msh->av[i].data[0] == '<')
 		{
 			msh->av[i].token = CHEVRON;
 			if (msh->av[i + 1].data && msh->av[i].data[1] && msh->av[i].data[1] == '<')

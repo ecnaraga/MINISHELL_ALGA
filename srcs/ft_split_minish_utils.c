@@ -6,30 +6,11 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/24 11:29:43 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 15:04:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-/*
-Free en cas d 'erreur de malloc
-*/
-// void	*ft_free_strs(t_split *strs, int j)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < j)
-// 	{
-// 		ft_magic_malloc(FREE, 0, strs[i].data);
-// 		if (strs[i].type)
-// 			ft_magic_malloc(FREE, 0, strs[i].type);
-// 		i++;
-// 	}
-// 	ft_magic_malloc(FREE, 0, strs);
-// 	return (NULL);
-// }
 
 /*
 Teste les conditions de la boucle de ft_count_letter pour compter le nb de k
@@ -50,11 +31,11 @@ int	ft_test(char c, const char *c1, const char *cm1, t_quote *q)
 		return (1);
 	if (c != '"' && c != 39)
 		return (0);
-	if (c == '"' && ((c1 && *c1 && ft_isspace(*c1) == 1)
-			|| (cm1 && ft_isspace(*cm1) == 1)))
+	if (c == '"' && ((c1 && *c1 && ft_isspace(*c1) == 1) || (cm1
+				&& ft_isspace(*cm1) == 1)))
 		return (0);
-	if (c == 39 && ((c1 && *c1 && ft_isspace(*c1) == 1)
-			|| (cm1 && ft_isspace(*cm1) == 1)))
+	if (c == 39 && ((c1 && *c1 && ft_isspace(*c1) == 1) || (cm1
+				&& ft_isspace(*cm1) == 1)))
 		return (0);
 	else
 		return (1);
@@ -74,4 +55,27 @@ int	ft_test_bis(char c, int d_q, int s_q)
 		return (0);
 	else
 		return (1);
+}
+
+/*
+Alloue dynamiquement un tableau de structure de la taille du nb potentielles
+	variables d environnement (dollar) presentes dans le mot qui permettra de
+	preciser s'il faudra expand ou non la variable potentielle
+*/
+int	ft_alloc_type(t_split *strs, int j)
+{
+	int	d;
+
+	strs[j].type = NULL;
+	if (strs[j].dollar > 0)
+	{
+		strs[j].type = ft_magic_malloc(MALLOC, sizeof(t_dollar)
+				* strs[j].dollar, NULL);
+		if (strs[j].type == NULL)
+			return (1);
+		d = -1;
+		while (++d < strs[j].dollar)
+			strs[j].type[d].expnd = TO_DEFINE;
+	}
+	return (0);
 }

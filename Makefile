@@ -20,6 +20,7 @@ SRCS = main.c \
 	   ft_structtablen.c \
 	   ft_token.c \
 	   ft_magic_malloc.c \
+	   ft_magic_malloc_utils.c \
 	   signal.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)

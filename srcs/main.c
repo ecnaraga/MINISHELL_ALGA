@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 14:35:09 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/24 16:34:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../includes/minishell.h"
 
@@ -47,7 +48,6 @@ int main(int ac, char **av, char **env)
 	t_msh msh;
 	
 	(void)av;
-	msh.env = get_env(env);
 	if (isatty(0) == 1) //A REGLER test ./minishell | ./minishell
 	{
 		printf("stdin : %d\n", isatty(0));
@@ -55,6 +55,7 @@ int main(int ac, char **av, char **env)
 	}
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
+	msh.env = get_env(env);
 	while (1)
 	{
 		ft_signal_handler_msh();
@@ -77,30 +78,30 @@ int main(int ac, char **av, char **env)
 		if (ft_parsing(&msh) != 0)
 			continue;
 		
-		// int i = -1;
-		// while (msh.av[++i].data)
-		// {
-		// 	printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
-		// 		msh.av[i].data, i, msh.av[i].token);
-		// 	if (msh.av[i].type)
-		// 	{
-		// 		int d = -1;
-		// 		while (++d < msh.av[i].dollar)
-		// 			printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
-		// 				msh.av[i].type[d].expnd, i, d,
-		// 				msh.av[i].type[d].len_variable);
-		// 	}
-		// }
-		// printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
-		// 	msh.av[i].data, i, msh.av[i].token);
-		// if (msh.av[i].type)
-		// {
-		// 	int d = -1;
-		// 	while (++d < msh.av[i].dollar)
-		// 		printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
-		// 			msh.av[i].type[d].expnd, i, d,
-		// 			msh.av[i].type[d].len_variable);
-		// }
+		int i = -1;
+		while (msh.av[++i].data)
+		{
+			printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
+				msh.av[i].data, i, msh.av[i].token);
+			if (msh.av[i].type)
+			{
+				int d = -1;
+				while (++d < msh.av[i].dollar)
+					printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
+						msh.av[i].type[d].expnd, i, d,
+						msh.av[i].type[d].len_variable);
+			}
+		}
+		printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
+			msh.av[i].data, i, msh.av[i].token);
+		if (msh.av[i].type)
+		{
+			int d = -1;
+			while (++d < msh.av[i].dollar)
+				printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
+					msh.av[i].type[d].expnd, i, d,
+					msh.av[i].type[d].len_variable);
+		}
 		
 		ft_magic_malloc(PRINT, 0, NULL);
 		ft_magic_malloc(FLUSH, 0, NULL);
