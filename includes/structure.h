@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 10:41:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/23 16:40:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,13 @@ typedef	struct s_split
 	t_dollar	*type;
 }		t_split;
 
-typedef	struct s_alloc
-{
-	char *tmp; //parse_line && parse_bis/error_message&& parseter/message_final
-	char *fstr; //parse_line UNNIQUEMENT
-	char *message; //parse_bis/error_message && parseter/message_final
-	char *new_line;
-	t_split *strs; // UNIQUEMENT POUR SPLIT
-}		t_alloc;
-
-
 typedef	struct s_msh
 {
 	char	**env;
 	char	*line;	
 	int		ac;
 	t_split *av;
-	t_alloc		m;
+	int		previous_status;
 	t_node	*node;
 }		t_msh;
 
@@ -74,6 +64,18 @@ typedef	struct s_index
 	size_t	j;
 	int	d;
 }		t_index;
+
+typedef struct s_par
+{
+	int par_o;
+	int par_c;
+	int prec_iss;
+	int chev;
+	int prec;
+	int multi_par;
+	int multi_cmd;
+}		t_par;
+
 
 enum	e_token
 {

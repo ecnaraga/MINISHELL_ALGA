@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 14:30:24 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:24:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ char	*add_spaces(char *str)
 
 	get_final_size(&count, &flag, str, &i);
 	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL);
+	if (!fstr)
+		return (NULL);
 	i = 0;
 	j = 0;
 	flag = 0;

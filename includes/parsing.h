@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 14:33:22 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:30:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	is_operator(char c);
 ft_parse_bis
 */
 int		ft_parse_bis(t_msh *minish);
-int 	ft_error_syntax(char *str, int exitstatus, int clean);
-char	*ft_error_message(t_msh *msh, char *str);
+int 	ft_error_syntax(char *str);
+char	*ft_error_message(char *str);
 
 /*
 ft_parse_ter.c
@@ -49,12 +49,12 @@ void	ft_inc_quote(char c, int *d_q, int *s_q);
 /*
 ft_split_minish.c
 */
-t_split	*ft_split_msh(/*t_msh *msh, */char const *s); //MALLOC
+t_split	*ft_split_msh(char const *s); //MALLOC
 
 /*
 ft_split_minish_utils.c
 */
-void	*ft_free_strs(t_split *strs, int j);
+// void	*ft_free_strs(t_split *strs, int j);
 int		ft_test(char c, const char *c1, const char *cm1, t_quote *q);
 int		ft_test_bis(char c, int d_q, int s_q);
 

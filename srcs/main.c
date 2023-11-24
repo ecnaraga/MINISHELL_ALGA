@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 14:09:44 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:33:45 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,31 +17,27 @@
 
 int status = 0;
 
-
 int ft_parsing(t_msh *msh)
 {
-	status = ft_parse_line(msh);
-	if (status != 0)
-		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	if (ft_parse_line(msh) != 0)
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	printf("PASSAGE ALIX TO GAGA\n");
-	status = ft_parse_bis(msh);
-	if (status != 0) // NE PAS MAJ EXIT STATUS
-		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	if (ft_parse_bis(msh) != 0) // NE PAS MAJ EXIT STATUS
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1); ///////////////////////////////////////CHECK ARRETE LA
 	msh->av = ft_split_msh(msh->line); // TO DO RECUPERER EXIT STATUS DANS SPLIT
 	if (!msh->av)
-		return (ft_magic_malloc(FLUSH, 0, NULL), status = 128 + 6); // verifier si status 128 + 6 bien retourne
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	msh->ac = ft_structtablen(msh->av);
 	if (msh->ac == 0) // NE PAS MAJ EXIT STATUS
-		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	ft_token(msh);
-	status = ft_parse_ter(msh);
-	if (status != 0)
-		return (ft_magic_malloc(FLUSH, 0, NULL), status);
+	if (ft_parse_ter(msh) != 0)
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	return (0);
 }
 void	ft_handle_eof(void)
 {
-	printf("exit\n");
+	ft_putstr_fd("exit\n", 2);
 	ft_magic_malloc(FLUSH, 0, NULL);
 	rl_clear_history();
 }
@@ -62,9 +58,16 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		ft_signal_handler_msh();
-		msh.line = ft_magic_malloc(ADD, 0, readline("Minishell$ ")); // malloc
+		msh.line = readline("Minishell$ ");
+		msh.previous_status = status;
+		status = 0;
 		if (!msh.line) // EOF
 			return (ft_handle_eof(), status); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
+		if (!ft_magic_malloc(ADD, 0, msh.line))
+		{
+			ft_magic_malloc(FLUSH, 0, NULL);
+			continue ;
+		}	
 		if (!msh.line[0])
 		{
 			ft_magic_malloc(FLUSH, 0, NULL);

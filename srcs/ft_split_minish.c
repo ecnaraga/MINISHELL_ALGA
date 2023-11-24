@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/22 10:49:24 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 11:29:20 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ static int	ft_alloc_type(t_split *strs, int j)
 	strs[j].type = NULL;
 	if (strs[j].dollar > 0)
 	{
-		// strs[j].type = (t_dollar *)malloc(sizeof(t_dollar) * strs[j].dollar); // MALLOC
 		strs[j].type = ft_magic_malloc(MALLOC, sizeof(t_dollar) * strs[j].dollar, NULL); // MALLOC
 		if (strs[j].type == NULL)
 			return (1);
@@ -156,10 +155,10 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 		// strs[j].data = (char *)malloc(sizeof(char) * (l.lt + 1)); // MALLOC DANS BOUCLE
 		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL); // MALLOC DANS BOUCLE
 		if (strs[j].data == NULL)
-			return (ft_free_strs(strs, j));
+			return (NULL);
 		strs[j].token = TO_DEFINE;
 		if (ft_alloc_type(strs, j) == 1) //MALLOC DANS BOUCLE
-			return (ft_free_strs(strs, j));
+			return (NULL);
 		if (l.lt > 0)
 			ft_strlcpy_msh(&strs[j], s + i - l.k - 1, l.lt + 1, i - l.k - 1);
 		else
