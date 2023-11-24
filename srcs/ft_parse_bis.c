@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 16:20:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 18:11:37 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,19 @@
 
 //ATTENTION A GESTION ERREUR SI PARENTHESES OUVERTE...
 
-int err_syntax(char *str) // a modifier
+static void	ft_init_var(t_par *p, int *i)
+{
+	*i = 0;
+	p->par_o = 0;
+	p->par_c = 0;
+	p->prec_iss = 0;
+	p->chev = 0;
+	p->prec = 0;
+	p->multi_par = 0;
+	p->multi_cmd = 0;
+}
+
+int err_syntax(char *str)
 {
 	if (!str)
 		return (1);
@@ -28,19 +40,20 @@ int err_syntax(char *str) // a modifier
 char	*ft_error_message(char *str)
 {
 	int	i;
-	// char *tmp;
 	char *message;
 
 	i = -1;
 	if (!str[0])
-		message = ft_magic_malloc(ADD, 0, ft_strdup("minishell: syntax error near unexpected token `newline'\n"));
+		message = ft_magic_malloc(ADD, 0, ft_strdup
+				("minishell: syntax error near unexpected token `newline'\n"));
 	else
 	{
 		while (str[++i])
 			if (ft_isspace(str[i]) == 0)
 				break ;
 		str[i] = '\0';
-		message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str));
+		message = ft_magic_malloc(ADD, 0, ft_strjoin
+				("minishell: syntax error near unexpected token `", str));
 		if (!message)
 			return (NULL);
 		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
@@ -61,9 +74,22 @@ int	ft_count_char(char *str)
 	c = str[0];
 	while (str[++i] == c)
 		count++;
-	if (!str[i] || (str[i] != c && ft_isspace(str[i]) != 0) || ((c == '>' || c == '&' || c == '|') && count > 2) || (count > 3 && c == '<'))
+	if (!str[i] || (str[i] != c && ft_isspace(str[i]) != 0)
+		|| ((c == '>' || c == '&' || c == '|') && count > 2)
+		|| (count > 3 && c == '<'))
 		return (1);
 	return (0);
+}
+
+void	ft_pass_quote(t_msh *msh, t_par *p, int *i, char c)
+{
+	while (msh->line[++(*i)] && msh->line[*i] != c)
+		;
+	(*i)++;
+	if (p->prec == ISS && (p->prec_iss == OTHER || p->prec_iss == CHEVRON))
+		p->multi_cmd = 2;
+	p->prec_iss = OTHER;
+	p->prec = OTHER;
 }
 
 //penser a gerer les parentheses dans des quotes
@@ -72,34 +98,13 @@ int ft_parse_bis(t_msh *msh)
 	t_par	p;
 	int	i;
 	
-	i = 0;
-	p.par_o = 0;
-	p.par_c = 0;
-	p.prec_iss = 0;
-	p.chev = 0;
-	p.prec = 0;
-	p.multi_par = 0;
-	p.multi_cmd = 0;
+	ft_init_var(&p, &i);
 	while (msh->line[i])
 	{
-		if (msh->line[i] == '"')//mettre multicmd
-		{
-			while (msh->line[++i] && msh->line[i] != '"');
-			i++;
-			if (p.prec == ISS && (p.prec_iss == OTHER || p.prec_iss == CHEVRON))
-				p.multi_cmd = 2;
-			p.prec_iss = OTHER;
-			p.prec = OTHER;
-		}
-		else if (msh->line[i] == '\'')//mettre multicmd
-		{
-			while (msh->line[++i] && msh->line[i] != '\'');
-			i++;
-			if (p.prec == ISS && (p.prec_iss == OTHER || p.prec_iss == CHEVRON))
-				p.multi_cmd = 2;
-			p.prec_iss = OTHER;
-			p.prec = OTHER;
-		}
+		if (msh->line[i] == '"')
+			ft_pass_quote(msh, &p, &i, '"');
+		else if (msh->line[i] == '\'')
+			ft_pass_quote(msh, &p, &i, '\'');
 		else if (ft_isspace(msh->line[i]) == 0)
 		{
 			p.prec = ISS;
@@ -111,10 +116,8 @@ int ft_parse_bis(t_msh *msh)
 				return (status = 2, err_syntax("syntax error near unexpected token `('\n"));
 			if (p.prec_iss == OTHER || p.prec_iss == CHEVRON)
 			{
-				while (ft_isspace(msh->line[++i]) == 0);
-				// message = ft_error_message(msh->line + i); //MALLOC
-				//IF ERROR MALLOC
-				// printf("ERROR 2 line |%s| i %d\n", message, i);
+				while (ft_isspace(msh->line[++i]) == 0)
+					;
 				return (status = 2, err_syntax(ft_error_message(msh->line + i)));
 			}
 			if (p.prec == PAR_OPEN)
