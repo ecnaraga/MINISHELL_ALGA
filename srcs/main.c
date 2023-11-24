@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 11:33:45 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 13:51:08 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,30 +77,30 @@ int main(int ac, char **av, char **env)
 		if (ft_parsing(&msh) != 0)
 			continue;
 		
-		// int i = -1;
-		// while (msh.av[++i].data)
-		// {
-		// 	printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
-		// 		msh.av[i].data, i, msh.av[i].token);
-		// 	if (msh.av[i].type)
-		// 	{
-		// 		int d = -1;
-		// 		while (++d < msh.av[i].dollar)
-		// 			printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
-		// 				msh.av[i].type[d].expnd, i, d,
-		// 				msh.av[i].type[d].len_variable);
-		// 	}
-		// }
-		// printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
-		// 	msh.av[i].data, i, msh.av[i].token);
-		// if (msh.av[i].type)
-		// {
-		// 	int d = -1;
-		// 	while (++d < msh.av[i].dollar)
-		// 		printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
-		// 			msh.av[i].type[d].expnd, i, d,
-		// 			msh.av[i].type[d].len_variable);
-		// }
+		int i = -1;
+		while (msh.av[++i].data)
+		{
+			printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
+				msh.av[i].data, i, msh.av[i].token);
+			if (msh.av[i].type)
+			{
+				int d = -1;
+				while (++d < msh.av[i].dollar)
+					printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
+						msh.av[i].type[d].expnd, i, d,
+						msh.av[i].type[d].len_variable);
+			}
+		}
+		printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
+			msh.av[i].data, i, msh.av[i].token);
+		if (msh.av[i].type)
+		{
+			int d = -1;
+			while (++d < msh.av[i].dollar)
+				printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
+					msh.av[i].type[d].expnd, i, d,
+					msh.av[i].type[d].len_variable);
+		}
 		
 		ft_magic_malloc(PRINT, 0, NULL);
 		ft_magic_malloc(FLUSH, 0, NULL);

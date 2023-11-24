@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 09:39:11 by garance           #+#    #+#             */
-/*   Updated: 2023/11/22 16:20:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 16:28:20 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ void	*ft_free_split_msh(t_split *strs)
 		i++;
 	}
 	ft_magic_malloc(FREE, 0, strs);
-	// strs = NULL;
 	return (NULL);
 }

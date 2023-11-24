@@ -6,149 +6,91 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/23 15:42:36 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/24 14:13:21 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// typedef struct s_liste
-// {
-// 	void				*content;
-// 	struct s_liste		*next;
-// }						t_liste;
-
-void del(void *content)
+void	ft_list_remove(t_list **begin_list, t_list **lst, t_list **prev)
 {
-	free(content);
+	if ((*lst)->next == NULL)
+	{
+		if ((*lst) == *begin_list)
+			*begin_list = NULL;
+		if (*prev)
+			(*prev)->next = NULL;
+		ft_lstdelone(*lst, del);
+		*lst = NULL;
+	}
+	else if (*lst == *begin_list)
+	{
+		*begin_list = (*lst)->next;
+		ft_lstdelone(*lst, del);
+		*lst = *begin_list;
+	}
+	else
+	{
+		(*prev)->next = (*lst)->next;
+		ft_lstdelone(*lst, del);
+		*lst = (*prev)->next;
+	}
 }
 
-int ft_check(void *data, void *data_ref)
+void	ft_list_remove_if(t_list **begin_list, void *addr, int (*cmp)())
 {
-    return (/**(int *)*/data == /**(int *)*/data_ref);
+	t_list	*prev;
+	t_list	*lst;
+
+	lst = *begin_list;
+	prev = NULL;
+	while (lst)
+	{
+		if (cmp(lst->content, addr))
+			ft_list_remove(begin_list, &lst, &prev);
+		else
+		{
+			prev = lst;
+			lst = lst->next;
+		}
+	}
 }
 
-void ft_list_remove_if(t_list **begin_list, void *addr, int (*cmp)())
+void	*ft_magic_add_malloc(t_list **mlc, int rule, size_t size, void *addr)
 {
-    t_list  *prev;
-    t_list  *lst;
-
-    lst = *begin_list;
-    prev = NULL;
-    while (lst)
-    {
-        if (cmp(lst->content, addr))
-        {
-            if (lst->next == NULL)
-            {
-                if (lst == *begin_list)
-                    *begin_list = NULL;
-                if (prev)
-                    prev->next = NULL;
-				printf("FREE mlc->content %p\n", lst->content);
-				ft_lstdelone(lst, del);
-                // free(lst);
-                lst = NULL;
-            }
-            else if (lst == *begin_list)
-            {
-                *begin_list = lst->next;
-				printf("FREE mlc->content %p\n", lst->content);
-				ft_lstdelone(lst, del);
-                // free(lst);
-                lst = *begin_list;
-            }
-            else
-            {
-                prev->next = lst->next;
-				printf("FREE mlc->content %p\n", lst->content);
-				ft_lstdelone(lst, del);
-                // free(lst);
-                lst = prev->next;
-            }
-        }
-        else
-        {
-            prev = lst;
-            lst = lst->next;
-        }
-    }
-}
-
-t_list	*ft_lstnew_malloc(size_t size)
-{
-	t_list	*temp;
-
-	temp = malloc(sizeof(t_list));
-	if (temp == NULL)
-		return (NULL);
-	temp->content = malloc(size);
-	if (temp->content == NULL)
-		return (free(temp), NULL);
-	temp->next = NULL;
-	return (temp);
-}
-
-t_list	*ft_lstnew_add(void *addr)
-{
-	t_list	*temp;
-
-	if (!addr)
-		return (NULL);
-	temp = malloc(sizeof(t_list));
-	if (temp == NULL)
-		return (free(addr), NULL);
-	temp->content = addr;
-	temp->next = NULL;
-	return (temp);
-}
-
-void *ft_magic_malloc(int rule, size_t size, void *addr)
-{
-	static	t_list *mlc;
 	t_list	*head;
 	t_list	*tmp;
-	int i;
-	
-	if (rule == MALLOC || rule == ADD)
+
+	head = *mlc;
+	if (rule == MALLOC)
+		tmp = ft_lstnew_malloc(size);
+	else
+		tmp = ft_lstnew_add(addr);
+	if (!tmp)
+		return (ft_putstr_fd("Error malloc\n", 2), status = 130, NULL);
+	printf("MALLOC %p\n", tmp->content);
+	if (*mlc)
 	{
-		head = mlc;
-		if (rule == MALLOC)
-			tmp = ft_lstnew_malloc(size);
-		else
-			tmp = ft_lstnew_add(addr);
-		if (!tmp)
-			return (ft_putstr_fd("Error malloc\n", 2), status = 130, NULL);
-		if (mlc)
-		{
-			while (mlc->next)
-				mlc = mlc->next;
-			mlc->next = tmp;
-			// printf("MALLOC mlc->content %p mlc %p\n", mlc->next->content, mlc);
-			mlc = head;
-		}
-		else
-		{
-			mlc = tmp;
-			// printf("MALLOC mlc->content %p mlc %p\n", mlc->content, mlc);
-		}
-		return (tmp->content);
+		while ((*mlc)->next)
+			(*mlc) = (*mlc)->next;
+		(*mlc)->next = tmp;
+		*mlc = head;
 	}
+	else
+		*mlc = tmp;
+	return (tmp->content);
+}
+
+void	*ft_magic_malloc(int rule, size_t size, void *addr)
+{
+	static t_list	*mlc;
+	t_list			*tmp;
+
+	if (rule == MALLOC || rule == ADD)
+		return (ft_magic_add_malloc(&mlc, rule, size, addr));
 	else if (rule == FREE)
 		ft_list_remove_if(&mlc, addr, ft_check);
-	else if (rule == PRINT)
-	{
-		head = mlc;
-		i = 0;
-		while (mlc)
-		{
-			// printf("PRINT %d %p\n", i, mlc->content);
-			i++;
-			mlc = mlc->next;
-		}
-		mlc = head;
-	}
-	else //rule == FLUSH
+	else
 	{
 		while (mlc)
 		{
