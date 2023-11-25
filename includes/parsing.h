@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 16:35:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/25 13:59:22 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-# include "../libft/includes/libft.h"
+// # include "../libft/includes/libft.h"
+# include "../includes/minishell.h"
 
 #ifndef PARSING_H
 # define PARSING_H
@@ -31,11 +32,21 @@ t_list	**get_env(char **str);
 //char	*ft_parse_bis_bis(char *str);
 
 /*
-ft_parse_bis
+ft_parse_bis.c
 */
 int		ft_parse_bis(t_msh *minish);
-int 	err_syntax(char *str);
-char	*ft_error_message(char *str);
+
+/*
+ft_parse_bis_utils.c
+*/
+int	ft_count_char(char *str);
+void	ft_pass_quote(t_msh *msh, t_par *p, int *i, char c);
+int	ft_other_char(t_msh *msh, t_par *p, int *i);
+
+/*
+ft_parse_bis_storage.c
+*/
+t_storage	ft_storage(int c);
 
 /*
 ft_parse_ter.c
@@ -48,6 +59,12 @@ ft_parse_utils.c
 int		ft_is_isspace(char c); // remplacer par ft_isspace x norme (nom trop long)
 int		ft_isspace(char c);
 void	ft_inc_quote(char c, int *d_q, int *s_q);
+
+/*
+ft_error_message_syntax.c
+*/
+int 	err_syntax(char *str);
+char	*ft_error_message(char *str);
 
 /*
 ft_split_minish.c

@@ -3,190 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 18:11:37 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/25 14:12:11 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minishell.h"
 
-//TO DO : UNE FOIS ECHO ET EXEC IMPLEMENTER PENSER A VERIFIER EXIT STATUS X TOUS LES CAS D ERREUR
+//TO DO : UNE FOIS ECHO ET EXEC IMPLEMENTER PENSER A VERIFIER EXIT STATUS X
+//TOUS LES CAS D ERREUR
 
 //ATTENTION A GESTION ERREUR SI PARENTHESES OUVERTE...
 
+/*
+Initialize the parameters at 0
+*/
 static void	ft_init_var(t_par *p, int *i)
 {
 	*i = 0;
 	p->par_o = 0;
 	p->par_c = 0;
-	p->prec_iss = 0;
+	p->prec_iss = TO_DEFINE;
 	p->chev = 0;
-	p->prec = 0;
+	p->prec = TO_DEFINE;
 	p->multi_par = 0;
 	p->multi_cmd = 0;
 }
 
-int err_syntax(char *str)
+static int	ft_parse_parenthesis(t_msh *msh, t_par *p, t_storage *f, int *i)
 {
-	if (!str)
-		return (1);
-	ft_putstr_fd(str, 2);
-	return (1);
-}
-
-// echo ( ls )
-char	*ft_error_message(char *str)
-{
-	int	i;
-	char *message;
-
-	i = -1;
-	if (!str[0])
-		message = ft_magic_malloc(ADD, 0, ft_strdup
-				("minishell: syntax error near unexpected token `newline'\n"));
-	else
+	if (msh->line[*i] == '"' || msh->line[*i] == '\'')
+		ft_pass_quote(msh, p, i, msh->line[*i]);
+	else if (ft_isspace(msh->line[*i]) == 0)
 	{
-		while (str[++i])
-			if (ft_isspace(str[i]) == 0)
-				break ;
-		str[i] = '\0';
-		message = ft_magic_malloc(ADD, 0, ft_strjoin
-				("minishell: syntax error near unexpected token `", str));
-		if (!message)
-			return (NULL);
-		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
+		p->prec = ISS;
+		(*i)++;
 	}
-	return (message);
-}
-
-int	ft_count_char(char *str)
-{
-	int i;
-	int count;
-	int err;
-	char c;
-
-	i = -1;
-	count = 0;
-	err = 0;
-	c = str[0];
-	while (str[++i] == c)
-		count++;
-	if (!str[i] || (str[i] != c && ft_isspace(str[i]) != 0)
-		|| ((c == '>' || c == '&' || c == '|') && count > 2)
-		|| (count > 3 && c == '<'))
+	else if (msh->line[*i] == '(' || msh->line[*i] == ')')
+	{
+		(*f) = ft_storage(msh->line[*i]);
+		if ((*f)(msh, p, i) != 0)
+			return (1);
+	}
+	else if (ck_char("&|><", msh->line[*i]) != 0)
+	{
+		(*f) = ft_storage(msh->line[*i]);
+		if ((*f)(msh, p, i) == 0)
+			return (2);
+	}
+	else if (ft_other_char(msh, p, i) != 0)
 		return (1);
 	return (0);
 }
 
-void	ft_pass_quote(t_msh *msh, t_par *p, int *i, char c)
-{
-	while (msh->line[++(*i)] && msh->line[*i] != c)
-		;
-	(*i)++;
-	if (p->prec == ISS && (p->prec_iss == OTHER || p->prec_iss == CHEVRON))
-		p->multi_cmd = 2;
-	p->prec_iss = OTHER;
-	p->prec = OTHER;
-}
-
-//penser a gerer les parentheses dans des quotes
 int ft_parse_bis(t_msh *msh)
 {
 	t_par	p;
 	int	i;
+	int res;
+	t_storage function;
 	
 	ft_init_var(&p, &i);
 	while (msh->line[i])
 	{
-		if (msh->line[i] == '"')
-			ft_pass_quote(msh, &p, &i, '"');
-		else if (msh->line[i] == '\'')
-			ft_pass_quote(msh, &p, &i, '\'');
-		else if (ft_isspace(msh->line[i]) == 0)
-		{
-			p.prec = ISS;
-			i++;
-		}
-		else if (msh->line[i] == '(')
-		{
-			if (p.prec_iss == PAR_CLOSE || ((p.prec_iss == OTHER || p.prec_iss == CHEVRON) && (p.chev == 1 || p.multi_cmd > 1)))
-				return (status = 2, err_syntax("syntax error near unexpected token `('\n"));
-			if (p.prec_iss == OTHER || p.prec_iss == CHEVRON)
-			{
-				while (ft_isspace(msh->line[++i]) == 0)
-					;
-				return (status = 2, err_syntax(ft_error_message(msh->line + i)));
-			}
-			if (p.prec == PAR_OPEN)
-				p.multi_par = 1;
-			p.prec_iss = PAR_OPEN;
-			p.prec = PAR_OPEN;
-			p.par_o += 1;
-			i++;
-		}
-		else if (msh->line[i] == ')')
-		{
-			if ((p.prec_iss == PAR_OPEN || p.prec_iss == CHEVRON ) && p.multi_par == 0)
-			{
-				printf("ERROR 3\n");
-				return (status = 2, err_syntax("syntax error near unexpected token `)'\n"));
-			}
-			if (p.par_o <= p.par_c)
-			{
-				printf("ERROR 4\n");
-				return (status = 2, err_syntax("syntax error near unexpected token `)'\n"));
-			}
-			if (p.par_o - p.par_c == 1)
-				p.multi_par = 0;
-			p.prec_iss = PAR_CLOSE;
-			p.prec = PAR_CLOSE;
-			p.par_c += 1;
-			i++;
-		}
-		else if (msh->line[i] == '&' || msh->line[i] == '|')
-		{
-			if (((p.prec_iss == OPERATOR || p.prec_iss == CHEVRON) && p.prec == ISS) ||  ft_count_char(msh->line + i) == 1)
-				return (0);
-			p.prec_iss = OPERATOR;
-			p.prec = OPERATOR;
-			p.chev = 0;
-			p.multi_par = 0;
-			p.multi_cmd = 0; //
-			i++;
-		}
-		else if (msh->line[i] == '>' || msh->line[i] == '<')//passer en chevron
-		{
-			p.chev = 1;
-			if ((p.prec_iss == CHEVRON && p.prec == ISS) ||  ft_count_char(msh->line + i) == 1)
-				return (0);
-			p.prec_iss = CHEVRON;
-			p.prec = CHEVRON;
-			i++;
-		}
-		else
-		{
-			if (p.prec_iss == PAR_CLOSE && msh->line[i] != '>' && msh->line[i] != '<')
-			{
-				// message = ft_error_message(msh->line + i); //MALLOC
-				//IF ERROR MALLOC
-				printf("ERROR 5\n");
-				return (status = 2, err_syntax(ft_error_message(msh->line + i))); // a free dans la fonction error_syntax
-			}
-			p.prec_iss = OTHER;
-			if (p.prec != OTHER)//
-				p.multi_cmd += 1;
-			p.prec = OTHER;
-			i++;
-		}
+		res = ft_parse_parenthesis(msh, &p, &function, &i);
+		if (res == 1)
+			return (1);
+		if (res == 2)
+			return (0);
 	}
 	if (p.par_c != p.par_o && p.prec_iss != OPERATOR) // POUR GERER SI PARENTHESE OUVERTE
-	{
-		printf("ERROR 6\n");
 		return (status = 2, err_syntax("parentheses ouvertes...\n"));
-	}
 	return (0);
 }
 

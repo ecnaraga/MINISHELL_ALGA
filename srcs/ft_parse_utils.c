@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:13:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/12 08:22:07 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/25 14:13:50 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_inc_quote(char c, int *d_q, int *s_q)
 }
 
 /*
-Test si le char envoye est un isspace
+Return 0 if c is an isspace
 */
 int	ft_is_isspace(char c)
 {
@@ -37,7 +37,7 @@ int	ft_is_isspace(char c)
 }
 
 /*
-Test si le char envoye est un isspace
+Return 0 if c is an isspace
 */
 int	ft_isspace(char c)
 {

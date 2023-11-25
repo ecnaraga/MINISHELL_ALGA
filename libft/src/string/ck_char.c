@@ -3,13 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ck_char.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 16:18:11 by galambey          #+#    #+#             */
-/*   Updated: 2023/06/23 16:18:17 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/25 14:10:38 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+Return 0 if c is absent in the string
+*/
 int	ck_char(char *s, char c)
 {
 	int	i;

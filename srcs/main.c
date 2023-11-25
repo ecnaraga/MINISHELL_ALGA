@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 16:34:58 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/25 14:18:08 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,26 @@ int status = 0;
 
 int ft_parsing(t_msh *msh)
 {
-	if (ft_parse_line(msh) != 0)
+	if (ft_parse_line(msh) != 0) // POUR ALIX : PB INVALID READ
 		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	printf("PASSAGE ALIX TO GAGA\n");
-	if (ft_parse_bis(msh) != 0) // NE PAS MAJ EXIT STATUS
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1); ///////////////////////////////////////CHECK ARRETE LA
-	msh->av = ft_split_msh(msh->line); // TO DO RECUPERER EXIT STATUS DANS SPLIT
+	if (ft_parse_bis(msh) != 0)
+		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+	msh->av = ft_split_msh(msh->line);
 	if (!msh->av)
 		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	msh->ac = ft_structtablen(msh->av);
-	if (msh->ac == 0) // NE PAS MAJ EXIT STATUS
+	if (msh->ac == 0)
 		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	ft_token(msh);
 	if (ft_parse_ter(msh) != 0)
 		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
 	return (0);
 }
+
+/*
+In case of Ctrl-D, free all and quit the program
+*/
 void	ft_handle_eof(void)
 {
 	ft_putstr_fd("exit\n", 2);
@@ -55,7 +59,7 @@ int main(int ac, char **av, char **env)
 	}
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
-	msh.env = get_env(env);
+	msh.env = get_env(env); // PB EST FLUSH AVEC LES AUTRES il faudrait aJOUTER UNE REGLE A FT-magic-malloc
 	while (1)
 	{
 		ft_signal_handler_msh();

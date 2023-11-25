@@ -1,0 +1,8 @@
+"()"'()')(
+"cmd"
+==6073== Invalid read of size 1
+==6073==    at 0x10A2C4: ft_quote_order_bis (ft_parse_str_bis.c:36)
+==6073==    by 0x10A378: ft_quote_order (ft_parse_str_bis.c:54)
+==6073==    by 0x10A440: ft_parse_line (ft_parse_str_bis.c:71)
+==6073==    by 0x109324: ft_parsing (main.c:23)
+==6073==    by 0x1095D8: main (main.c:78)
