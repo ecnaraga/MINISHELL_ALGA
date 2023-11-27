@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 16:51:45 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 15:21:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	ft_token(t_msh *msh)
 			ft_token_chev_right(msh, i);
 		else if (msh->av[i].data[0] == '<')
 			ft_token_chev_left(msh, i);
+		else if (msh->av[i].data[0] == '|' && !msh->av[i].data[1])
+			msh->av[i].token = PIPE;
 		else if (msh->av[i].data[0] == '&' || msh->av[i].data[0] == '|')
 			msh->av[i].token = OPERATOR;
 		else if (msh->av[i].data[0] == '(')

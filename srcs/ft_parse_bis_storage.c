@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis_storage.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/25 13:49:40 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 17:02:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int	ft_par_open(t_msh *msh, t_par *p, int *i)
 			;
 		return (status = 2, err_syntax(ft_error_message(msh->line + *i)));
 	}
-	if (p->prec == PAR_OPEN)
-		p->multi_par = 1;
+	// if (p->prec == PAR_OPEN)
+	// 	p->multi_par = 1;
 	p->prec_iss = PAR_OPEN;
 	p->prec = PAR_OPEN;
 	p->par_o += 1;
@@ -36,11 +36,11 @@ static int	ft_par_open(t_msh *msh, t_par *p, int *i)
 static int	ft_par_close(t_msh *msh, t_par *p, int *i)
 {
 	(void) msh;
-	if (p->par_o <= p->par_c || ((p->prec_iss == PAR_OPEN || p->prec_iss == CHEVRON)
-			&& p->multi_par == 0))
+	if (p->par_o <= p->par_c || (p->prec_iss == PAR_OPEN || p->prec_iss == CHEVRON)
+			/*&& p->multi_par == 0)*/)
 		return (status = 2, err_syntax("syntax error near unexpected token `)'\n"));
-	if (p->par_o - p->par_c == 1)
-		p->multi_par = 0;
+	// if (p->par_o - p->par_c == 1)
+	// 	p->multi_par = 0;
 	p->prec_iss = PAR_CLOSE;
 	p->prec = PAR_CLOSE;
 	p->par_c += 1;
@@ -63,7 +63,7 @@ static int	ft_operator(t_msh *msh, t_par *p, int *i)
 	p->prec_iss = OPERATOR;
 	p->prec = OPERATOR;
 	p->chev = 0;
-	p->multi_par = 0;
+	// p->multi_par = 0;
 	p->multi_cmd = 0;
 	(*i)++;
 	return (1);

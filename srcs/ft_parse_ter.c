@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/24 16:22:55 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 15:38:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ char	*ft_error_message_final(char *str)
 
 	if (!str[0])
 		message = ft_magic_malloc(ADD, 0, ft_strdup
-				("minishell: syntax error near unexpected token `newline'\n"));
+				("minishell: syntax error near unexpected token `newline'\n"), NO_ENV);
 	else
 	{
 		message = ft_magic_malloc(ADD, 0,
 				ft_strjoin("minishell: syntax error near unexpected token `",
-					str));
+					str), NO_ENV);
 		if (!message)
 			return (NULL);
-		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"));
+		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"), NO_ENV);
 	}
 	return (message);
 }
@@ -81,6 +81,9 @@ char	*ft_err_op(char *str, int skip)
 	return (ft_error_message_final(str + i));
 }
 
+/*
+Return 0 if all the string's characters are the same, otherwise return 1
+*/
 int	ft_same_char(char *str)
 {
 	char	c;
@@ -104,7 +107,7 @@ int	ft_check_chev(t_msh *msh, int i)
 		&& msh->av[i + 1].token == CHEVRON)
 		return (status = 2, err_syntax(err_chev(msh->av[i + 1].data, 0)));
 	if (msh->av[i + 1].data && msh->av[i].token == CHEVRON
-		&& msh->av[i + 1].token == OPERATOR)
+		&& (msh->av[i + 1].token == OPERATOR || msh->av[i + 1].token == PIPE))
 		return (status = 2, err_syntax(ft_err_op(msh->av[i + 1].data, 0)));
 	return (0);
 }
@@ -114,9 +117,9 @@ int	ft_check_op(t_msh *msh, int i)
 	if (msh->av[i].token == OPERATOR && (ft_strlen(msh->av[i].data) > 2
 			|| ft_same_char(msh->av[i].data) == 1))
 		return (status = 2, err_syntax(ft_err_op(msh->av[i].data, 1)));
-	if (msh->av[i + 1].data && msh->av[i].token == OPERATOR
-		&& msh->av[i + 1].token == OPERATOR)
-		return (status = 2, err_syntax(ft_err_op(msh->av[i].data, 0)));
+	if (msh->av[i + 1].data && (msh->av[i].token == OPERATOR || msh->av[i].token == PIPE)
+		&& (msh->av[i + 1].token == OPERATOR || msh->av[i + 1].token == PIPE))
+		return (status = 2, err_syntax(ft_err_op(msh->av[i + 1].data, 0)));
 	return (0);
 }
 
@@ -128,7 +131,7 @@ int	ft_parse_ter(t_msh *msh)
 	printf("PARSE_TER\n");
 	if (msh->av[0].token == CHEVRON && msh->ac == 1)
 		return (status = 2, err_syntax(err_chev(msh->av[0].data, 1)));
-	if (msh->av[0].token == OPERATOR)
+	if (msh->av[0].token == OPERATOR || msh->av[0].token == PIPE)
 		return (status = 2, err_syntax(ft_err_op(msh->av[0].data, 0)));
 	while (msh->av[++i].data)
 	{

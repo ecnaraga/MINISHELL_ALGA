@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 17:29:42 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:07:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*ft_parse_bis_bis(char *str)
 		}
 		i++;
 	}
-	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL);
+	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL, NO_ENV);
 	if (!fstr)
 		return (NULL);
 	i = 0;
@@ -96,7 +96,7 @@ char	*ft_parse_bis_bis(char *str)
 		j++;
 	}
 	fstr[j] = '\0';
-	ft_magic_malloc(FREE, 0, str);
+	ft_magic_malloc(FREE, 0, str, 0);
 	return (fstr);
 }
 

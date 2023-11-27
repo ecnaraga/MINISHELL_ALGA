@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_bis.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/25 14:12:11 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 17:05:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	ft_init_var(t_par *p, int *i)
 	p->prec_iss = TO_DEFINE;
 	p->chev = 0;
 	p->prec = TO_DEFINE;
-	p->multi_par = 0;
+	// p->multi_par = 0;
 	p->multi_cmd = 0;
 }
 
@@ -136,7 +136,7 @@ echo Bravo && ((ls && ls)) || echo hehe
 ( ( (( )) ) )
 (())
 (( ))
-	
+>>>> parenthese collee gerees comme parenthese espacees car on doit gerer parentheses pour priorites
 
 3- NE DOIT PAS PASSER DANS EXEC : bash: syntax error near unexpected token + EXIT STATUS 2
 1. 

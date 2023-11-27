@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/25 14:18:08 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 10:44:45 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,25 @@
 
 int status = 0;
 
+/*
+Call all the parsing function + split the line + tokenisation
+*/
 int ft_parsing(t_msh *msh)
 {
 	if (ft_parse_line(msh) != 0) // POUR ALIX : PB INVALID READ
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	printf("PASSAGE ALIX TO GAGA\n");
 	if (ft_parse_bis(msh) != 0)
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	msh->av = ft_split_msh(msh->line);
 	if (!msh->av)
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	msh->ac = ft_structtablen(msh->av);
 	if (msh->ac == 0)
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	ft_token(msh);
 	if (ft_parse_ter(msh) != 0)
-		return (ft_magic_malloc(FLUSH, 0, NULL), 1);
+		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	return (0);
 }
 
@@ -43,7 +46,7 @@ In case of Ctrl-D, free all and quit the program
 void	ft_handle_eof(void)
 {
 	ft_putstr_fd("exit\n", 2);
-	ft_magic_malloc(FLUSH, 0, NULL);
+	ft_magic_malloc(QUIT, 0, NULL, 0);
 	rl_clear_history();
 }
 
@@ -59,7 +62,7 @@ int main(int ac, char **av, char **env)
 	}
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
-	msh.env = get_env(env); // PB EST FLUSH AVEC LES AUTRES il faudrait aJOUTER UNE REGLE A FT-magic-malloc
+	msh.env = get_env(env);
 	while (1)
 	{
 		ft_signal_handler_msh();
@@ -68,14 +71,14 @@ int main(int ac, char **av, char **env)
 		status = 0;
 		if (!msh.line) // EOF
 			return (ft_handle_eof(), status); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
-		if (!ft_magic_malloc(ADD, 0, msh.line))
+		if (!ft_magic_malloc(ADD, 0, msh.line, NO_ENV))
 		{
-			ft_magic_malloc(FLUSH, 0, NULL);
+			ft_magic_malloc(FLUSH, 0, NULL, 0);
 			continue ;
 		}	
 		if (!msh.line[0])
 		{
-			ft_magic_malloc(FLUSH, 0, NULL);
+			ft_magic_malloc(FLUSH, 0, NULL, 0);
 			continue ;	
 		}
 		add_history(msh.line);
@@ -106,8 +109,6 @@ int main(int ac, char **av, char **env)
 					msh.av[i].type[d].expnd, i, d,
 					msh.av[i].type[d].len_variable);
 		}
-		
-		ft_magic_malloc(PRINT, 0, NULL);
-		ft_magic_malloc(FLUSH, 0, NULL);
-	} 
+		ft_magic_malloc(FLUSH, 0, NULL, 0);
+	}
 }

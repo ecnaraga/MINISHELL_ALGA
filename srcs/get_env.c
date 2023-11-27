@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/24 14:36:11 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:10:24 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ t_list	*ft_lstnew_malloc_bis(size_t size)
 	t_list	*temp;
 
 	temp = NULL;
-	temp = ft_magic_malloc(MALLOC, sizeof(t_list), NULL);
+	temp = ft_magic_malloc(MALLOC, sizeof(t_list), NULL, ENV);
 	if (temp == NULL)
 		return (NULL);
-	temp->content = ft_magic_malloc(MALLOC, sizeof(char) * size, NULL);
+	temp->content = ft_magic_malloc(MALLOC, sizeof(char) * size, NULL, ENV);
 	if (!temp->content)
 		return (NULL);
 	temp->next = NULL;
@@ -49,7 +49,7 @@ t_list	**get_env(char **str)
 {
 	t_list	**env;
 
-	env = ft_magic_malloc(MALLOC, sizeof(t_list), NULL);
+	env = ft_magic_malloc(MALLOC, sizeof(t_list), NULL, ENV);
 	if (!env)
 		return (NULL);
 	*env = NULL;

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/23 17:24:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:07:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char	*add_spaces(char *str)
 	int		flag;
 
 	get_final_size(&count, &flag, str, &i);
-	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL);
+	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL, NO_ENV);
 	if (!fstr)
 		return (NULL);
 	i = 0;
@@ -127,6 +127,6 @@ char	*add_spaces(char *str)
 		j++;
 	}
 	fstr[j] = '\0';
-	ft_magic_malloc(FREE, 0, str);
+	ft_magic_malloc(FREE, 0, str, 0);
 	return (fstr);
 }

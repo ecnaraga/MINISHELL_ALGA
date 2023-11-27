@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/24 15:04:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:53:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	ft_test(char c, const char *c1, const char *cm1, t_quote *q)
 }
 
 /*
-Teste les conditions de ft_count_letter pour compter le nb de lt
-Renvoie 0 si ok pour rentrer dans la boucle, sinon 1
+Test all the conditions in ft_count_letter to count the number of lt
+Renvoie 0 if ok to get into the loop, otherwise 1
 */
 int	ft_test_bis(char c, int d_q, int s_q)
 {
@@ -61,6 +61,9 @@ int	ft_test_bis(char c, int d_q, int s_q)
 Alloue dynamiquement un tableau de structure de la taille du nb potentielles
 	variables d environnement (dollar) presentes dans le mot qui permettra de
 	preciser s'il faudra expand ou non la variable potentielle
+Dynamically allocates a structure array of the size of the number of potential
+	environment variables (dollar) present in the word, which will be used to
+	specify whether or not expand the potential variable
 */
 int	ft_alloc_type(t_split *strs, int j)
 {
@@ -70,7 +73,7 @@ int	ft_alloc_type(t_split *strs, int j)
 	if (strs[j].dollar > 0)
 	{
 		strs[j].type = ft_magic_malloc(MALLOC, sizeof(t_dollar)
-				* strs[j].dollar, NULL);
+				* strs[j].dollar, NULL, NO_ENV);
 		if (strs[j].type == NULL)
 			return (1);
 		d = -1;

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/24 14:36:38 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:09:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 	{
 		strs[j].dollar = 0;
 		l = ft_count_letter(s, &q, &i, &strs[j].dollar);
-		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL);
+		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
 		if (strs[j].data == NULL)
 			return (NULL);
 		strs[j].token = TO_DEFINE;
@@ -148,7 +148,7 @@ t_split	*ft_split_msh(char const *s)
 	if (!s)
 		return (NULL);
 	wd = ft_countwords(s);
-	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL);
+	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL, NO_ENV);
 	if (strs == NULL)
 		return (NULL);
 	if (ft_split_strs(s, strs, wd) == NULL)

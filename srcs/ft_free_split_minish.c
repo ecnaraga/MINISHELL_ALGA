@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 09:39:11 by garance           #+#    #+#             */
-/*   Updated: 2023/11/24 16:28:20 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:05:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void	*ft_free_split_msh(t_split *strs)
 	i = 0;
 	while (strs[i].data)
 	{
-		ft_magic_malloc(FREE, 0, strs[i].data);
+		ft_magic_malloc(FREE, 0, strs[i].data, 0);
 		if (strs[i].type)
-			ft_magic_malloc(FREE, 0, strs[i].type);
+			ft_magic_malloc(FREE, 0, strs[i].type, 0);
 		i++;
 	}
-	ft_magic_malloc(FREE, 0, strs);
+	ft_magic_malloc(FREE, 0, strs, 0);
 	return (NULL);
 }

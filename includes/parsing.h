@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/25 13:59:22 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 09:59:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,6 @@ ft_token.c
 */
 void	ft_token(t_msh *msh);
 
-/*
-ft_magic_malloc.c
-*/
-void *ft_magic_malloc(int rule, size_t size, void *addr);
+
 
 #endif

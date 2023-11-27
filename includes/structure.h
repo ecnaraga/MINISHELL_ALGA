@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/25 12:41:10 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 17:15:44 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 #ifndef STRUCTURE_H
 # define STRUCTURE_H
+
+# define NO_ENV 0
+# define ENV 1
 
 extern int	status;
 
@@ -74,9 +77,16 @@ typedef struct s_par
 	int prec_iss;
 	int chev;
 	int prec;
-	int multi_par;
+	// int multi_par;
 	int multi_cmd;
 }		t_par;
+
+typedef struct	s_shell
+{
+	t_list	*infile;
+	t_list	*outfile;
+	t_list	*cmd;
+}		t_shell;
 
 typedef int (*t_storage)(t_msh *msh, t_par *p, int *i);
 
@@ -88,10 +98,11 @@ enum	e_token
 	OUTFILE_NO_TRUNC,// 3
 	HERE_DOC,// 4
 	OPERATOR,// 5
-	PAR_OPEN,// 6
-	PAR_CLOSE,// 7
-	CMD,// 8
-	CHEVRON,// 9
+	PIPE,//6
+	PAR_OPEN,// 7
+	PAR_CLOSE,// 8
+	CMD,// 9
+	CHEVRON,// 10
 };
 
 enum	e_expand
@@ -103,8 +114,8 @@ enum	e_expand
 
 enum	e_parenthesis
 {
-	OTHER = 10,
-	ISS = 11,
+	OTHER = 11,
+	ISS = 12,
 };
 
 enum	e_malloc
@@ -113,6 +124,7 @@ enum	e_malloc
 	ADD,
 	FREE,
 	FLUSH,
+	QUIT,
 	PRINT,//a effacer
 };
 
