@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 22:23:50 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 23:00:29 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,30 +101,6 @@ int main(int ac, char **av, char **env)
 			i++;
 		}
 		
-		// int i = -1;
-		// while (msh.av[++i].data)
-		// {
-		// 	printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
-		// 		msh.av[i].data, i, msh.av[i].token);
-		// 	if (msh.av[i].type)
-		// 	{
-		// 		int d = -1;
-		// 		while (++d < msh.av[i].dollar)
-		// 			printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
-		// 				msh.av[i].type[d].expnd, i, d,
-		// 				msh.av[i].type[d].len_variable);
-		// 	}
-		// }
-		// printf("msh.av[%d].data = |%s| msh.av[%d].token = %d\n", i,
-		// 	msh.av[i].data, i, msh.av[i].token);
-		// if (msh.av[i].type)
-		// {
-		// 	int d = -1;
-		// 	while (++d < msh.av[i].dollar)
-		// 		printf("msh.av[%d].type[%d].expnd = %d msh.av[%d].type[%d].len_variable = %d\n", i, d,
-		// 			msh.av[i].type[d].expnd, i, d,
-		// 			msh.av[i].type[d].len_variable);
-		// }
 		ft_magic_malloc(FLUSH, 0, NULL, 0);
 	}
 }

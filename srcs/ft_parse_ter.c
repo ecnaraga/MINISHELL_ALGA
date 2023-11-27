@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 22:29:11 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/27 22:59:43 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ int	ft_check_op(t_msh *msh)
 	return (0);
 }
 
+// SUPPRIMER LES MAILLONS CHEVRONS SI PAS D ERREUR AVDC FT_LSTDELONE_SPLIT
 int	ft_parse_ter(t_msh *msh)
 {
 	t_split	*tmp;
