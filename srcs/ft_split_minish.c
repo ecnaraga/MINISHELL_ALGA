@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/27 18:03:00 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 22:36:23 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,45 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 	return (l);
 }
 
+// t_split	*ft_lstlast_split(t_split *lst)
+// {
+// 	t_split	*temp;
+
+// 	if (lst == NULL)
+// 		return (NULL);
+// 	temp = lst;
+// 	while (temp->next != NULL)
+// 		temp = temp->next;
+// 	return (temp);
+// }
+
+// void	ft_lstadd_back_split(t_split **lst, t_split *new)
+// {
+// 	t_split	*temp;
+
+// 	if (!*lst)
+// 		*lst = new;
+// 	else
+// 	{
+// 		temp = ft_lstlast_split(*lst);
+// 		temp->next = new;
+// 	}
+// }
+
+// t_split	*ft_lstnew_split(void)
+// {
+// 	t_split	*temp;
+
+// 	temp = NULL;
+// 	temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV);
+// 	if (temp == NULL)
+// 		return (NULL);
+// 	// temp -> content = content;
+// 	temp->dollar = 0;
+// 	temp->next = NULL;
+// 	return (temp);
+// }
+
 /*
 Boucle tant que le nb de mots contenus dans s n'est pas atteint et alloue de la
 	memoire pour copie le nb de mots dans la data de la structure.
@@ -106,32 +145,33 @@ Tableau de structure strs->type : strs[i]->type[d]
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
 */
-static t_split	*ft_split_strs(const char *s, t_split *strs, int wd, t_list **strss)
+static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
 {
 	int			j;
 	t_letter	l;
 	t_quote		q;
 	int			i;
+	t_split		*new;
 
 	i = 0;
 	j = -1;
 	while (s[i] && ++j < wd)
 	{
-		strs[j].dollar = 0;
-		l = ft_count_letter(s, &q, &i, &strs[j].dollar);
-		strs[j].data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
-		if (strs[j].data == NULL)
-			return (NULL);
-		strs[j].token = TO_DEFINE;
-		if (ft_alloc_type(strs, j) == 1)
-			return (NULL);
+		new = ft_lstnew_split();
+		l = ft_count_letter(s, &q, &i, &new->dollar);
+		new->data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
+		if (new->data == NULL)
+			return (1);
+		new->token = TO_DEFINE;
+		if (ft_alloc_type(new) == 1)
+			return (1);
 		if (l.lt > 0)
-			ft_strlcpy_msh(&strs[j], s + i - l.k - 1, l.lt + 1, i - l.k - 1);
+			ft_strlcpy_msh(new, s + i - l.k - 1, l.lt + 1, i - l.k - 1);
 		else
-			strs[j].data[0] = '\0';
-		ft_lstadd_back(strss, ft_magic_malloc(ADD, 0, ft_lstnew(&strs[j]), NO_ENV));
-	}
-	return (strs);
+			new->data[0] = '\0';
+		ft_lstadd_back_split(strs, new);
+		}
+	return (0);
 }
 
 /*
@@ -145,18 +185,19 @@ t_split	*ft_split_msh(char const *s)
 {
 	int		wd;
 	t_split	*strs;
-	t_list	*strss;
+	// t_list	*strss;
 
 	if (!s)
 		return (NULL);
 	wd = ft_countwords(s);
-	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL, NO_ENV);
-	if (strs == NULL)
+	// strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL, NO_ENV);
+	// if (strs == NULL)
+	// 	return (NULL);
+	strs = NULL;
+	if (ft_split_strs(s, &strs, wd) == 1)
 		return (NULL);
-	if (ft_split_strs(s, strs, wd, &strss) == NULL)
-		return (NULL);
-	strs[wd].data = NULL;
-	strs[wd].type = NULL;
+	// strs[wd].data = NULL;
+	// strs[wd].type = NULL;
 	return (strs);
 }
 

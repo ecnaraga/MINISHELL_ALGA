@@ -20,6 +20,7 @@ SRCS = main.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
 	   ft_strlcpy_minish_utils.c \
+	   lst_split.c \
 	   ft_structtablen.c \
 	   ft_token.c \
 	   ft_magic_malloc.c \

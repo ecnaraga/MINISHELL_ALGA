@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_token.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 15:21:30 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 22:23:12 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,49 +16,53 @@
 //Attention au cas ">(" et "> ("
 //Attention au cas "<(" et  "< ("
 
-static void	ft_token_chev_right(t_msh *msh, int i)
+static void	ft_token_chev_right(t_msh *msh)
 {
-	msh->av[i].token = CHEVRON;
-	if (msh->av[i + 1].data && msh->av[i].data[1] && msh->av[i].data[1] == '>')
-		msh->av[i + 1].token = OUTFILE_NO_TRUNC;
-	// else if (msh->av[i].data[1] && msh->av[i].data[1] == '(')
-	else if (msh->av[i + 1].data)
-		msh->av[i + 1].token = OUTFILE_TRUNC;
+	msh->av->token = CHEVRON;
+	if (msh->av->next && msh->av->data[1] && msh->av->data[1] == '>')
+		msh->av->next->token = OUTFILE_NO_TRUNC;
+	// else if (msh->av->data[1] && msh->av->data[1] == '(')
+	else if (msh->av->next)
+		msh->av->next->token = OUTFILE_TRUNC;
 }
 
-static void	ft_token_chev_left(t_msh *msh, int i)
+static void	ft_token_chev_left(t_msh *msh)
 {
-	msh->av[i].token = CHEVRON;
-	if (msh->av[i + 1].data && msh->av[i].data[1] && msh->av[i].data[1] == '<')
-		msh->av[i + 1].token = HERE_DOC;
-	// else if (msh->av[i].data[1] && msh->av[i].data[1] == '(')
-	else if (msh->av[i + 1].data)
-		msh->av[i + 1].token = INFILE;
+	msh->av->token = CHEVRON;
+	if (msh->av->next && msh->av->data[1] && msh->av->data[1] == '<')
+		msh->av->next->token = HERE_DOC;
+	// else if (msh->av->data[1] && msh->av->data[1] == '(')
+	else if (msh->av->next)
+		msh->av->next->token = INFILE;
 }
 
 void	ft_token(t_msh *msh)
 {
-	int	i;
+	t_split	*tmp;
 
-	i = -1;
-	while (msh->av[++i].data)
+	tmp = msh->av;
+	while (msh->av)
 	{
-		if (!msh->av[i].data[0] || msh->av[i].token != TO_DEFINE)
+		if (!msh->av->data[0] || msh->av->token != TO_DEFINE)
+		{
+			msh->av = msh->av->next;
 			continue ;
-		if (msh->av[i].data[0] == '>')
-			ft_token_chev_right(msh, i);
-		else if (msh->av[i].data[0] == '<')
-			ft_token_chev_left(msh, i);
-		else if (msh->av[i].data[0] == '|' && !msh->av[i].data[1])
-			msh->av[i].token = PIPE;
-		else if (msh->av[i].data[0] == '&' || msh->av[i].data[0] == '|')
-			msh->av[i].token = OPERATOR;
-		else if (msh->av[i].data[0] == '(')
-			msh->av[i].token = PAR_OPEN;
-		else if (msh->av[i].data[0] == ')')
-			msh->av[i].token = PAR_CLOSE;
+		}
+		if (msh->av->data[0] == '>')
+			ft_token_chev_right(msh);
+		else if (msh->av->data[0] == '<')
+			ft_token_chev_left(msh);
+		else if (msh->av->data[0] == '|' && !msh->av->data[1])
+			msh->av->token = PIPE;
+		else if (msh->av->data[0] == '&' || msh->av->data[0] == '|')
+			msh->av->token = OPERATOR;
+		else if (msh->av->data[0] == '(')
+			msh->av->token = PAR_OPEN;
+		else if (msh->av->data[0] == ')')
+			msh->av->token = PAR_CLOSE;
 		else
-			msh->av[i].token = CMD;
+			msh->av->token = CMD;
+		msh->av = msh->av->next;
 	}
-	msh->av[i].token = 0;
+	msh->av = tmp;
 }

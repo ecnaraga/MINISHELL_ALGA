@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 09:59:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 22:34:52 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ ft_split_minish_utils.c
 // void	*ft_free_strs(t_split *strs, int j);
 int		ft_test(char c, const char *c1, const char *cm1, t_quote *q);
 int		ft_test_bis(char c, int d_q, int s_q);
-int	ft_alloc_type(t_split *strs, int j);
+int	ft_alloc_type(t_split *new);
 
 /*
 ft_strlcpy_minish.c
@@ -89,6 +89,16 @@ ft_strlcpy_minish_utils.c
 */
 int		ft_inc_d(t_split *strs, int *d, char c);
 void	ft_dollar(t_split *strs, const char *src, t_index *x, t_quote q);
+
+/*
+lst_split.c
+*/
+t_split	*ft_lstlast_split(t_split *lst);
+void	ft_lstadd_back_split(t_split **lst, t_split *new);
+t_split	*ft_lstnew_split(void);
+int	ft_lstsize_split(t_split *lst);
+void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *));
+
 
 /*
 ft_token.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_ter.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 15:38:28 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 22:29:11 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,52 +98,54 @@ int	ft_same_char(char *str)
 	return (0);
 }
 
-int	ft_check_chev(t_msh *msh, int i)
+int	ft_check_chev(t_msh *msh)
 {
-	if (msh->av[i].token == CHEVRON && (ft_strlen(msh->av[i].data) > 2
-			|| ft_same_char(msh->av[i].data) == 1))
-		return (status = 2, err_syntax(err_chev(msh->av[i].data, 1)));
-	if (msh->av[i + 1].data && msh->av[i].token == CHEVRON
-		&& msh->av[i + 1].token == CHEVRON)
-		return (status = 2, err_syntax(err_chev(msh->av[i + 1].data, 0)));
-	if (msh->av[i + 1].data && msh->av[i].token == CHEVRON
-		&& (msh->av[i + 1].token == OPERATOR || msh->av[i + 1].token == PIPE))
-		return (status = 2, err_syntax(ft_err_op(msh->av[i + 1].data, 0)));
+	if (msh->av->token == CHEVRON && (ft_strlen(msh->av->data) > 2
+			|| ft_same_char(msh->av->data) == 1))
+		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
+	if (msh->av->next->data && msh->av->token == CHEVRON
+		&& msh->av->next->token == CHEVRON)
+		return (status = 2, err_syntax(err_chev(msh->av->next->data, 0)));
+	if (msh->av->next->data && msh->av->token == CHEVRON
+		&& (msh->av->next->token == OPERATOR || msh->av->next->token == PIPE))
+		return (status = 2, err_syntax(ft_err_op(msh->av->next->data, 0)));
 	return (0);
 }
 
-int	ft_check_op(t_msh *msh, int i)
+int	ft_check_op(t_msh *msh)
 {
-	if (msh->av[i].token == OPERATOR && (ft_strlen(msh->av[i].data) > 2
-			|| ft_same_char(msh->av[i].data) == 1))
-		return (status = 2, err_syntax(ft_err_op(msh->av[i].data, 1)));
-	if (msh->av[i + 1].data && (msh->av[i].token == OPERATOR || msh->av[i].token == PIPE)
-		&& (msh->av[i + 1].token == OPERATOR || msh->av[i + 1].token == PIPE))
-		return (status = 2, err_syntax(ft_err_op(msh->av[i + 1].data, 0)));
+	if (msh->av->token == OPERATOR && (ft_strlen(msh->av->data) > 2
+			|| ft_same_char(msh->av->data) == 1))
+		return (status = 2, err_syntax(ft_err_op(msh->av->data, 1)));
+	if (msh->av->next->data && (msh->av->token == OPERATOR || msh->av->token == PIPE)
+		&& (msh->av->next->token == OPERATOR || msh->av->next->token == PIPE))
+		return (status = 2, err_syntax(ft_err_op(msh->av->next->data, 0)));
 	return (0);
 }
 
 int	ft_parse_ter(t_msh *msh)
 {
-	int	i;
+	t_split	*tmp;
 
-	i = -1;
+	tmp = msh->av;
 	printf("PARSE_TER\n");
-	if (msh->av[0].token == CHEVRON && msh->ac == 1)
-		return (status = 2, err_syntax(err_chev(msh->av[0].data, 1)));
-	if (msh->av[0].token == OPERATOR || msh->av[0].token == PIPE)
-		return (status = 2, err_syntax(ft_err_op(msh->av[0].data, 0)));
-	while (msh->av[++i].data)
+	if (msh->av->token == CHEVRON && msh->ac == 1)
+		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
+	if (msh->av->token == OPERATOR || msh->av->token == PIPE)
+		return (status = 2, err_syntax(ft_err_op(msh->av->data, 0)));
+	while (msh->av->next)
 	{
-		if (ft_check_chev(msh, i) == 1)
+		if (ft_check_chev(msh) == 1)
 			return (1);
-		if (ft_check_op(msh, i) == 1)
+		if (ft_check_op(msh) == 1)
 			return (1);
+		msh->av = msh->av->next;
 	}
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// 	return (err_syntax(ft_err_op(msh->av[msh->ac - 1].data, 0), 2, 1));
-	if (msh->av[msh->ac - 1].token == CHEVRON)
-		return (status = 2, err_syntax(err_chev(msh->av[msh->ac - 1].data, 1)));
+	if (msh->av->token == CHEVRON)
+		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
+	msh->av = tmp;
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// {
 	// 	ft_free_split_msh(msh->av);
