@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/27 10:09:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/27 18:03:00 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ Tableau de structure strs->type : strs[i]->type[d]
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
 */
-static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
+static t_split	*ft_split_strs(const char *s, t_split *strs, int wd, t_list **strss)
 {
 	int			j;
 	t_letter	l;
@@ -129,6 +129,7 @@ static t_split	*ft_split_strs(const char *s, t_split *strs, int wd)
 			ft_strlcpy_msh(&strs[j], s + i - l.k - 1, l.lt + 1, i - l.k - 1);
 		else
 			strs[j].data[0] = '\0';
+		ft_lstadd_back(strss, ft_magic_malloc(ADD, 0, ft_lstnew(&strs[j]), NO_ENV));
 	}
 	return (strs);
 }
@@ -144,6 +145,7 @@ t_split	*ft_split_msh(char const *s)
 {
 	int		wd;
 	t_split	*strs;
+	t_list	*strss;
 
 	if (!s)
 		return (NULL);
@@ -151,7 +153,7 @@ t_split	*ft_split_msh(char const *s)
 	strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL, NO_ENV);
 	if (strs == NULL)
 		return (NULL);
-	if (ft_split_strs(s, strs, wd) == NULL)
+	if (ft_split_strs(s, strs, wd, &strss) == NULL)
 		return (NULL);
 	strs[wd].data = NULL;
 	strs[wd].type = NULL;
