@@ -6,32 +6,24 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:42:04 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/22 16:45:15 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/28 17:02:05 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	builtin_pwd(char **env)
+void	builtin_pwd(t_msh *minish)
 {
-	int	i;
+	t_env *tmp;
 
-	i = -1;
-	while (env[++i])
+	tmp = *(minish->env);
+	while (tmp)
 	{
-		if (!ft_strncmp(env[i], "PWD=", 4))
+		if (!ft_strcmp(tmp->name, "PWD"))
 		{
-			printf("%s\n", env[i] + 4);
+			printf("%s%s\n", (char *)tmp->name, (char *)tmp->content);
 			break ;
 		}
+		tmp = tmp->next;
 	}
 }
-/*cc srcs/ft_pwd.c libft/src/string/ft_strncmp.c*/
-
-// int main(int ac, char **av, char **env)
-// {
-// 	(void)ac;
-// 	(void)av;
-// 	builtin_pwd(env);
-// 	return 0;
-// }

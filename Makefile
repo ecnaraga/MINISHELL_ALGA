@@ -8,13 +8,14 @@ SRCS = main.c \
 	   ft_parse_str.c \
 	   ft_parse_str_bis.c \
 	   get_env.c \
+	   get_env_utils.c \
+	   get_export_env.c \
 	   ft_parse_bis.c \
 	   ft_parse_bis_utils.c \
 	   ft_parse_bis_storage.c \
 	   ft_parse_ter.c \
 	   ft_parse_utils.c \
 	   ft_error_message_syntax.c \
-	   ft_echo.c \
 	   ft_free_split_minish.c \
 	   ft_split_minish_utils.c \
 	   ft_split_minish.c \
@@ -25,7 +26,10 @@ SRCS = main.c \
 	   ft_token.c \
 	   ft_magic_malloc.c \
 	   ft_magic_malloc_utils.c \
-	   signal.c
+	   signal.c \
+	   ft_echo.c \
+	   ft_pwd.c \
+	   #ft_cd.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

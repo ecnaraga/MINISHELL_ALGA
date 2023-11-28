@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 22:12:04 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/28 17:54:34 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,17 @@ typedef	struct s_split
 	struct s_split		*next;
 }		t_split;
 
+typedef	struct s_env
+{
+	char	*name;
+	char	*content;
+	struct s_env	*next;
+}		t_env;
+
 typedef	struct s_msh
 {
-	t_list	**env;
+	t_env	**env;
+	t_env	**export_env;
 	char	*line;	
 	int		ac;
 	t_split *av;
