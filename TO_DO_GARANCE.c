@@ -71,9 +71,3 @@ galambey-R834741galambey
 /* 2. TOKEN */
 // Si termine par un operateur valide reouvrir un readline => voir parsebis pour l algo + ne pas free minishline avant que token soit termine
 // "" et '' doivent avoir le token CMD
-
-cdm 1 cdm 2 | < infile > outfile
-cdm 1 cdm 2 | < infile >
-<
-|
-<< gege < infile > outfile

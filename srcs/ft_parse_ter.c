@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 10:25:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/28 11:29:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int	ft_check_op(t_msh *msh)
 	return (0);
 }
 
-int	ft_handle_chev(t_msh *msh, t_split *prev)
+int	ft_handle_chev(t_msh *msh, t_split *prev, t_split **head)
 {
 	t_split	*tmp;
 	
@@ -136,6 +136,7 @@ int	ft_handle_chev(t_msh *msh, t_split *prev)
 		tmp = msh->av->next;
 		ft_lstdelone_split(msh->av, del_two);
 		msh->av = tmp;
+		*head = msh->av;
 	}
 	else
 	{
@@ -165,7 +166,7 @@ int	ft_parse_ter(t_msh *msh)
 	{
 		if (msh->av->token == CHEVRON)
 		{
-			if (ft_handle_chev(msh, tmp) == 1)
+			if (ft_handle_chev(msh, tmp, &head) == 1)
 				return (1);
 		}
 		// if (ft_check_chev(msh) == 1)

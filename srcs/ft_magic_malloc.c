@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 10:44:33 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/28 11:24:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,7 @@ void	ft_list_remove_if(t_list **begin_list, void *addr, int (*cmp)())
 	while (lst)
 	{
 		if (cmp(lst->content, addr))
-		{
-			printf("lst %p\n", addr);
 			ft_list_remove(begin_list, &lst, &prev);
-		}
 		else
 		{
 			prev = lst;

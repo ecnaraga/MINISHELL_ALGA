@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/11/28 10:34:32 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/28 11:24:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,5 @@ void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *))
 	if (!lst || !del)
 		return ;
 	del_two(lst);
-	printf("del_two lst %p\n", lst);
 	ft_magic_malloc(FREE, 0, lst, NO_ENV);
 }
