@@ -25,7 +25,9 @@ SRCS = main.c \
 	   ft_token.c \
 	   ft_magic_malloc.c \
 	   ft_magic_malloc_utils.c \
-	   signal.c
+	   signal.c \
+	   ft_exec.c \
+	   heredoc.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 11:24:41 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/28 11:56:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,18 @@ void	*ft_magic_malloc(int rule, size_t size, void *addr, int nb)
 	static t_list	*mlc;
 	static t_list	*mlc_env;
 
-	if (nb == NO_ENV && (rule == MALLOC || rule == ADD))
+	if ((rule == MALLOC || rule == ADD) && nb == NO_ENV)
 		return (ft_magic_add_malloc(&mlc, rule, size, addr));
-	else if (nb == ENV && (rule == MALLOC || rule == ADD))
+	else if ((rule == MALLOC || rule == ADD) && nb == ENV)
 		return (ft_magic_add_malloc(&mlc_env, rule, size, addr));
-	else if (rule == FREE)
+	else if (rule == FREE && nb == NO_ENV)
 		ft_list_remove_if(&mlc, addr, ft_check);
-	else if (rule == FLUSH)
+	else if (rule == FREE && nb == ENV)
+		ft_list_remove_if(&mlc_env, addr, ft_check);
+	else if (rule == FLUSH && nb == NO_ENV)
 		ft_lstclear(&mlc, del);
+	else if (rule == FLUSH && nb == ENV)
+		ft_lstclear(&mlc_env, del);
 	else //QUIT
 	{
 		ft_lstclear(&mlc, del);

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 11:29:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/28 11:31:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,8 @@ int	ft_parse_ter(t_msh *msh)
 	// 		return (1) ; //Verif quel exitstatus
 	// 	}
 	// 	ft_token(msh);
-	// 	// printf("msh->ac = %d\n", msh->ac);
+	// 	// printf("msh->ac = %d\n", msh->ac)			printf("msh->av->data %s\n", msh->av->data);
+;
 	// 	if (ft_parse_ter(msh) != 0)
 	// 	{
 	// 		// free(msh->line);

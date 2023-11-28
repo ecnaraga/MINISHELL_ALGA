@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 23:00:29 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/28 14:18:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int main(int ac, char **av, char **env)
 		add_history(msh.line);
 		if (ft_parsing(&msh) != 0)
 			continue;
+		ft_exec(&msh);
 		
 		int i = 0;
 		while (msh.av)
@@ -100,7 +101,6 @@ int main(int ac, char **av, char **env)
 			msh.av = msh.av->next;
 			i++;
 		}
-		
 		ft_magic_malloc(FLUSH, 0, NULL, 0);
 	}
 }

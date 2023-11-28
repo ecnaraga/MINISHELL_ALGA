@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec.c                                          :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 14:08:45 by galambey         ###   ########.fr       */
+/*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
+/*   Updated: 2023/11/28 14:11:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#ifndef EXEC_H
+# define EXEC_H
 
+# include "../includes/minishell.h"
 
-int	ft_exec(t_msh *msh)
-{
-	ft_heredoc(msh);
-	return (0);
-}
+/*ft_exec.c*/
+int	ft_exec(t_msh *msh);
+
+/*heredoc.c*/
+void	ft_heredoc(t_msh *msh);
+
+#endif
