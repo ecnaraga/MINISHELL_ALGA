@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 14:20:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/28 10:44:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ void	ft_list_remove_if(t_list **begin_list, void *addr, int (*cmp)())
 	while (lst)
 	{
 		if (cmp(lst->content, addr))
+		{
+			printf("lst %p\n", addr);
 			ft_list_remove(begin_list, &lst, &prev);
+		}
 		else
 		{
 			prev = lst;
@@ -108,7 +111,7 @@ void	*ft_magic_malloc(int rule, size_t size, void *addr, int nb)
 		ft_list_remove_if(&mlc, addr, ft_check);
 	else if (rule == FLUSH)
 		ft_lstclear(&mlc, del);
-	else
+	else //QUIT
 	{
 		ft_lstclear(&mlc, del);
 		ft_lstclear(&mlc_env, del);

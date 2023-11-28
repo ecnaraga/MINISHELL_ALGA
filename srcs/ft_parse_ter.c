@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_ter.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 22:59:43 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/28 10:25:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,30 +123,70 @@ int	ft_check_op(t_msh *msh)
 	return (0);
 }
 
+int	ft_handle_chev(t_msh *msh, t_split *prev)
+{
+	t_split	*tmp;
+	
+	if (msh->ac == 1)
+		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
+	else if (ft_check_chev(msh) == 1)
+		return (1);
+	else if (prev == NULL)
+	{
+		tmp = msh->av->next;
+		ft_lstdelone_split(msh->av, del_two);
+		msh->av = tmp;
+	}
+	else
+	{
+		prev->next = msh->av->next;
+		ft_lstdelone_split(msh->av, del_two);
+		msh->av = prev->next;
+	}
+	return (0);
+}
+
 // SUPPRIMER LES MAILLONS CHEVRONS SI PAS D ERREUR AVDC FT_LSTDELONE_SPLIT
 int	ft_parse_ter(t_msh *msh)
 {
+	t_split	*head;
 	t_split	*tmp;
 
-	tmp = msh->av;
+	head = msh->av;
+	tmp = NULL;
 	printf("PARSE_TER\n");
-	if (msh->av->token == CHEVRON && msh->ac == 1)
-		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
+	// if (msh->av->token == CHEVRON/* && msh->ac == 1*/)
+	// 	ft_handle_chev(msh, tmp);
+	// if (msh->av->token == CHEVRON && msh->ac == 1)
+	// 	return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
 	if (msh->av->token == OPERATOR || msh->av->token == PIPE)
 		return (status = 2, err_syntax(ft_err_op(msh->av->data, 0)));
 	while (msh->av->next)
 	{
-		if (ft_check_chev(msh) == 1)
-			return (1);
-		if (ft_check_op(msh) == 1)
-			return (1);
-		msh->av = msh->av->next;
+		if (msh->av->token == CHEVRON)
+		{
+			if (ft_handle_chev(msh, tmp) == 1)
+				return (1);
+		}
+		// if (ft_check_chev(msh) == 1)
+		// 	return (1);
+		// if (ft_check_op(msh) == 1)
+		// 	return (1);
+		else
+		{
+			if (ft_check_op(msh) == 1)
+				return (1);
+			tmp = msh->av;
+			msh->av = msh->av->next;
+		}
 	}
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// 	return (err_syntax(ft_err_op(msh->av[msh->ac - 1].data, 0), 2, 1));
 	if (msh->av->token == CHEVRON)
 		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
-	msh->av = tmp;
+	if (msh->av->token == OPERATOR || msh->av->token == PIPE) // avoir si on decide de considerer en dernier un operator comme erreur ou non
+		return (status = 2, err_syntax(ft_err_op(msh->av->data, 0)));
+	msh->av = head;
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// {
 	// 	ft_free_split_msh(msh->av);
