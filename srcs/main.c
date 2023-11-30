@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 14:18:23 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:32:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,27 @@ int main(int ac, char **av, char **env)
 		add_history(msh.line);
 		if (ft_parsing(&msh) != 0)
 			continue;
+		int i = 0;
+		t_split *head;
+		head = msh.av;
+		while (msh.av)
+		{
+			printf("%d msh.av->data = |%s| msh.av->token = %d\n", i, msh.av->data, msh.av->token);
+			if (msh.av->type)
+			{
+				int d = -1;
+				while (++d < msh.av->dollar)
+					printf("msh.av->type[%d].expnd = %d msh.av->type[%d].len_variable = %d\n", d,
+						msh.av->type[d].expnd, d,
+						msh.av->type[d].len_variable);
+			}
+			msh.av = msh.av->next;
+			i++;
+		}
+		msh.av = head;
 		ft_exec(&msh);
 		
-		int i = 0;
+		i = 0;
 		while (msh.av)
 		{
 			printf("%d msh.av->data = |%s| msh.av->token = %d\n", i, msh.av->data, msh.av->token);

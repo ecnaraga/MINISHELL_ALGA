@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 14:37:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/30 16:44:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,21 @@
 /*
 TO DO : BIEN CHECKER LES FREE ET UNLINK
 */
+
+int	ft_check_unique_name(char *tmp, t_list **heredoc)
+{
+	t_list *head;
+
+	head = *heredoc;
+	while (*heredoc)
+	{
+		if (ft_strcmp((*heredoc)->content, tmp) == 0)
+			return (1);
+		*heredoc = (*heredoc)->next;
+	}
+	*heredoc = head;
+	return (0);
+}
 
 /*
 Create a random name for the here_doc and at it at the end of the linked list
@@ -31,12 +46,15 @@ void	create_here_doc(t_split *av, t_list **heredoc)
 		(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
 	ft_lstadd_back(heredoc, new);
 	/* Create and add the name of the here_doc in the linked list*/
-	tmp = ft_magic_malloc(ADD, 0, ft_random_filename("/tmp/", 8), NO_ENV);
-	if (!tmp)
+	while (1)
 	{
-		tmp = ft_magic_malloc(ADD, 0, ft_strdup("/tmp/here_doc"), NO_ENV);
+		tmp = ft_magic_malloc(ADD, 0, ft_random_filename("/tmp/", 8), NO_ENV);
 		if (!tmp)
 			(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
+		if (ft_check_unique_name(tmp, heredoc) == 0)
+			break;
+		else
+			ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 	}
 	new = ft_lstnew(tmp);
 	if (!new)
@@ -99,8 +117,9 @@ void	ft_prompt(t_msh *msh, t_split *av, t_list **here_doc)
 		if (ft_recover_prompt(fd_temp, lim, *here_doc) == 1)
 			break ;
 	}
-	msh->p.prompt = 1;
-	(close(fd_temp), ft_magic_malloc(FREE, 0, lim, NO_ENV));
+	msh->p.prompt = 1;// (SUPPRIMER PROMPT PAS BESOIN)
+	*here_doc = head;
+ 	(close(fd_temp), ft_magic_malloc(FREE, 0, lim, NO_ENV));
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 12:36:07 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/30 18:27:49 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,14 @@ enum			e_err
 	E_STRJOIN,
 	E_STRDUP,
 	E_NO_CMD
+};
+
+enum		e_std
+{
+	FIRST,
+	MIDLAST,
+	FIRSTMID,
+	LAST,
 };
 
 #endif

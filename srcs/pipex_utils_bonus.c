@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/11/28 17:46:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/30 18:25:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@ char	**ft_research_path(t_list **env)
 	if (!env)
 		return (NULL);
 	// head = *env;
-	while (env)
+	while (*env)
 	{
-		if (ft_strncmp(env->content, "PATH=", 5) == 0)
-			return (ft_split(env->content + 5, ':')); //implementer ft_magic ici
+		if (ft_strncmp((*env)->content, "PATH=", 5) == 0)
+			return (ft_split((*env)->content + 5, ':')); //implementer ft_magic ici
+		*env = (*env)->next;
 	}
 	return (NULL);
 }
@@ -36,18 +37,18 @@ static int	ft_find_good_path(char **path, char **good_path, char *cmd,
 	i = 0;
 	while (path[i] && accss != 0)
 	{
-		*good_path = ft_strjoin(path[i], "/");
+		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(path[i], "/"), NO_ENV);
 		if (!good_path)
 			return (E_STRJOIN);
 		tmp = *good_path;
-		*good_path = ft_strjoin(*good_path, cmd);
+		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(*good_path, cmd), NO_ENV);
 		if (!*good_path)
 			return (E_STRJOIN);
-		free(tmp);
+		ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 		accss = access(*good_path, F_OK | X_OK);
 		if (accss == 0)
 			return (E_OK);
-		free(*good_path);
+		ft_magic_malloc(FREE, 0, *good_path, NO_ENV);
 		*good_path = NULL;
 		i++;
 	}
@@ -62,13 +63,13 @@ int	ft_access_cmd(char **path, char *cmd, char **good_path)
 	accss = access(cmd, F_OK | X_OK);
 	if (accss == 0)
 	{
-		tmp = ft_strjoin(cmd, "/");
+		tmp = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, "/"), NO_ENV);
 		if (!tmp)
 			return (E_STRJOIN);
 		accss = access(tmp, F_OK | X_OK);
 		if (accss == 0)
-			return (free(tmp), E_NO_CMD);
-		*good_path = ft_strdup(cmd);
+			return (ft_magic_malloc(FREE, 0, tmp, NO_ENV), E_NO_CMD);
+		*good_path = ft_magic_malloc(ADD, 0, ft_strdup(cmd), NO_ENV);
 		if (!*good_path)
 			return (E_STRDUP);
 		return (E_OK);
@@ -84,7 +85,7 @@ Open and close in a loop all the heredoc and infile until a pipe, operator or
 The last heredoc or infile encountered is dup2 to stdin_fileno before being
 	closed
 */
-void	redef_stdin(t_msh *msh, char **av, t_pipex p)
+void	redef_stdin(t_msh *msh, int rule, int j)
 {
 	int		fd_infile;
 	char	*str;
@@ -98,24 +99,34 @@ void	redef_stdin(t_msh *msh, char **av, t_pipex p)
 	fd_infile = -2;
 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
 	{
+		// printf("msh->av->token %d HERE_DOC %d\n", msh->av->token, HERE_DOC);
 		if (msh->av->token == INFILE)
 		{
 			if (fd_infile != -2)
 				close(fd_infile);
 			fd_infile = open(msh->av->data, O_RDONLY);
-			ft_lstdel_and_relink_split(msh->av, prev);
+			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+			// printf("msh->av->data %s\n", msh->av->data);
 		}
 		else if (msh->av->token == HERE_DOC)
 		{
+			// printf("HERE_DOC msh->p.here_doc %p msh->p.here_doc->content %p msh->p.here_doc->content %s\n", msh->p.here_doc, (char *)msh->p.here_doc->content, (char *)msh->p.here_doc->content);
 			if (fd_infile != -2)
 				close(fd_infile);
 			head_hd = msh->p.here_doc;
-			while (ft_strcmp(msh->p.here_doc->content, msh->av->token) != 0)//
+			prev_hd = NULL;
+			while (msh->p.here_doc && ft_strcmp(msh->p.here_doc->content, msh->av->data) != 0)//
 				msh->p.here_doc = msh->p.here_doc->next;
-			fd_infile = open(msh->p.here_doc->next, O_RDONLY);
-			ft_lstdel_and_relink(msh->p.here_doc, prev_hd);
-			ft_lstdel_and_relink(msh->p.here_doc, prev_hd); //normalement c est l element suivant
-			ft_lstdel_and_relink_split(msh->av, prev);
+			// printf ("msh->p.here_doc->content %s msh->p.here_doc->next->content %s\n", (char *)msh->p.here_doc->content, (char *)msh->p.here_doc->next->content);
+			fd_infile = open(msh->p.here_doc->next->content, O_RDONLY);
+			// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd); // A REVOIR
+			// printf("msh->p.here_doc %p\n", msh->p.here_doc);
+			// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd); // A REVOIRnormalement c est l element suivant
+			// printf("msh->av %p\n", msh->av);
+			// printf("test1, prev %p\n", prev);
+			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+			// dprintf(2, "msh->av->data %s\n",msh->av->data);
+			// dprintf(2, "msh->p.here_doc->content %s\n", (char *)msh->p.here_doc->content);
 			msh->p.here_doc = head_hd;
 		}
 		else
@@ -125,40 +136,105 @@ void	redef_stdin(t_msh *msh, char **av, t_pipex p)
 		}
 		if (fd_infile == -1)
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("bash: ", av[1]), NO_ENV);
+			str = ft_magic_malloc(ADD, 0, ft_strjoin("bash: ", msh->av->data), NO_ENV);
 			perror(str);
 			ft_magic_malloc(FREE, 0, str, NO_ENV);
 		}
 	}
 	msh->av = head;
-	if (fd_infile == -1)
-		ft_exit(&p, p.fd_p[0][1], fd_infile, -1);
-	if (dup2(fd_infile, STDIN_FILENO) == -1)
-		(perror("dup2"), ft_exit(&p, p.fd_p[0][1], fd_infile, -1)); //PENSER A FREE
+	// if (fd_infile == -1) //UTILE?
+	// 	ft_exit(&msh->p, msh->p.fd_p[0][1], fd_infile, -1);
+	if (fd_infile == -2 && rule == FIRST)
+		return ;
+	if (fd_infile == -2 && rule == MIDLAST)
+	{
+		if (dup2(msh->p.fd_p[j - 1][0], STDIN_FILENO) == -1) //implementer redefstdin
+			(perror("dup2")/*, ft_exit(&msh->p, msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1)*/, exit(1)); //implementer F_EXIT);
+	}
+	else if (dup2(fd_infile, STDIN_FILENO) == -1)
+		(perror("dup2")/*, ft_exit(&msh->p, msh->p.fd_p[0][1], fd_infile, -1)*/, exit(1)); //implementer F_EXIT); //PENSER A FREE
 	close(fd_infile);
+	printf("END OF STDIN\n");
 }
 
-void	redef_stout(char **av, t_pipex p, int *fd_outfile, int j)
+void	redef_stout(t_msh *msh, int *fd_outfile)
 {
 	char	*str;
-
-	if (ft_strcmp(av[1], "here_doc") == 0)
+	t_split *head;
+	t_split *prev;
+	
+	head = msh->av;
+	prev = NULL;
+	*fd_outfile = -2;
+	// printf("test1931\n");
+	printf("STDOUT msh->av->data %s\n", msh->av->data);
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
 	{
-		*fd_outfile = open(av[j + 4], O_CREAT | O_APPEND | O_WRONLY, 0744);
+		// printf("test1932 msh->av->data |%s|\n", msh->av->data);
+		if (msh->av->token == OUTFILE_TRUNC)
+		{
+			// printf("test1932bis\n");
+			if (*fd_outfile != -2)
+				close(*fd_outfile);
+			*fd_outfile = open(msh->av->data, O_CREAT | O_TRUNC | O_WRONLY, 0744);
+			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+		}
+		else if (msh->av->token == OUTFILE_NO_TRUNC)
+		{
+			// printf("test1932ter\n");
+			if (*fd_outfile != -2)
+				close(*fd_outfile);
+			*fd_outfile = open(msh->av->data, O_CREAT | O_APPEND | O_WRONLY, 0744);
+			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+		}
+		else
+		{
+			// printf("test1932qua *fd_outfile %d\n", *fd_outfile);
+			prev = msh->av;
+			msh->av = msh->av->next;
+			// printf("test1932 msh->av |%p|\n", msh->av);
+		}
 		if (*fd_outfile == -1)
 		{
-			str = ft_strjoin("bash: ", av[j + 4]);
-			(perror(str), free(str), ft_exit(&p, -1, -1, -1));
+			// printf("test1932cin\n");
+			str = ft_magic_malloc(ADD, 0, ft_strjoin("bash: ", msh->av->data), NO_ENV);
+			(perror(str), ft_magic_malloc(FREE, 0, str, NO_ENV)/*, ft_exit(&msh->p, -1, -1, -1)*/, exit(1)); //implementer F_EXIT);
 		}
 	}
-	else
-		*fd_outfile = open(av[j + 3], O_CREAT | O_TRUNC | O_WRONLY, 0744);
-	if (*fd_outfile == -1)
+	// write(2, "test1933\n", 10);
+	msh->av = head;
+	printf("STDOUT msh->av->data %s\n", msh->av->data);
+	// printf("test1933\n");
+	if (*fd_outfile == -2)
 	{
-		str = ft_strjoin("bash: ", av[j + 3]);
-		(perror(str), free(str), ft_exit(&p, -1, -1, -1));
+		// printf("test1933bis\n");
+		return ;
+		// *fd_outfile = 1;
 	}
+	// printf("test1934\n");
+	if (dup2(*fd_outfile, STDOUT_FILENO) == -1)
+		(perror("dup2")/*, ft_exit(&msh->p, msh->p.fd_p[0][1], *fd_outfile, -1)*/, exit(1)); //implementer F_EXIT); //PENSER A FREE
+	// printf("test1935\n");
+	close(*fd_outfile);
+	// printf("test1936\n");
 }
+// 	if (ft_strcmp(av[1], "here_doc") == 0)
+// 	{
+// 		*fd_outfile = open(av[j + 4], O_CREAT | O_APPEND | O_WRONLY, 0744);
+// 		if (*fd_outfile == -1)
+// 		{
+// 			str = ft_strjoin("bash: ", av[j + 4]);
+// 			(perror(str), free(str), ft_exit(&p, -1, -1, -1));
+// 		}
+// 	}
+// 	else
+// 		*fd_outfile = open(av[j + 3], O_CREAT | O_TRUNC | O_WRONLY, 0744);
+// 	if (*fd_outfile == -1)
+// 	{
+// 		str = ft_strjoin("bash: ", av[j + 3]);
+// 		(perror(str), free(str), ft_exit(&p, -1, -1, -1));
+// 	}
+// }
 
 /*
 Count the numbers of elements that we will put in the cmd (cmd + option +
@@ -178,6 +254,7 @@ int		ft_count_cmd(t_msh *msh)
 		msh->av = msh->av->next;
 	}
 	msh->av = head;
+	return (count);
 }
 
 /*
@@ -204,7 +281,7 @@ char	**ft_make_cmd(t_msh *msh)
 			if (!cmd[i])
 				exit(134); // penser a free
 			i++;
-			ft_lstdel_and_relink_split(msh->av, prev);
+			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
 		}
 		else
 		{

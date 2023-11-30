@@ -6,11 +6,17 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 11:31:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:53:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+
+//TO DO : Renvoyer erreurs pour test : 
+/*
+, &head_hd<< LIM cat << LAM | cat << LOM
+*/
 
 char	*ft_error_message_final(char *str)
 {
