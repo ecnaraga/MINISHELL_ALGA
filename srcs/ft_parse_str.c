@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/27 10:07:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/11/29 12:02:49 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static void	get_final_size(int *count, int *flag, char *str, size_t *i)
 		}
 		*i += 1;
 	}
+	*flag = 0;
 }
 
 static void	get_final_str2(size_t *i, size_t *j, char *str, char *fstr)
@@ -110,23 +111,22 @@ char	*add_spaces(char *str)
 	int		flag;
 
 	get_final_size(&count, &flag, str, &i);
-	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL, NO_ENV);
+	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1),
+			NULL, NO_ENV);
 	if (!fstr)
 		return (NULL);
-	i = 0;
+	i = -1;
 	j = 0;
-	flag = 0;
-	while (str[i])
+	while (str[++i])
 	{
 		flag_handler(&flag, str[i]);
 		if (is_operator(str[i]) == 1 && flag == 0)
 			get_final_str(&i, &j, str, fstr);
 		else
 			fstr[j] = str[i];
-		i++;
 		j++;
 	}
 	fstr[j] = '\0';
-	ft_magic_malloc(FREE, 0, str, 0);
+	ft_magic_malloc(FREE, 0, str, NO_ENV);
 	return (fstr);
 }

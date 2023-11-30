@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 17:55:17 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/30 11:26:41 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ void	builtin_cd(t_msh *minish);
 get_env
 */
 t_env	**get_env(char **str);
+
 t_env	*ft_lstlast_env(t_env *lst);
 int	ft_lstsize_env(t_env *lst);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env	*ft_lst_new_malloc(size_t size, size_t size2);
+int	check_env(t_env **export_env, char **str);
 
 /*
 get_export_env

@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 18:08:07 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/30 10:53:08 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ int main(int ac, char **av, char **env)
 	t_msh msh;
 	
 	(void)av;
-	if (isatty(0) == 1) //A REGLER test ./minishell | ./minishell
+	/*if (isatty(0) == 1) //A REGLER test ./minishell | ./minishell
 	{
 		printf("stdin : %d\n", isatty(0));
 		printf("stdout : %d\n", isatty(1));
-	}
+	}*/
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
 	for (size_t i = 0; env[i]; i++)
@@ -73,7 +73,7 @@ int main(int ac, char **av, char **env)
 	t_env *new = (*msh.export_env);
 	while(new)
 	{
-		printf("%s%s\n", new->name, new->content);
+		printf("%s\n", new->name);
 		new = new->next;
 	}
 	

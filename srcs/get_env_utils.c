@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:04:43 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/28 17:09:06 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/30 11:29:05 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,15 @@ t_env	*ft_lst_new_malloc(size_t size, size_t size2)
 		return (NULL);
 	temp->next = NULL;
 	return (temp);
+}
+
+int	check_env(t_env **env, char **str)
+{
+	if (!str || str[0] == NULL)
+	{
+		ft_magic_malloc(FREE, 0, env, ENV);
+		return (1);
+	}
+	else
+		return (0);
 }

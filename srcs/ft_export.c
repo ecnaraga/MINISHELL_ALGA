@@ -6,47 +6,80 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/28 14:37:56 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:56:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	fill_env(t_list **export_env, char **str)
+static void	ft_print_export(t_msh *minish)
 {
-	int		i;
-	t_list	*new;
+	t_env	*tmp;
 
-	i = 0;
-	if (!str || str[0] == NULL)
+	tmp = *(minish->export_env);
+	while (tmp)
 	{
-		ft_magic_malloc(FREE, 0, env, ENV);
+		printf("%s%s\n", (char *)tmp->name, (char *)tmp->content);
+		tmp = tmp->next;
+	}
+}
+
+static int	get_statut(char *cmd)
+{
+	int	i;
+
+	i = -1;
+	while(cmd[++i])
+	{
+		if (cmd[i] == '=')
+			return (2);
+	}
+	return (1);	
+}
+
+static int	change_export_env(char *str, t_msh *minish)
+{
+	t_env	*new;
+	int	key;
+	int	name_size;
+	int	content_size;
+
+	name_size = get_name_size(str);
+	content_size = ft_strlen(str + name_size);
+	new = ft_lst_new_malloc(name_size + 1, content_size + 2 + 1);
+	if (!new)
+	{
+		ft_magic_malloc(FLUSH, 0, NULL, ENV);
 		return (1);
 	}
-	while (str[i])
-	{
-		new = ft_lst_new_malloc(ft_strlen(str[i]) + 1);
-		if (!new)
-		{
-			ft_magic_malloc(FLUSH, 0, NULL, ENV);
-			return (1);
-		}
-		ft_strlcpy(new->content, str[i], ft_strlen(str[i]) + 1);
-		ft_lstadd_back(env, new);
-		i++;
-	}
-	return (0);
+	ft_strlcpy(new->name, str, name_size + 1);
+	ft_exstrlcpy(new->content, str + name_size, content_size + 2 + 1);
+	ft_lstadd_back_env(minish->export_env, new);
 }
 
 void	builtin_export(char **str, t_msh *minish)
 {
-	if (!minish->export_env)
+	char	*name;
+	char	*content;
+	int	i;
+
+	i = 1;
+	if(!str[i])
+		ft_print_export(minish);
+	else
 	{
-		minish->export_env = ft_magic_malloc(MALLOC, sizeof(t_list), NULL, ENV);
-		if (!minish->export_env)
-			return ;
-		minish->export_env = NULL;
-		if (fill_env(minish->export_env, str) == 1)
-		return (NULL);
-	}	
+		while(str[i])
+		{
+			if(get_statut(str[i]) == 1)
+			{
+				change_export_env(str[i], minish);
+			}
+			else
+			{
+				
+			}
+
+		}
+		
+	}
 }

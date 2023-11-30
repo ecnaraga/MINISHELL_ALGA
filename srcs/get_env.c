@@ -6,18 +6,18 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/28 17:29:08 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/30 11:27:21 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	get_maj(char *str)
+static int	get_size_name(char *str)
 {
 	int	i;
-	
+
 	i = -1;
-	while(str[++i])
+	while (str[++i])
 	{
 		if (str[i] == '=')
 			return (i);
@@ -25,33 +25,35 @@ static int	get_maj(char *str)
 	return (-1);
 }
 
+static void	get_sizes(int *size_name, int *size_content, int *i, char **str)
+{
+	*size_name = get_size_name(str[*i]);
+	*size_content = ft_strlen(str[*i] + *size_name);
+}
+
 static int	fill_env(t_env **env, char **str)
 {
 	int		i;
-	int		maj;
-	int		size;
+	int		size_name;
+	int		size_content;
 	t_env	*new;
 
-	i = 0;
-	if (!str || str[0] == NULL)
-	{
-		ft_magic_malloc(FREE, 0, env, ENV);
+	i = -1;
+
+	if (check_env(env, str) == 1)
 		return (1);
-	}
-	while (str[i])
+	while (str[++i])
 	{
-		maj = get_maj(str[i]);
-		size = ft_strlen(str[i] + maj);
-		new = ft_lst_new_malloc(maj + 1, size + 1);
+		get_sizes(&size_name, &size_content, &i, str);
+		new = ft_lst_new_malloc(size_name + 1, size_content + 1);
 		if (!new)
 		{
 			ft_magic_malloc(FLUSH, 0, NULL, ENV);
 			return (1);
 		}
-		ft_strlcpy(new->name, str[i], maj + 1);
-		ft_strlcpy(new->content, str[i] + maj, size + 1);
+		ft_strlcpy(new->name, str[i], size_name + 1);
+		ft_strlcpy(new->content, str[i] + size_name, size_content + 1);
 		ft_lstadd_back_env(env, new);
-		i++;
 	}
 	return (0);
 }

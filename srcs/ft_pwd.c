@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:42:04 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/28 17:02:05 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/11/29 12:33:29 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	builtin_pwd(t_msh *minish)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
 	tmp = *(minish->env);
 	while (tmp)
