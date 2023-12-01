@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/30 16:44:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 12:12:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	create_here_doc(t_split *av, t_list **heredoc)
 	char *tmp;
 	
 	/*Add the limiter in the linked list*/
-	new = ft_lstnew(av->data);
+	new = ft_magic_malloc(ADD, 0, ft_lstnew(av->data), NO_ENV);
 	if (!new)
 		(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
 	ft_lstadd_back(heredoc, new);
@@ -56,7 +56,7 @@ void	create_here_doc(t_split *av, t_list **heredoc)
 		else
 			ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 	}
-	new = ft_lstnew(tmp);
+	new = ft_magic_malloc(ADD, 0, ft_lstnew(tmp), NO_ENV);
 	if (!new)
 		(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
 	ft_lstadd_back(heredoc, new);
@@ -139,4 +139,18 @@ void	ft_heredoc(t_msh *msh)
 		msh->av = msh->av->next;
 	}
 	msh->av = head;
+}
+
+void	ft_unlink_heredoc(t_list *heredoc)
+{
+	int i;
+
+	i = 0;
+	while (heredoc)
+	{
+		if (i % 2 == 1)
+			unlink(heredoc->content);
+		heredoc = heredoc->next;
+		i++;
+	}
 }

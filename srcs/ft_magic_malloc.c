@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 11:56:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 13:32:15 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*ft_magic_add_malloc(t_list **mlc, int rule, size_t size, void *addr)
 	else
 		tmp = ft_lstnew_add(addr);
 	if (!tmp)
-		return (ft_putstr_fd("minishell: Cannot allocate memory\n", 2), status = 134, NULL);
+		return (write(2, "minishell: Cannot allocate memory\n", 35), status = 255, NULL);
 	if (*mlc)
 	{
 		while ((*mlc)->next)
