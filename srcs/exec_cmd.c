@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 15:53:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 19:18:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	ft_exec_cmd(t_msh *msh)
 
 int	ft_cmd_alone(t_msh *msh)
 {
+	// sleep(10);
+	printf("cmdalone\n");
 	ft_parse(msh);
 	ft_exec_cmd(msh);
 	// sleep(10);
@@ -48,7 +50,7 @@ int	ft_cmd_alone(t_msh *msh)
 	printf("status %d\n", status);
 	// if (msh->p.path)
 	// 	ft_free_split(msh->p.path);
-	ft_unlink_heredoc(msh->p.here_doc);
-	ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
+	// ft_unlink_heredoc(msh->p.here_doc);
+	ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }

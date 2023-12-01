@@ -74,3 +74,6 @@ galambey-R834741galambey
 
 
 // Il n'y a pas de code d'exit status standardisé pour une erreur de mémoire en Bash, car cela dépend de l'implémentation spécifique de la commande ou du programme que vous exécutez.
+
+
+// echo coucou && << LEM echo bravo | cat | < outfile cat && echo salut << LIM

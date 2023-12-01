@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/01 15:52:04 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 19:00:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,14 @@ void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2)
 			close(fd_2);
 		head = msh->av;
 		while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE)
+		{
+			printf("PARENT msh->av->data %s\n", msh->av->data);
 			msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
+		}
 		if (msh->av && msh->av->token == PIPE)
 			msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
+		if (msh->av)
+			printf("END PARENT msh->av->data %s\n", msh->av->data);
 	}
 }
 
@@ -65,7 +70,7 @@ void	ft_first_pipe(t_msh *msh)
 		// }
 		if (!msh->p.cmd_opt[0])//cela pourrait il arriver???????????????????????????????????? Pour l instant en commentaire a voir plus tard
 		{
-			dprintf(2, "c est  moi first \n");
+			// dprintf(2, "c est  moi first \n");
 			(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1));
 		}	
 		ft_child_exec(msh);//****************************************************************************
@@ -122,4 +127,5 @@ void	ft_last_pipe(t_msh *msh, int j)
 		ft_child_exec(msh);
 	}
 	ft_parent(pid, msh, msh->p.fd_p[j - 1][0], -1);
+	// printf("msh->av->data %s\n", msh->av->data);
 }

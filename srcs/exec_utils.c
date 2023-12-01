@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/01 15:56:03 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 18:45:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,18 @@ static int	ft_find_good_path(char **path, char **good_path, char *cmd,
 	i = 0;
 	while (path[i] && accss != 0)
 	{
-		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(path[i], "/"), NO_ENV);
+		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(path[i], "/"), PIP);
 		if (!good_path)
 			return (E_STRJOIN);
 		tmp = *good_path;
-		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(*good_path, cmd), NO_ENV);
+		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(*good_path, cmd), PIP);
 		if (!*good_path)
 			return (E_STRJOIN);
-		ft_magic_malloc(FREE, 0, tmp, NO_ENV);
+		ft_magic_malloc(FREE, 0, tmp, PIP);
 		accss = access(*good_path, F_OK | X_OK);
 		if (accss == 0)
 			return (E_OK);
-		ft_magic_malloc(FREE, 0, *good_path, NO_ENV);
+		ft_magic_malloc(FREE, 0, *good_path, PIP);
 		*good_path = NULL;
 		i++;
 	}
@@ -63,13 +63,13 @@ int	ft_access_cmd(char **path, char *cmd, char **good_path)
 	accss = access(cmd, F_OK | X_OK);
 	if (accss == 0)
 	{
-		tmp = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, "/"), NO_ENV);
+		tmp = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, "/"), PIP);
 		if (!tmp)
 			return (E_STRJOIN);
 		accss = access(tmp, F_OK | X_OK);
 		if (accss == 0)
-			return (ft_magic_malloc(FREE, 0, tmp, NO_ENV), E_NO_CMD);
-		*good_path = ft_magic_malloc(ADD, 0, ft_strdup(cmd), NO_ENV);
+			return (ft_magic_malloc(FREE, 0, tmp, PIP), E_NO_CMD);
+		*good_path = ft_magic_malloc(ADD, 0, ft_strdup(cmd), PIP);
 		if (!*good_path)
 			return (E_STRDUP);
 		return (E_OK);
@@ -113,7 +113,7 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 				close(fd_infile);
 			head_hd = msh->p.here_doc;
 			prev_hd = NULL;
-			while (msh->p.here_doc && ft_strcmp(msh->p.here_doc->content, msh->av->data) != 0)//
+			while (msh->p.here_doc && msh->av && ft_strcmp(msh->p.here_doc->content, msh->av->data) != 0)//
 				msh->p.here_doc = msh->p.here_doc->next;
 			fd_infile = open(msh->p.here_doc->next->content, O_RDONLY);
 			// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd); // A REVOIR
@@ -129,14 +129,14 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 		}
 		if (fd_infile == -1)
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), NO_ENV);
+			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
 			//IF ERROR MALLOC ? 
 			if (str)
 			{
 				perror(str);
 				status = 1;
 				msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
-				ft_magic_malloc(FREE, 0, str, NO_ENV);
+				ft_magic_malloc(FREE, 0, str, PIP);
 			}
 			if (rule == CMD_ALONE)
 				ft_exit(-1, -1, -1);
@@ -211,13 +211,13 @@ void	redef_stout(t_msh *msh, int rule, int j)
 		}
 		if (fd_outfile == -1)
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), NO_ENV);
+			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
 			if (str)
 			{
 				perror(str);
 				status = 1;
 				// msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
-				// ft_magic_malloc(FREE, 0, str, NO_ENV);
+				// ft_magic_malloc(FREE, 0, str, PIP);
 			}
 			if (rule == CMD_ALONE)
 				ft_exit(-1, -1, -1);
@@ -312,7 +312,7 @@ char	**ft_make_cmd(t_msh *msh)
 
 	head = msh->av;
 	prev = NULL;
-	cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (ft_count_cmd(msh) + 1), NULL, NO_ENV);
+	cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (ft_count_cmd(msh) + 1), NULL, PIP);
 	if (!cmd)
 		ft_exit(-1, -1, -1);
 	i = 0;
@@ -320,7 +320,7 @@ char	**ft_make_cmd(t_msh *msh)
 	{
 		if (msh->av->token == CMD) // normalement besoin de cette condition quand on implementera les parentheses mais pas certaine => a verifier
 		{
-			cmd[i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), NO_ENV);
+			cmd[i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
 			if (!cmd[i])
 				ft_exit(-1, -1, -1);
 			i++;

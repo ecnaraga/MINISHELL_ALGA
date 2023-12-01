@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 15:34:11 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 16:40:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_exit(int fd_1, int fd_2, int fd_3)
 		close(fd_2);
 	if (fd_3 > -1)
 		close(fd_3);
-	ft_magic_malloc(QUIT, 0, NULL, NO_ENV);
+	ft_magic_malloc(QUIT, 0, NULL, PIP);
 	exit(status);
 }
 
@@ -73,10 +73,10 @@ static int	ft_message_directory(char *cmd)
 	ck = ft_check_cmd(cmd);
 	if (ck == 1 || ck == 3)
 	{
-		str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), NO_ENV);
+		str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
 		if (!str)
 			return (1);
-		str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": Is a directory\n"), NO_ENV);
+		str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": Is a directory\n"), PIP);
 		if (!str)
 			return (1);
 		write(2, str, ft_strlen(str));
@@ -97,14 +97,14 @@ void	ft_perr(int err, char *cmd)
 			return ;
 		if (ck_char(cmd, '/') > 0)
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), NO_ENV);
+			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
 			perror(str);
 			status = 127;
 		}
 		else
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), NO_ENV);
-			str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": command not found\n"), NO_ENV);
+			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
+			str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": command not found\n"), PIP);
 			status = 127;
 			write(2, str, ft_strlen(str));
 		}

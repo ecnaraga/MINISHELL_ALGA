@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 15:53:01 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/01 18:39:15 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ static void	ft_create_fd_p(int size, t_pipex *p)
 	int	j;
 
 	j = -1;
-	p->fd_p = ft_magic_malloc(MALLOC, sizeof(int *) * (size + 1), NULL, NO_ENV);
+	p->fd_p = ft_magic_malloc(MALLOC, sizeof(int *) * (size + 1), NULL, PIP);
 	if (!p->fd_p)
 		ft_exit(-1, -1, -1);
 	while (++j < size)
 	{
-		p->fd_p[j] = ft_magic_malloc(MALLOC, sizeof(int) * 2, NULL, NO_ENV);
+		p->fd_p[j] = ft_magic_malloc(MALLOC, sizeof(int) * 2, NULL, PIP);
 		if (!p->fd_p)
 			ft_exit(-1, -1, -1);
 	}
@@ -91,7 +91,7 @@ int	pipex_multi(t_msh *msh)
 	printf("status %d\n", status);
 	// if (msh->p.path)
 	// 	ft_free_split(msh->p.path);
-	ft_unlink_heredoc(msh->p.here_doc);
-	ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
+	// ft_unlink_heredoc(msh->p.here_doc);
+	ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }
