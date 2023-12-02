@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 18:39:11 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 08:45:11 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void	create_here_doc(t_split *av, t_list **heredoc)
 	char *tmp;
 	
 	/*Add the limiter in the linked list*/
-	new = ft_magic_malloc(ADD, 0, ft_lstnew(av->data), NO_ENV);
+	tmp = ft_magic_malloc(ADD, 0, ft_strdup(av->data), NO_ENV);
+	new = ft_magic_malloc(ADD, 0, ft_lstnew(tmp), NO_ENV);
 	if (!new)
 		(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
 	ft_lstadd_back(heredoc, new);
@@ -148,8 +149,8 @@ void	ft_unlink_heredoc(t_list *heredoc)
 	i = 0;
 	while (heredoc)
 	{
-		if (i % 2 == 1)
-			unlink(heredoc->content);
+		// if (i % 2 == 1)
+		unlink(heredoc->content);
 		heredoc = heredoc->next;
 		i++;
 	}

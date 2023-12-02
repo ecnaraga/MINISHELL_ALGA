@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/01 18:45:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 08:32:43 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 	t_split *head;
 	t_split *prev;
 	t_list *head_hd;
-	t_list *prev_hd;
+	// t_list *prev_hd;
 
 	head = msh->av;
 	prev = NULL;
@@ -112,8 +112,8 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 			if (fd_infile != -2)
 				close(fd_infile);
 			head_hd = msh->p.here_doc;
-			prev_hd = NULL;
-			while (msh->p.here_doc && msh->av && ft_strcmp(msh->p.here_doc->content, msh->av->data) != 0)//
+			// prev_hd = NULL;
+			while (msh->p.here_doc && msh->av && ft_strcmp((char *)msh->p.here_doc->content, msh->av->data) != 0)//
 				msh->p.here_doc = msh->p.here_doc->next;
 			fd_infile = open(msh->p.here_doc->next->content, O_RDONLY);
 			// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd); // A REVOIR

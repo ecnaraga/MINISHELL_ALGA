@@ -77,3 +77,4 @@ galambey-R834741galambey
 
 
 // echo coucou && << LEM echo bravo | cat | < outfile cat && echo salut << LIM
+// cat << LAM | cat && cat << LAM

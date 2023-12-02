@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/01 19:00:16 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 08:43:48 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	ft_child_exec(t_msh *msh)
 void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2)
 {
 	t_split *head;
+	t_list *head_hd;
+	t_list *prev_hd;
 	
 	if (pid != 0)
 	{
@@ -37,13 +39,23 @@ void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2)
 		head = msh->av;
 		while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE)
 		{
-			printf("PARENT msh->av->data %s\n", msh->av->data);
+			if (msh->av->token == HERE_DOC)
+			{
+				head_hd = msh->p.here_doc;
+				prev_hd = NULL;
+				while (msh->p.here_doc && ft_strcmp(msh->p.here_doc->content, msh->av->data) != 0)
+				{
+					prev_hd = msh->p.here_doc;
+					msh->p.here_doc = msh->p.here_doc->next;
+				}
+				if (msh->p.here_doc)
+					msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd);
+				msh->p.here_doc = head_hd;
+			}
 			msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
 		}
 		if (msh->av && msh->av->token == PIPE)
 			msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
-		if (msh->av)
-			printf("END PARENT msh->av->data %s\n", msh->av->data);
 	}
 }
 

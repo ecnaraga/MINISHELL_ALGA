@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 19:37:12 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:46:03 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	del(void *content)
 {
+	// ft_magic_malloc(FREE, 0, content);
 	free(content);
 	content = NULL;
 }

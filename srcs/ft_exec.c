@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 19:18:11 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:31:12 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int	ft_search_pipe(t_msh *msh)
 int	ft_exec(t_msh *msh)
 {
 	t_split *head;
-	t_split *prev;
-	int pipe;
+	// t_split *prev;
+	// int pipe;
 	
 	printf("FT_EXEC\n");
 	ft_heredoc(msh);
 	head = msh->av;
-	pipe = 0;
+	// pipe = 0;
 	if (ft_search_pipe(msh) == 1)
 		pipex_multi(msh);
 	else
@@ -110,7 +110,7 @@ int	ft_exec(t_msh *msh)
 		}
 		else
 		{
-			prev = msh->av;
+			// prev = msh->av;
 			msh->av = msh->av->next;
 		}
 	}
@@ -119,5 +119,6 @@ int	ft_exec(t_msh *msh)
 	// if (head)
 	// 	ft_cmd_alone(msh);
 	ft_unlink_heredoc(msh->p.here_doc);
+	ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	return (0);
 }

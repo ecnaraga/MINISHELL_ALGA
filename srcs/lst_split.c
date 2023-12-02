@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/12/01 19:46:10 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:45:41 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,19 @@ void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *))
 	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 }
 
+void    del_three(t_list *lst)
+{
+    lst->content = ft_magic_malloc(FREE, 0, lst->content, NO_ENV);
+}
+
+void	ft_lstdelone_magic(t_list*lst, void (*del)(t_list*))
+{
+	if (!lst || !del)
+		return ;
+	del_three(lst);
+	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
+}
+
 t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head)
 {
 	t_split	*tmp;
@@ -91,13 +104,7 @@ t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head)
 	else
 		*head = av->next;
 	tmp = av->next;
-	printf("av %p \n", av);
-	printf("av->next %p\n", av->next);
-	printf("tmp %p\n", tmp);
 	ft_lstdelone_split(av, del_two);
-	printf("tmp %p\n", tmp);
-	if (tmp)
-		printf("tmp->data %s\n", tmp->data);
 	return (tmp);
 }
 
@@ -112,7 +119,6 @@ t_list	*ft_lstdel_and_relink(t_list *lst, t_list *prev, t_list **head)
 	else
 		*head = lst->next;
 	tmp = lst->next;
-	ft_lstdelone(lst, del);
-	lst = NULL;
+	ft_lstdelone_magic(lst, del_three);
 	return (tmp);
 }
