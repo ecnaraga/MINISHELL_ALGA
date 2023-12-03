@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 19:18:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/03 11:30:20 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ int	ft_cmd_alone(t_msh *msh)
 	// sleep(10);
 	printf("cmdalone\n");
 	ft_parse(msh);
+	printf("cmdalone1\n");
 	ft_exec_cmd(msh);
 	// sleep(10);
+	printf("cmdalone2\n");
 	while (wait(&status) > 0)
 		;
 	if (WIFEXITED(status))

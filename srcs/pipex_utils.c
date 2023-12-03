@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/02 08:43:48 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/03 11:25:33 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2)
 			}
 			msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
 		}
-		if (msh->av && msh->av->token == PIPE)
+		if (msh->av && (msh->av->token == PIPE || msh->av->token == PAR_CLOSE))
 			msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
 	}
 }

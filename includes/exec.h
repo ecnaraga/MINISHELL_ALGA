@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 15:53:10 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/03 13:48:56 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 int	ft_cmd_alone(t_msh *msh);
 
 /*ft_exec.c*/
-int	ft_exec(t_msh *msh);
+int	ft_exec(t_msh *msh, int sub);
 
 /*pipex.c*/
 int	pipex_multi(t_msh *msh);
@@ -49,5 +49,9 @@ void	ft_unlink_heredoc(t_list *heredoc);
 
 /*split_magic_malloc.c*/
 char	**ft_split_magic_malloc(char const *s, char c);
+
+
+int	ft_minishell(t_msh *msh, int sub);
+char	*ft_strtrim_msh(char const *s1, char const *set);
 
 #endif

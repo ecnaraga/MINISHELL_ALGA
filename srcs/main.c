@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/30 16:32:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/03 13:53:52 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,34 @@ void	ft_handle_eof(void)
 	rl_clear_history();
 }
 
+int	ft_minishell(t_msh *msh, int sub)
+{
+	if (ft_parsing(msh) != 0)
+		return (1);
+	int i = 0;
+	t_split *head;
+	head = msh->av;
+	while (msh->av)
+	{
+		printf("%d msh->av->data = |%s| msh->av->token = %d\n", i, msh->av->data, msh->av->token);
+		if (msh->av->type)
+		{
+			int d = -1;
+			while (++d < msh->av->dollar)
+				printf("msh->av->type[%d].expnd = %d msh->av->type[%d].len_variable = %d\n", d,
+					msh->av->type[d].expnd, d,
+					msh->av->type[d].len_variable);
+		}
+		msh->av = msh->av->next;
+		i++;
+	}
+	msh->av = head;
+	ft_exec(msh, 0);
+	if (sub == 1)
+		ft_exit(-1, -1, -1);
+	return (0);
+}
+
 int main(int ac, char **av, char **env)
 {
 	t_msh msh;
@@ -82,43 +110,45 @@ int main(int ac, char **av, char **env)
 			continue ;	
 		}
 		add_history(msh.line);
-		if (ft_parsing(&msh) != 0)
-			continue;
-		int i = 0;
-		t_split *head;
-		head = msh.av;
-		while (msh.av)
-		{
-			printf("%d msh.av->data = |%s| msh.av->token = %d\n", i, msh.av->data, msh.av->token);
-			if (msh.av->type)
-			{
-				int d = -1;
-				while (++d < msh.av->dollar)
-					printf("msh.av->type[%d].expnd = %d msh.av->type[%d].len_variable = %d\n", d,
-						msh.av->type[d].expnd, d,
-						msh.av->type[d].len_variable);
-			}
-			msh.av = msh.av->next;
-			i++;
-		}
-		msh.av = head;
-		ft_exec(&msh);
+		ft_minishell(&msh, 0);
 		
-		i = 0;
-		while (msh.av)
-		{
-			printf("%d msh.av->data = |%s| msh.av->token = %d\n", i, msh.av->data, msh.av->token);
-			if (msh.av->type)
-			{
-				int d = -1;
-				while (++d < msh.av->dollar)
-					printf("msh.av->type[%d].expnd = %d msh.av->type[%d].len_variable = %d\n", d,
-						msh.av->type[d].expnd, d,
-						msh.av->type[d].len_variable);
-			}
-			msh.av = msh.av->next;
-			i++;
-		}
+		// if (ft_parsing(&msh) != 0)
+		// 	continue;
+		// int i = 0;
+		// t_split *head;
+		// head = msh.av;
+		// while (msh.av)
+		// {
+		// 	printf("%d msh.av->data = |%s| msh.av->token = %d\n", i, msh.av->data, msh.av->token);
+		// 	if (msh.av->type)
+		// 	{
+		// 		int d = -1;
+		// 		while (++d < msh.av->dollar)
+		// 			printf("msh.av->type[%d].expnd = %d msh.av->type[%d].len_variable = %d\n", d,
+		// 				msh.av->type[d].expnd, d,
+		// 				msh.av->type[d].len_variable);
+		// 	}
+		// 	msh.av = msh.av->next;
+		// 	i++;
+		// }
+		// msh.av = head;
+		// ft_exec(&msh, 0);
+		
+		// int i = 0;
+		// while (msh.av)
+		// {
+		// 	printf("%d msh.av->data = |%s| msh.av->token = %d\n", i, msh.av->data, msh.av->token);
+		// 	if (msh.av->type)
+		// 	{
+		// 		int d = -1;
+		// 		while (++d < msh.av->dollar)
+		// 			printf("msh.av->type[%d].expnd = %d msh.av->type[%d].len_variable = %d\n", d,
+		// 				msh.av->type[d].expnd, d,
+		// 				msh.av->type[d].len_variable);
+		// 	}
+		// 	msh.av = msh.av->next;
+		// 	i++;
+		// }
 		ft_magic_malloc(FLUSH, 0, NULL, 0);
 	}
 }
