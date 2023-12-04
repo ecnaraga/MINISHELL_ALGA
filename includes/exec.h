@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/03 13:48:56 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/04 16:40:49 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,6 @@ char	**ft_split_magic_malloc(char const *s, char c);
 
 
 int	ft_minishell(t_msh *msh, int sub);
-char	*ft_strtrim_msh(char const *s1, char const *set);
+char	*ft_strtrim_msh(char **s1);
 
 #endif

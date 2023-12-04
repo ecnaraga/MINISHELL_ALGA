@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/03 13:53:52 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/04 16:43:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ int status = 0;
 /*
 Call all the parsing function + split the line + tokenisation
 */
-int ft_parsing(t_msh *msh)
+int ft_parsing(t_msh *msh, int sub)
 {
-	if (ft_parse_line(msh) != 0) // POUR ALIX : PB INVALID READ
+	if (sub == 0 && ft_parse_line(msh) != 0) // POUR ALIX : PB INVALID READ
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	printf("PASSAGE ALIX TO GAGA\n");
-	if (ft_parse_bis(msh) != 0)
+	if (sub == 0 && ft_parse_bis(msh) != 0)
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	msh->av = ft_split_msh(msh->line);
 	if (!msh->av)
@@ -35,7 +35,7 @@ int ft_parsing(t_msh *msh)
 	if (msh->ac == 0)
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	ft_token(msh);
-	if (ft_parse_ter(msh) != 0)
+	if (sub == 0 && ft_parse_ter(msh) != 0)
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	return (0);
 }
@@ -52,7 +52,7 @@ void	ft_handle_eof(void)
 
 int	ft_minishell(t_msh *msh, int sub)
 {
-	if (ft_parsing(msh) != 0)
+	if (ft_parsing(msh, sub) != 0)
 		return (1);
 	int i = 0;
 	t_split *head;
