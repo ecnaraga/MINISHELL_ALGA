@@ -6,11 +6,18 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/04 16:32:35 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/04 18:07:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static void	ft_init_var(int *i, size_t *count, int *par)
+{
+	*i = 0;
+	*count = 0;
+	*par = 0;
+}
 
 static unsigned int	ft_count_deb(char *s1)
 {
@@ -29,29 +36,28 @@ static unsigned int	ft_count_deb(char *s1)
 
 static unsigned int	ft_count_end(char *s1)
 {
-	unsigned int	i;
-	unsigned int	count;
-	unsigned int	par;
+	int	i;
+	size_t	count;
+	int	par;
 
-	i = 0;
-	count = 0;
-	par = 0;
-	while (s1[i++] != '(')
-		;
-	while (s1[i++])
+	ft_init_var(&i, &count, &par);
+	while (s1[i] != '(')
+		i++;
+	while (s1[i])
 	{
 		if (s1[i] == '(')
 			par++;
 		else if (s1[i] == ')')
 		{
-			if (par == 0)
+			if (par == 1)
 			{
-				count += 2;
+				count += 1;
 				break ;
 			}
 			par--;
 		}
 		count++;
+		i++;
 	}
 	return (count);
 }
@@ -65,7 +71,7 @@ The sub-line command contains the content that is between the first parenthesis
 */
 char	*ft_strtrim_msh(char **s1)
 {
-	unsigned int	count;
+	size_t	count;
 	char			*s2;
 	unsigned int	len2;
 	char			*tmp;

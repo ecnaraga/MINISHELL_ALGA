@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/04 17:03:48 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/04 18:23:57 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, t_split **head, int rule)
 	
 	(void) rule;
 	sub_msh->line = ft_strtrim_msh(&msh->line);
-	printf("sub_msh->line %s\n", sub_msh->line);
+	dprintf(2, "sub_msh->line %s\n", sub_msh->line);
 	sub_msh->env = msh->env;
 	pid = fork();
 	if (pid == 0)
@@ -47,18 +47,13 @@ int	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, t_split **head, int rule)
 				redef_stdin(msh, CMD_ALONE, 0);//TO DO adapter au pipe
 			else if (msh->av->token == OUTFILE_TRUNC || msh->av->token == OUTFILE_NO_TRUNC)
 			{
-				printf("STDOUT\n");
+				// dprintf(2, "STDOUT\n");
 				redef_stout(msh, CMD_ALONE, 0);
 			}
 			else
 				msh->av = msh->av->next;
 		}
 		ft_minishell(sub_msh, 1);
-		// while (wait(&status) > 0)
-		// ;
-		// if (WIFEXITED(status))
-		// 	status = WEXITSTATUS(status);
-		// return (0);
 	}
 	else
 	{
@@ -73,10 +68,24 @@ int	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, t_split **head, int rule)
 int ft_exec_par(t_msh *msh, t_split **head, int rule)
 {
 	t_msh	sub_msh;
+	int		par;
 
-	while (msh->av->token != PAR_CLOSE)
+	par = 0;
+	dprintf(2, "msh->av->token %d\n", msh->av->token);
+	while (msh->av->token != PAR_CLOSE || par != 0)
+	{
+		if (msh->av->token == PAR_OPEN)
+			par++;
+		else if (msh->av->token == PAR_CLOSE)
+		{
+			par--;
+			if (par == 0)
+				break ;
+		}
+		dprintf(2, "msh->av->token %d par = %d\n", msh->av->token, par);
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, head);
-	while (msh->av && msh->av->token == PAR_CLOSE)
+	}
+	while (msh->av && msh->av->token == PAR_CLOSE) // et pourquoi pas if a la place
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, head);
 	*head = msh->av;
 	ft_create_sub_msh(&sub_msh, msh, head, rule);
@@ -88,39 +97,29 @@ int ft_exec_par(t_msh *msh, t_split **head, int rule)
 	msh->av = *head;
 	return (0);
 }
-	
-int	ft_exec_operator(t_msh *msh, t_split **head)
+
+void	ft_choice_exec(t_msh *msh, t_split **head)
 {
-	if (ft_search_pipe(msh) == 1)
+	if (msh->av->token == PAR_OPEN)
+		ft_exec_par(msh, head, CMD_ALONE);
+	else if (ft_search_pipe(msh) == 1)
 		pipex_multi(msh);
 	else
 		ft_cmd_alone(msh);
-	if (msh->av)
-		printf("msh->av->data %s\n", msh->av->data);
+}
+	
+int	ft_exec_operator(t_msh *msh, t_split **head)
+{
+	ft_choice_exec(msh, head);
 	*head = msh->av;
 	while (msh->av)
 	{
-		if (msh->av->token == PAR_OPEN)
-		{
-			ft_exec_par(msh, head, CMD_ALONE);
-			continue;
-		}
 		if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "&&") == 0)
 		{
 			if (status == 0)
 			{
 				msh->av = msh->av->next;
-				if (msh->av->token == PAR_OPEN)
-				{
-					ft_exec_par(msh, head, CMD_ALONE);
-					continue;
-				}
-				else if (ft_search_pipe(msh) == 1)
-					pipex_multi(msh);
-				else
-					ft_cmd_alone(msh);
-				if (msh->av)
-					printf("msh->av->data %s\n", msh->av->data);
+				ft_choice_exec(msh, head);
 				*head = msh->av;
 				continue;
 			}
@@ -136,17 +135,7 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 			if (status != 0)
 			{
 				msh->av = msh->av->next;
-				if (msh->av->token == PAR_OPEN)
-				{
-					ft_exec_par(msh, head, CMD_ALONE);
-					continue;
-				}
-				else if (ft_search_pipe(msh) == 1)
-					pipex_multi(msh);
-				else
-					ft_cmd_alone(msh);
-				if (msh->av)
-					printf("msh->av->data %s\n", msh->av->data);
+				ft_choice_exec(msh, head);
 				*head = msh->av;
 				continue;
 			}
@@ -157,17 +146,8 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 			}
 		}
 		else
-		{
-			// prev = msh->av;
 			msh->av = msh->av->next;
-		}
 	}
-	// msh->av = head;
-	// printf("head %p\n", head);
-	// // if (head)
-	// // 	ft_cmd_alone(msh);
-	// ft_unlink_heredoc(msh->p.here_doc);
-	// ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	return (0);
 }
 
@@ -176,122 +156,12 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 int	ft_exec(t_msh *msh, int sub)
 {
 	t_split *head;
-	// t_msh	sub_msh;
-	// t_split *tmp;
-	// int pipe;
 	
 	(void) sub;
 	printf("FT_EXEC\n");
 	ft_heredoc(msh);
 	head = msh->av;
-	if (msh->av->token == PAR_OPEN)
-		ft_exec_par(msh, &head, CMD_ALONE);
-	// pipe = 0;
-	// if (msh->av->token == PAR_OPEN)
-	// {
-	// 	while (msh->av->token != PAR_CLOSE)
-	// 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
-	// 		// msh->av = msh->av->next;
-	// 	while (msh->av && msh->av->token == PAR_CLOSE)
-	// 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
-	// 		// msh->av = msh->av->next;
-	// 	head = msh->av;
-	// 	ft_create_sub_msh(&sub_msh, msh, &head);
-	// 	printf("TESTTTTTTTTTTTTT\n");
-	// 	while (wait(&status) > 0)
-	// 	;
-	// 	if (WIFEXITED(status))
-	// 		status = WEXITSTATUS(status);
-	// 	printf("TESTTTTTTTTTTTTT0\n");
-	// 	printf("status %d\n", status);
-	// 	msh->av = head;
-	// // 	msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);//TO DO ADAPTER SI PREV EXISTE
-	// // 	while (msh->av->token != PAR_CLOSE)
-	// // 		msh->av = msh->av->next;
-	// // 	while (msh->av->token == PAR_CLOSE)
-	// // 		msh->av = msh->av->next;
-	// // 	while (msh->av && msh->av->token != OPERATOR)
-	// // 	{
-	// // 		if (msh->av->token == INFILE || msh->av->token == HERE_DOC)
-	// // 			redef_stdin(msh, CMD_ALONE, 0);//TO DO adapter au pipe
-	// // 		else if (msh->av->token == OUTFILE_TRUNC || msh->av->token == OUTFILE_NO_TRUNC)
-	// // 		{
-	// // 			printf("STDOUT\n");
-	// // 			redef_stout(msh, CMD_ALONE, 0);
-	// // 		}
-	// // 		else
-	// // 			msh->av = msh->av->next;
-	// // 	}
-	// // 	tmp = msh->av;
-	// // 	msh->av = head;
-	// // 	ft_exec(msh, 1);
-	// // 	msh->av = tmp;
-	// }
-	if (msh->av)
-		ft_exec_operator(msh, &head);
-	else
-		return (0);
-	// if (ft_search_pipe(msh) == 1)
-	// 	pipex_multi(msh);
-	// else
-	// 	ft_cmd_alone(msh);
-	// if (msh->av)
-	// 	printf("msh->av->data %s\n", msh->av->data);
-	// head = msh->av;
-	// while (msh->av)
-	// {
-	// 	if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "&&") == 0)
-	// 	{
-	// 		if (status == 0)
-	// 		{
-	// 			msh->av = msh->av->next;
-	// 			if (ft_search_pipe(msh) == 1)
-	// 				pipex_multi(msh);
-	// 			else
-	// 				ft_cmd_alone(msh);
-	// 			if (msh->av)
-	// 				printf("msh->av->data %s\n", msh->av->data);
-	// 			head = msh->av;
-	// 			continue;
-	// 		}
-	// 		else
-	// 		{
-	// 			while (msh->av)
-	// 				msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
-	// 			continue;
-	// 		}
-	// 	}
-	// 	if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "||") == 0)
-	// 	{
-	// 		if (status != 0)
-	// 		{
-	// 			msh->av = msh->av->next;
-	// 			if (ft_search_pipe(msh) == 1)
-	// 				pipex_multi(msh);
-	// 			else
-	// 				ft_cmd_alone(msh);
-	// 			if (msh->av)
-	// 				printf("msh->av->data %s\n", msh->av->data);
-	// 			head = msh->av;
-	// 			continue;
-	// 		}
-	// 		else
-	// 		{
-	// 			while (msh->av)
-	// 				msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		// prev = msh->av;
-	// 		msh->av = msh->av->next;
-	// 	}
-	// }
-	msh->av = head;
-	if (head)
-		printf("head %p\n", head);
-	// if (head)
-	// 	ft_cmd_alone(msh);
+	ft_exec_operator(msh, &head);
 	ft_unlink_heredoc(msh->p.here_doc);
 	ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	return (0);

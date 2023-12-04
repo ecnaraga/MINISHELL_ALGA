@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/03 11:30:20 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/04 17:29:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,15 @@ void	ft_exec_cmd(t_msh *msh)
 int	ft_cmd_alone(t_msh *msh)
 {
 	// sleep(10);
-	printf("cmdalone\n");
+	// dprintf(2, "CMD_ALONE\n");
 	ft_parse(msh);
-	printf("cmdalone1\n");
 	ft_exec_cmd(msh);
 	// sleep(10);
-	printf("cmdalone2\n");
 	while (wait(&status) > 0)
 		;
 	if (WIFEXITED(status))
 		status = WEXITSTATUS(status);
-	printf("status %d\n", status);
+	dprintf(2, "status %d\n", status);
 	// if (msh->p.path)
 	// 	ft_free_split(msh->p.path);
 	// ft_unlink_heredoc(msh->p.here_doc);
