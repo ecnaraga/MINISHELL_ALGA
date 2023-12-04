@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/04 16:41:56 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/04 17:03:48 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,12 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 			if (status == 0)
 			{
 				msh->av = msh->av->next;
-				if (ft_search_pipe(msh) == 1)
+				if (msh->av->token == PAR_OPEN)
+				{
+					ft_exec_par(msh, head, CMD_ALONE);
+					continue;
+				}
+				else if (ft_search_pipe(msh) == 1)
 					pipex_multi(msh);
 				else
 					ft_cmd_alone(msh);
@@ -131,7 +136,12 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 			if (status != 0)
 			{
 				msh->av = msh->av->next;
-				if (ft_search_pipe(msh) == 1)
+				if (msh->av->token == PAR_OPEN)
+				{
+					ft_exec_par(msh, head, CMD_ALONE);
+					continue;
+				}
+				else if (ft_search_pipe(msh) == 1)
 					pipex_multi(msh);
 				else
 					ft_cmd_alone(msh);
@@ -217,7 +227,7 @@ int	ft_exec(t_msh *msh, int sub)
 	// // 	ft_exec(msh, 1);
 	// // 	msh->av = tmp;
 	// }
-	else if (msh->av)
+	if (msh->av)
 		ft_exec_operator(msh, &head);
 	else
 		return (0);
