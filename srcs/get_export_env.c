@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/30 15:47:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/04 17:56:15 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	get_name_size(char *str)
 		if (str[i] == '=')
 			return (i);
 	}
-	return (-1);
+	return (i);
 }
 
 static int	fill_export_env(t_env **export_env, char **str)

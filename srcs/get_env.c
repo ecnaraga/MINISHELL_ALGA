@@ -6,32 +6,19 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/30 11:27:21 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/04 16:46:07 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	get_size_name(char *str)
-{
-	int	i;
-
-	i = -1;
-	while (str[++i])
-	{
-		if (str[i] == '=')
-			return (i);
-	}
-	return (-1);
-}
-
 static void	get_sizes(int *size_name, int *size_content, int *i, char **str)
 {
-	*size_name = get_size_name(str[*i]);
+	*size_name = get_name_size(str[*i]);
 	*size_content = ft_strlen(str[*i] + *size_name);
 }
 
-static int	fill_env(t_env **env, char **str)
+int	fill_env(t_env **env, char **str)
 {
 	int		i;
 	int		size_name;

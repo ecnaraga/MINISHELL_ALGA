@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/30 11:26:41 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/04 17:49:16 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	builtin_cd(t_msh *minish);
 get_env
 */
 t_env	**get_env(char **str);
+int	fill_env(t_env **env, char **str);
+int	get_name_size(char *str);
 
 t_env	*ft_lstlast_env(t_env *lst);
 int	ft_lstsize_env(t_env *lst);
@@ -49,7 +51,10 @@ t_env	**get_export_env(char **str);
 /*
 others
 */
-int	ft_strcmp(const char *s1, const char *s2);
-size_t	ft_strlen(const char *s);
+void	ft_print_export(t_msh *minish);
+int	get_statut(char *cmd);
+int	valide_key(char *key);
+//int	ft_strcmp(const char *s1, const char *s2);
+//size_t	ft_strlen(const char *s);
 
 #endif
