@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 14:10:11 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 14:35:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	ft_child_exec(t_msh *msh);
 void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2);
 
 /*exec_utils.c*/
-char	**ft_research_path(t_list **env);
+char	**ft_research_path(t_env **env);
+// char	**ft_research_path(t_list **env);
 int	ft_access_cmd(char **path, char *cmd, char **good_path);
 void	redef_stdin(t_msh *msh, int rule, int j);
 void	redef_stout(t_msh *msh, int rule, int j);

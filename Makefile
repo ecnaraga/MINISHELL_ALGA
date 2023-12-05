@@ -27,9 +27,6 @@ SRCS = main.c \
 	   ft_magic_malloc.c \
 	   ft_magic_malloc_utils.c \
 	   signal.c \
-	   ft_echo.c \
-	   ft_pwd.c \
-	   #ft_cd.c
 	   ft_exec.c \
 	   heredoc.c \
 	   exec_error.c \
@@ -38,7 +35,10 @@ SRCS = main.c \
 	   pipex.c \
 	   pipex_utils.c \
 	   ft_split_magic_malloc.c \
-	   ft_strtrim_msh.c
+	   ft_strtrim_msh.c \
+	   ft_echo.c \
+	   ft_pwd.c 
+#    ft_cd.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

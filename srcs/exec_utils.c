@@ -6,13 +6,13 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 13:48:35 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 14:32:20 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	**ft_research_path(t_list **env)
+char	**ft_research_path(t_env **env)
 {
 	// t_list	*head; // BESOIN D UN HEAD ICI ? PAS SUR
 
@@ -21,8 +21,8 @@ char	**ft_research_path(t_list **env)
 	// head = *env;
 	while (*env)
 	{
-		if (ft_strncmp((*env)->content, "PATH=", 5) == 0)
-			return (ft_split_magic_malloc((*env)->content + 5, ':')); //implementer ft_magic ici
+		if (ft_strncmp((*env)->name, "PATH", 4) == 0)
+			return (ft_split_magic_malloc((*env)->content + 1, ':')); //implementer ft_magic ici
 		*env = (*env)->next;
 	}
 	return (NULL);
