@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 09:59:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 13:48:35 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ int	ft_access_cmd(char **path, char *cmd, char **good_path)
 		return (E_NO_CMD);
 	return (ft_find_good_path(path, good_path, cmd, accss));
 }
-
 /*
 Open and close in a loop all the heredoc and infile until a pipe, operator or
 	the end of commandline.
@@ -97,6 +96,17 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 	head = msh->av;
 	prev = NULL;
 	fd_infile = -2;
+	if (rule == MID || rule == LAST)
+	{
+		if (dup2(msh->p.fd_p[j - 1][0], STDIN_FILENO) == -1)
+		{
+			perror("dup2");  // EXIT STATUS ?
+			if (rule == MID)
+				ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
+			else
+				ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
+		}
+	}
 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_CLOSE)
 	{
 		if (msh->av->token == INFILE)
@@ -149,21 +159,7 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 		}
 	}
 	msh->av = head;
-	if (fd_infile == -2 && (rule == FIRST || rule == CMD_ALONE))
-		return ;
-	if (fd_infile == -2 && (rule == MID || rule == LAST))
-	{
-		if (dup2(msh->p.fd_p[j - 1][0], STDIN_FILENO) == -1)
-		{
-			perror("dup2");  // EXIT STATUS ?
-			if (rule == MID)
-				ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
-			else
-				ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
-		}
-		return ;
-	}
-	if (dup2(fd_infile, STDIN_FILENO) == -1)
+	if (fd_infile != -2 && dup2(fd_infile, STDIN_FILENO) == -1)
 	{
 		perror("dup2"); // EXIT STATUS ?
 		if (rule == CMD_ALONE)
@@ -178,6 +174,107 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 	close(fd_infile);
 }
 
+// /*
+// Open and close in a loop all the heredoc and infile until a pipe, operator or
+// 	the end of commandline.
+// The last heredoc or infile encountered is dup2 to stdin_fileno before being
+// 	closed
+// */
+// void	redef_stdin(t_msh *msh, int rule, int j)
+// {
+// 	int		fd_infile;
+// 	char	*str;
+// 	t_split *head;
+// 	t_split *prev;
+// 	t_list *head_hd;
+// 	// t_list *prev_hd;
+
+// 	head = msh->av;
+// 	prev = NULL;
+// 	fd_infile = -2;
+// 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_CLOSE)
+// 	{
+// 		if (msh->av->token == INFILE)
+// 		{
+// 			if (fd_infile != -2)
+// 				close(fd_infile);
+// 			fd_infile = open(msh->av->data, O_RDONLY);
+// 			if (fd_infile > -1)
+// 				msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+// 		}
+// 		else if (msh->av->token == HERE_DOC)
+// 		{
+// 			if (fd_infile != -2)
+// 				close(fd_infile);
+// 			head_hd = msh->p.here_doc;
+// 			// prev_hd = NULL;
+// 			while (msh->p.here_doc && msh->av && ft_strcmp((char *)msh->p.here_doc->content, msh->av->data) != 0)//
+// 				msh->p.here_doc = msh->p.here_doc->next;
+// 			fd_infile = open(msh->p.here_doc->next->content, O_RDONLY);
+// 			// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd); // A REVOIR
+// 			// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd); // A REVOIRnormalement c est l element suivant
+// 			if (fd_infile > -1)
+// 				msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+// 			msh->p.here_doc = head_hd;
+// 		}
+// 		else
+// 		{
+// 			prev = msh->av;
+// 			msh->av = msh->av->next;
+// 		}
+// 		if (fd_infile == -1)
+// 		{
+// 			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
+// 			//IF ERROR MALLOC ? 
+// 			if (str)
+// 			{
+// 				perror(str);
+// 				status = 1;
+// 				msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+// 				ft_magic_malloc(FREE, 0, str, PIP);
+// 			}
+// 			if (rule == CMD_ALONE)
+// 				ft_exit(-1, -1, -1);
+// 			if (rule == FIRST)
+// 				ft_exit(msh->p.fd_p[0][1], -1, -1);
+// 			if (rule == MID)
+// 				ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
+// 			else
+// 				ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
+// 		}
+// 	}
+// 	msh->av = head;
+// 	if (fd_infile == -2 && (rule == FIRST || rule == CMD_ALONE))
+// 		return ;
+// 	if (fd_infile == -2 && (rule == MID || rule == LAST))
+// 	{
+// 		if (dup2(msh->p.fd_p[j - 1][0], STDIN_FILENO) == -1)
+// 		{
+// 			perror("dup2");  // EXIT STATUS ?
+// 			if (rule == MID)
+// 				ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
+// 			else
+// 				ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
+// 		}
+// 		return ;
+// 	}
+// 	if (dup2(fd_infile, STDIN_FILENO) == -1)
+// 	{
+// 		perror("dup2"); // EXIT STATUS ?
+// 		if (rule == CMD_ALONE)
+// 				ft_exit(fd_infile, -1, -1);
+// 		if (rule == FIRST)
+// 			ft_exit(msh->p.fd_p[0][1], fd_infile, -1);
+// 		if (rule == MID)
+// 			ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd_infile);
+// 		else
+// 			ft_exit(msh->p.fd_p[j - 1][0], fd_infile, -1);
+// 	}
+// 	close(fd_infile);
+// }
+
+//*********************************************************************************************
+
 void	redef_stout(t_msh *msh, int rule, int j)
 {
 	char	*str;
@@ -188,6 +285,17 @@ void	redef_stout(t_msh *msh, int rule, int j)
 	head = msh->av;
 	prev = NULL;
 	fd_outfile = -2;
+	if (rule == FIRST || rule == MID)
+	{
+		if (dup2(msh->p.fd_p[j][1], STDOUT_FILENO) == -1)
+		{
+			perror("dup2"); // EXIT STATUS ? 
+			if (rule == FIRST)
+				ft_exit(msh->p.fd_p[0][1], -1, -1);
+			else
+				ft_exit(msh->p.fd_p[j][1], -1, -1);
+		}
+	}
 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR /* && msh->av->token != PAR_CLOSE */)
 	{
 		if (msh->av->token == OUTFILE_TRUNC)
@@ -230,21 +338,7 @@ void	redef_stout(t_msh *msh, int rule, int j)
 		}
 	}
 	msh->av = head;
-	if (fd_outfile == -2 && (rule == LAST || rule == CMD_ALONE))
-		return ;
-	if (fd_outfile == -2 && (rule == FIRST || rule == MID))
-	{
-		if (dup2(msh->p.fd_p[j][1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2"); // EXIT STATUS ? 
-			if (rule == FIRST)
-				ft_exit(msh->p.fd_p[0][1], -1, -1);
-			else
-				ft_exit(msh->p.fd_p[j][1], -1, -1);
-		}
-		return ;
-	}
-	if (dup2(fd_outfile, STDOUT_FILENO) == -1)
+	if (fd_outfile != -2 && dup2(fd_outfile, STDOUT_FILENO) == -1)
 	{
 		perror("dup2"); // EXIT STATUS ?
 		if (rule == CMD_ALONE)
@@ -258,7 +352,91 @@ void	redef_stout(t_msh *msh, int rule, int j)
 	}
 	close(fd_outfile);
 }
-			
+
+//*********************************************************************************************
+// void	redef_stout(t_msh *msh, int rule, int j)
+// {
+// 	char	*str;
+// 	t_split *head;
+// 	t_split *prev;
+// 	int		fd_outfile;
+	
+// 	head = msh->av;
+// 	prev = NULL;
+// 	fd_outfile = -2;
+// 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR /* && msh->av->token != PAR_CLOSE */)
+// 	{
+// 		if (msh->av->token == OUTFILE_TRUNC)
+// 		{
+// 			if (fd_outfile != -2)
+// 				close(fd_outfile);
+// 			fd_outfile = open(msh->av->data, O_CREAT | O_TRUNC | O_WRONLY, 0744);
+// 			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+// 		}
+// 		else if (msh->av->token == OUTFILE_NO_TRUNC)
+// 		{
+// 			if (fd_outfile != -2)
+// 				close(fd_outfile);
+// 			fd_outfile = open(msh->av->data, O_CREAT | O_APPEND | O_WRONLY, 0744);
+// 			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+// 		}
+// 		else
+// 		{
+// 			prev = msh->av;
+// 			msh->av = msh->av->next;
+// 		}
+// 		if (fd_outfile == -1)
+// 		{
+// 			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
+// 			if (str)
+// 			{
+// 				perror(str);
+// 				status = 1;
+// 				// msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
+// 				// ft_magic_malloc(FREE, 0, str, PIP);
+// 			}
+// 			if (rule == CMD_ALONE)
+// 				ft_exit(-1, -1, -1);
+// 			if (rule == FIRST)
+// 				ft_exit(msh->p.fd_p[0][1], -1, -1);
+// 			if (rule == MID)
+// 				ft_exit(msh->p.fd_p[j][1], -1, -1);
+// 			else
+// 				ft_exit(-1, -1, -1);
+// 		}
+// 	}
+// 	msh->av = head;
+// 	if (fd_outfile == -2 && (rule == LAST || rule == CMD_ALONE))
+// 		return ;
+// 	if (fd_outfile == -2 && (rule == FIRST || rule == MID))
+// 	{
+// 		if (dup2(msh->p.fd_p[j][1], STDOUT_FILENO) == -1)
+// 		{
+// 			perror("dup2"); // EXIT STATUS ? 
+// 			if (rule == FIRST)
+// 				ft_exit(msh->p.fd_p[0][1], -1, -1);
+// 			else
+// 				ft_exit(msh->p.fd_p[j][1], -1, -1);
+// 		}
+// 		return ;
+// 	}
+// 	if (dup2(fd_outfile, STDOUT_FILENO) == -1)
+// 	{
+// 		perror("dup2"); // EXIT STATUS ?
+// 		if (rule == CMD_ALONE)
+// 			ft_exit(fd_outfile, -1, -1);
+// 		if (rule == FIRST)
+// 			ft_exit(msh->p.fd_p[0][1], fd_outfile, -1);
+// 		if (rule == MID)
+// 			ft_exit(msh->p.fd_p[j][1], fd_outfile, -1);
+// 		else
+// 			ft_exit(fd_outfile, -1, -1);
+// 	}
+// 	close(fd_outfile);
+// }
+
+//****************************************************************************************************************************
+
 // 	if (ft_strcmp(av[1], "here_doc") == 0)
 // 	{
 // 		*fd_outfile = open(av[j + 4], O_CREAT | O_APPEND | O_WRONLY, 0744);
