@@ -6,13 +6,12 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 11:05:53 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 13:54:05 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//SAME
 int	ft_search_pipe(t_msh *msh)
 {
 	t_split *head;
