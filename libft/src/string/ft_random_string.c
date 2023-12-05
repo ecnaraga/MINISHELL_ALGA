@@ -3,19 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_random_string.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:55 by garance           #+#    #+#             */
-/*   Updated: 2023/09/19 10:32:59 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/30 14:12:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
+int	ft_select_char(int fd)
+{
+	char buf[1];
+	
+	buf[0] = '\0';
+	while (ft_isalnum(buf[0]) == 0)
+	{
+		if (read(fd, buf, 1) == -1)
+		{
+			(perror("read"), close(fd));
+			return (-1);
+		}
+	}
+	return ((int)buf[0]);
+}
+
+/*Create a random alphanumeric string */
 char	*ft_random_string(int n)
 {
 	char	*str;
+	int 	c;
 	int		fd;
+	int		i;
 
 	str = (char *)malloc(sizeof(char) * n + 1);
 	if (!str)
@@ -26,10 +45,13 @@ char	*ft_random_string(int n)
 		(perror("/dev/urandom"), free(str));
 		return (NULL);
 	}
-	if (read(fd, str, n) == -1)
+	i = -1;
+	while (++i < n)
 	{
-		(perror("read"), close(fd), free(str));
-		return (NULL);
+		c = ft_select_char(fd);
+		if (c == -1)
+			return (free(str), NULL);
+		str[i] = c;
 	}
 	close(fd);
 	str[n] = '\0';

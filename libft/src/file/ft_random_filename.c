@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_random_filename.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:17:50 by garance           #+#    #+#             */
-/*   Updated: 2023/09/21 09:58:29 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/30 14:15:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,8 @@ char	*ft_random_filename(char *path, int n)
 	if (n == 0)
 		return (NULL);
 	name = ft_random_string(n);
-	ft_replace_char(name, '/', 'y');
 	if (!name)
-	{
 		return (NULL);
-	}
 	tmp = name;
 	name = ft_strjoin(path, name);
 	free(tmp);

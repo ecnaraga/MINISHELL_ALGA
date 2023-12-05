@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:41:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/25 13:44:32 by garance          ###   ########.fr       */
+/*   Updated: 2023/11/28 14:10:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "builtin.h"
 # include "signal.h"
 # include "magic_malloc.h"
+# include "exec.h"
 
 // void	ft_prompt(int ac, char **av, char **env);
 

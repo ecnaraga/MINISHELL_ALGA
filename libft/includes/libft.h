@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:34:22 by garance           #+#    #+#             */
-/*   Updated: 2023/11/21 13:31:53 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/03 12:44:49 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ char					*ft_strjoin_bfr_char(char const *s1, char const *s2,
 char					*ft_strjoin_aftr_char(char const *s1, char const *s2,
 							char c);
 char					*ft_strtrim(char const *s1, char const *set);
+char					*ft_strtrim_exept_set(char const *s1, char const *set);
 char					*ft_substr(char const *s, unsigned int start,
 							size_t len);
 void					ft_striteri(char *s, void (*f)(unsigned int, char *));

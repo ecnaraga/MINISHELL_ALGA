@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/28 11:24:41 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:34:40 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*ft_magic_add_malloc(t_list **mlc, int rule, size_t size, void *addr)
 	else
 		tmp = ft_lstnew_add(addr);
 	if (!tmp)
-		return (ft_putstr_fd("minishell: Cannot allocate memory\n", 2), status = 134, NULL);
+		return (write(2, "minishell: Cannot allocate memory\n", 35), status = 255, NULL);
 	if (*mlc)
 	{
 		while ((*mlc)->next)
@@ -98,20 +98,32 @@ nb : if the rule is add or malloc, linked list concerning
 void	*ft_magic_malloc(int rule, size_t size, void *addr, int nb)
 {
 	static t_list	*mlc;
+	static t_list	*mlc_pip;
 	static t_list	*mlc_env;
 
-	if (nb == NO_ENV && (rule == MALLOC || rule == ADD))
+	if ((rule == MALLOC || rule == ADD) && nb == NO_ENV)
 		return (ft_magic_add_malloc(&mlc, rule, size, addr));
-	else if (nb == ENV && (rule == MALLOC || rule == ADD))
+	else if ((rule == MALLOC || rule == ADD) && nb == ENV)
 		return (ft_magic_add_malloc(&mlc_env, rule, size, addr));
-	else if (rule == FREE)
+	else if ((rule == MALLOC || rule == ADD) && nb == PIP)
+		return (ft_magic_add_malloc(&mlc_pip, rule, size, addr));
+	else if (rule == FREE && nb == NO_ENV)
 		ft_list_remove_if(&mlc, addr, ft_check);
-	else if (rule == FLUSH)
+	else if (rule == FREE && nb == ENV)
+		ft_list_remove_if(&mlc_env, addr, ft_check);
+	else if (rule == FREE && nb == PIP)
+		ft_list_remove_if(&mlc_pip, addr, ft_check);
+	else if (rule == FLUSH && nb == NO_ENV)
 		ft_lstclear(&mlc, del);
+	else if (rule == FLUSH && nb == ENV)
+		ft_lstclear(&mlc_env, del);
+	else if (rule == FLUSH && nb == PIP)
+		ft_lstclear(&mlc_pip, del);
 	else //QUIT
 	{
 		ft_lstclear(&mlc, del);
 		ft_lstclear(&mlc_env, del);
+		ft_lstclear(&mlc_pip, del);
 	}
 	return (NULL);
 }

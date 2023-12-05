@@ -71,3 +71,13 @@ galambey-R834741galambey
 /* 2. TOKEN */
 // Si termine par un operateur valide reouvrir un readline => voir parsebis pour l algo + ne pas free minishline avant que token soit termine
 // "" et '' doivent avoir le token CMD
+
+
+// Il n'y a pas de code d'exit status standardisé pour une erreur de mémoire en Bash, car cela dépend de l'implémentation spécifique de la commande ou du programme que vous exécutez.
+
+
+// echo coucou && << LEM echo bravo | cat | < outfile cat && echo salut << LIM
+// cat << LAM | cat && cat << LAM
+
+// ((echo bravo && echo salut ) >> bravo && echo tada) && echo hello
+// ((echo bravo && echo salut ) >> bravo || echo tada) && echo hello

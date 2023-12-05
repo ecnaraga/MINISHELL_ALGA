@@ -30,6 +30,15 @@ SRCS = main.c \
 	   ft_echo.c \
 	   ft_pwd.c \
 	   #ft_cd.c
+	   ft_exec.c \
+	   heredoc.c \
+	   exec_error.c \
+	   exec_utils.c \
+	   exec_cmd.c \
+	   pipex.c \
+	   pipex_utils.c \
+	   ft_split_magic_malloc.c \
+	   ft_strtrim_msh.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

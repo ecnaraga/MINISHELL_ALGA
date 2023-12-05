@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/11/28 11:24:54 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:45:41 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int	ft_lstsize_split(t_split *lst)
 
 void    del_two(t_split *lst)
 {
-    ft_magic_malloc(FREE, 0, lst->data, NO_ENV);
+    lst->data = ft_magic_malloc(FREE, 0, lst->data, NO_ENV);
     if (lst->type)
-        ft_magic_malloc(FREE, 0, lst->type, NO_ENV);
+        lst->type = ft_magic_malloc(FREE, 0, lst->type, NO_ENV);
 }
 
 void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *))
@@ -77,5 +77,48 @@ void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *))
 	if (!lst || !del)
 		return ;
 	del_two(lst);
-	ft_magic_malloc(FREE, 0, lst, NO_ENV);
+	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
+}
+
+void    del_three(t_list *lst)
+{
+    lst->content = ft_magic_malloc(FREE, 0, lst->content, NO_ENV);
+}
+
+void	ft_lstdelone_magic(t_list*lst, void (*del)(t_list*))
+{
+	if (!lst || !del)
+		return ;
+	del_three(lst);
+	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
+}
+
+t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head)
+{
+	t_split	*tmp;
+	
+	if (!av)
+		return (NULL);
+	if (prev != NULL)
+		prev->next = av->next;
+	else
+		*head = av->next;
+	tmp = av->next;
+	ft_lstdelone_split(av, del_two);
+	return (tmp);
+}
+
+t_list	*ft_lstdel_and_relink(t_list *lst, t_list *prev, t_list **head)
+{
+	t_list	*tmp;
+	
+	if (!lst)
+		return (NULL);
+	if (prev != NULL)
+		prev->next = lst->next;
+	else
+		*head = lst->next;
+	tmp = lst->next;
+	ft_lstdelone_magic(lst, del_three);
+	return (tmp);
 }
