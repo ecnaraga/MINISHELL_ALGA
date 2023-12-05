@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 14:32:20 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:36:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,8 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 		else
 			ft_exit(msh->p.fd_p[j - 1][0], fd_infile, -1);
 	}
-	close(fd_infile);
+	if (fd_infile != -2)
+		close(fd_infile);
 }
 
 // /*
@@ -350,7 +351,8 @@ void	redef_stout(t_msh *msh, int rule, int j)
 		else
 			ft_exit(fd_outfile, -1, -1);
 	}
-	close(fd_outfile);
+	if (fd_outfile != -2)
+		close(fd_outfile);
 }
 
 //*********************************************************************************************

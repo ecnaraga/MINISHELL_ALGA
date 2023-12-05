@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 14:35:04 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:59:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_exit(int fd_1, int fd_2, int fd_3);
 void	ft_perr(int err, char *cmd);
 
 /*heredoc.c*/
-void	ft_heredoc(t_msh *msh);
+int	ft_heredoc(t_msh *msh);
 void	ft_unlink_heredoc(t_list *heredoc);
 
 /*split_magic_malloc.c*/

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 14:11:56 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:30:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2)
 void	ft_first_pipe(t_msh *msh)
 {
 	pid_t	pid;
+	t_split *head;
 
 	// printf("FIRST_PIPE\n");
 	pid = fork();
@@ -74,18 +75,28 @@ void	ft_first_pipe(t_msh *msh)
 		redef_stdin(msh, FIRST, 0);
 		redef_stout(msh, FIRST, 0);
 		close(msh->p.fd_p[0][1]);
-		msh->p.cmd_opt = ft_make_cmd(msh);
-		// if (!msh->p.cmd_opt) // NORMALEMENT CAS DE FIGURE GERE DANS FT_MAKE_CMD
-		// {
-		// 	dprintf(2, "c est  moi first \n");
-		// 	ft_exit(-1, -1, -1);
-		// }
-		if (!msh->p.cmd_opt[0])//cela pourrait il arriver???????????????????????????????????? Pour l instant en commentaire a voir plus tard
+		// dprintf(2, "msh->av->data %s\n", msh->av->data);
+		head = msh->av;
+		if (msh->av->token == PAR_OPEN)
 		{
-			// dprintf(2, "c est  moi first \n");
-			(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1));
-		}	
-		ft_child_exec(msh);//****************************************************************************
+			ft_exec_par(msh, &head, CMD_ALONE);
+			ft_exit(-1, -1, -1);
+		}
+		else
+		{
+			msh->p.cmd_opt = ft_make_cmd(msh);
+			// if (!msh->p.cmd_opt) // NORMALEMENT CAS DE FIGURE GERE DANS FT_MAKE_CMD
+			// {
+			// 	dprintf(2, "c est  moi first \n");
+			// 	ft_exit(-1, -1, -1);
+			// }
+			if (!msh->p.cmd_opt[0])//cela pourrait il arriver???????????????????????????????????? Pour l instant en commentaire a voir plus tard
+			{
+				// dprintf(2, "c est  moi first \n");
+				(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1));
+			}	
+			ft_child_exec(msh);//****************************************************************************
+		}
 	}
 	ft_parent(pid, msh, msh->p.fd_p[0][1], -1);
 }
@@ -106,19 +117,25 @@ void	ft_middle_pipe(t_msh *msh, int j)
 		close(msh->p.fd_p[j - 1][0]);
 		redef_stout(msh, MID, j);
 		close(msh->p.fd_p[j][1]);
-		dprintf(2, "msh->av->data %s\n", msh->av->data);
+		// dprintf(2, "msh->av->data %s\n", msh->av->data);
 		head = msh->av;
-		// if (msh->av->token == PAR_OPEN)
-		// 	ft_exec_par(msh, &head, CMD_ALONE);
-		msh->p.cmd_opt = ft_make_cmd(msh);
-		// if (!msh->p.cmd_opt)
-		// {
-		// 	dprintf(2, "c est  moi last \n");
-		// 	ft_exit(-1, -1, -1); //implementer F_EXIT);
-		// }
-		if (!msh->p.cmd_opt[0])
-			(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1)); //implementer F_EXIT);
-		ft_child_exec(msh);
+		if (msh->av->token == PAR_OPEN)
+		{
+			ft_exec_par(msh, &head, CMD_ALONE);
+			ft_exit(-1, -1, -1);
+		}
+		else
+		{
+			msh->p.cmd_opt = ft_make_cmd(msh);
+			// if (!msh->p.cmd_opt)
+			// {
+			// 	dprintf(2, "c est  moi last \n");
+			// 	ft_exit(-1, -1, -1); //implementer F_EXIT);
+			// }
+			if (!msh->p.cmd_opt[0])
+				(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1)); //implementer F_EXIT);
+			ft_child_exec(msh);
+		}
 	}
 	ft_parent(pid, msh, msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1]);
 }
@@ -126,6 +143,7 @@ void	ft_middle_pipe(t_msh *msh, int j)
 void	ft_last_pipe(t_msh *msh, int j)
 {
 	pid_t	pid;
+	t_split *head;
 
 	// printf("LAST_PIPE\n");
 	pid = fork();
@@ -136,12 +154,22 @@ void	ft_last_pipe(t_msh *msh, int j)
 		redef_stdin(msh, LAST, j);
 		close(msh->p.fd_p[j - 1][0]);
 		redef_stout(msh, LAST, j);
-		msh->p.cmd_opt = ft_make_cmd(msh);
-		// if (!msh->p.cmd_opt)
-		// 	ft_exit(-1, -1, -1); //implementer F_EXIT);
-		if (!msh->p.cmd_opt[0])
-			(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1)); //implementer F_EXIT);
-		ft_child_exec(msh);
+		// dprintf(2, "msh->av->data %s\n", msh->av->data);
+		head = msh->av;
+		if (msh->av->token == PAR_OPEN)
+		{
+			ft_exec_par(msh, &head, CMD_ALONE);
+			ft_exit(-1, -1, -1);
+		}
+		else
+		{
+			msh->p.cmd_opt = ft_make_cmd(msh);
+			// if (!msh->p.cmd_opt)
+			// 	ft_exit(-1, -1, -1); //implementer F_EXIT);
+			if (!msh->p.cmd_opt[0])
+				(ft_perr(E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1)); //implementer F_EXIT);
+			ft_child_exec(msh);
+		}
 	}
 	ft_parent(pid, msh, msh->p.fd_p[j - 1][0], -1);
 	// printf("msh->av->data %s\n", msh->av->data);
