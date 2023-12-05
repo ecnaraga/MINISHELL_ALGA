@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/04 17:29:59 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 10:07:44 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	ft_minishell(t_msh *msh, int sub)
 	// 	i++;
 	// }
 	// msh->av = head;
-	ft_exec(msh, 0);
+	ft_exec(msh, sub);
 	if (sub == 1)
 		ft_exit(-1, -1, -1);
 	return (0);

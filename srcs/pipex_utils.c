@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/03 11:25:33 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/05 10:02:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2)
 		if (fd_2 > -1)
 			close(fd_2);
 		head = msh->av;
-		while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE)
+		while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR /* && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE */)
 		{
 			if (msh->av->token == HERE_DOC)
 			{

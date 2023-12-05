@@ -6,12 +6,13 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/04 17:29:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 09:56:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+//SAME
 void	ft_exec_cmd(t_msh *msh)
 {
 	pid_t	pid;
@@ -36,6 +37,7 @@ void	ft_exec_cmd(t_msh *msh)
 	ft_parent(pid, msh, -1, -1);
 }
 
+//SAME
 int	ft_cmd_alone(t_msh *msh)
 {
 	// sleep(10);
