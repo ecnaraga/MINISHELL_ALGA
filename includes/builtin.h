@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/04 17:49:16 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:43:14 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,13 @@ int	check_env(t_env **export_env, char **str);
 get_export_env
 */
 t_env	**get_export_env(char **str);
+size_t	ft_exstrlcpy(char *dst, const char *src, size_t size);
+void	order_export_env(t_env **export_env);
 
 /*
-others
+export
 */
+void	builtin_export(char **str, t_msh *minish);
 void	ft_print_export(t_msh *minish);
 int	get_statut(char *cmd);
 int	valide_key(char *key);

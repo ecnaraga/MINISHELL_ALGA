@@ -6,9 +6,11 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:47:35 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/05 14:08:24 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:09:51 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../includes/minishell.h"
 
 void	ft_print_export(t_msh *minish)
 {
@@ -17,7 +19,7 @@ void	ft_print_export(t_msh *minish)
 	tmp = *(minish->export_env);
 	while (tmp)
 	{
-		printf("%s%s\n", (char *)tmp->name, (char *)tmp->content);
+		printf("export %s%s\n", (char *)tmp->name, (char *)tmp->content);
 		tmp = tmp->next;
 	}
 }
@@ -30,10 +32,11 @@ int	get_statut(char *cmd)
 	while(cmd[++i])
 	{
 		if (cmd[i] == '=')
+		{
 			if(cmd[i - 1] == '+')
 				return (4);
-			else
-				return (2);
+			return (2);
+		}
 	}
 	return (1);	
 }
@@ -42,20 +45,17 @@ int	valide_key(char *key)
 {
 	int	i;
 
-	i = 0;
-	if (key[0] >= 48 && key[0] <= 57)
-		return (0);
+	i = 1;
 	if (ft_isalpha(key[0]) || key[0] == '_')
 	{
-		while(key[++i] != '=')
+		while(key[i] != '=' && key[i])
 		{
 			if (ft_isalnum(key[i]) || key[i] == '_')
-				i++;
+				return (1);
 			else
-				return (0);		
+				return (0);	
 		}
 		return (1);
 	}
-	else
-		return (0);
+	return (0);
 }

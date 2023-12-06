@@ -37,7 +37,9 @@ SRCS = main.c \
 	   ft_split_magic_malloc.c \
 	   ft_strtrim_msh.c \
 	   ft_echo.c \
-	   ft_pwd.c 
+	   ft_pwd.c \
+	   ft_export.c \
+	   ft_export_bis.c
 #    ft_cd.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)

@@ -6,86 +6,104 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/28 14:13:50 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:30:16 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static char	*get_cwd(t_list **env)
+static char	*get_old_pwd(t_env **env)
 {
-	char	*str;
-	t_list	*tmp;
+	char	*old_pwd;
+	t_env	*tmp;
 
-	str = NULL;
+	old_pwd = NULL;
 	tmp = *env;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->content, "PWD=", 4))
+		if (!ft_strcmp(tmp->name, "PWD"))
 		{
-			str = tmp->content + 4;
+			old_pwd = tmp->content;
 			break ;
 		}
 		tmp = tmp->next;
 	}
-	return (str);
+	return (old_pwd);
 }
 
-static char	*get_old_pwd(t_list **env)
+static char	*get_path(char	**str)
 {
-	char	*tmp;
-	char	*old_pwd;
+	char	*path;
 
-	tmp = get_cwd(env);
-	if (!tmp)
-		return (NULL);
+	if (str[1])
+		path = str[1];
 	else
 	{
-		old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
-		return (old_pwd);
+		path = getenv("HOME");
+		if (!path)
+			return (NULL);
 	}
+	return (path);
 }
 
-// static char	*get_path(char	**str)
-// {
-// 	char	*path;
-
-// 	if (str[1])
-// 		path = str[1];
-// 	else
-// 	{
-// 		path = getenv("HOME");
-// 		if (!path)
-// 			return (NULL);
-// 	}
-// 	return (path);
-// }
-/*void	change_env(char	*old_pwd)
+void	change_env(char	*old_pwd, t_env **env)
 {
-	
-}*/
+	t_env	*tmp;
+	char	*tmp2;
+	char	*newpath;
 
-void	builtin_cd(t_msh *minish)
+	tmp = *env;
+	while(tmp)
+	{
+		if(ft_strcmp(tmp->name, "OLDPWD"))
+		{
+			tmp2 = tmp->content;
+			break ;
+		}
+		tmp = tmp->next;
+	}
+	tmp->content = old_pwd;
+	if (tmp2)
+		ft_magic_malloc(FREE, 0, tmp2, ENV);
+	newpath = getcwd(NULL, 0);
+	if (!newpath)
+		return ;
+	else
+	{
+		tmp = *env;
+		while(tmp)
+		{
+			if(ft_strcmp(tmp->name, "PWD"))
+			{
+				tmp2 = tmp->content;
+				break ;
+			}
+			tmp = tmp->next;
+		}
+		tmp->content = old_pwd;
+		if (tmp2)
+			ft_magic_malloc(FREE, 0, tmp2, ENV);
+	}	
+}
+
+void	builtin_cd(char **str, t_msh *minish)
 {
 	char	*path;
 	char	*old_pwd;
 
-	old_pwd = get_old_pwd(minish->env);//malloc
+	old_pwd = get_old_pwd(minish->env);
 	if (!old_pwd)
 		return ;
-	printf("old_pwd : %s\n", old_pwd);
-	/*path = get_path(str);
+	path = get_path(str);
 	if (!path)
 	{
-		ft_magic_malloc(FREE, 0, old_pwd);
+		ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
 		return ;
 	}
-	printf("path : %s\n", path);*/
-	path = NULL;
 	if (chdir(path) == 0)
 	{
 		printf("coucou\n");
-		//change_env(old_pwd);
+		change_env(old_pwd, minish->env);
 	}
 	else
 		perror("minishell");

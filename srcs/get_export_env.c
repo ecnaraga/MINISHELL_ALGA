@@ -6,13 +6,13 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/04 17:56:15 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:43:08 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static size_t	ft_exstrlcpy(char *dst, const char *src, size_t size)
+size_t	ft_exstrlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	j;
@@ -77,7 +77,7 @@ static int	fill_export_env(t_env **export_env, char **str)
 	return (0);
 }
 
-static void	order_export_env(t_env **export_env)
+void	order_export_env(t_env **export_env)
 {
 	t_env	*node;
 	char	*tmp;
