@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 15:52:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:55:21 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	order_export_env(t_env **export_env);
 /*
 export
 */
-void	builtin_export(char **str, t_msh *minish);
+void	builtin_export(t_msh *minish);
 void	ft_print_export(t_msh *minish);
 int	get_statut(char *cmd);
 int	valide_key(char *key);

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 16:58:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 16:20:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 		// 	ft_exec_par(msh, head, CMD_ALONE);
 		// 	continue;
 		// }
-		if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "&&") == 0)
+		if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "&&") == 0) //modifier env si cmd export avt operator
 		{
 			if (status == 0)
 			{
@@ -303,7 +303,7 @@ int	ft_exec_operator(t_msh *msh, t_split **head)
 		}
 		if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "||") == 0)
 		{
-			if (status != 0)
+			if (status != 0) //modifier env si cmd export avt operator
 			{
 				msh->av = msh->av->next;
 				ft_choice_exec(msh, head);

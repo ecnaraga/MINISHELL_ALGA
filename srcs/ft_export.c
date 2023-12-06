@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 15:50:29 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/06 16:05:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,30 +170,36 @@ char	*enleve_le_plus(char *str)
 	return (tmp);
 }
 
-void	builtin_export(char **str, t_msh *minish)
+void	builtin_export(t_msh *minish)
 {
 	int	i;
 
 	i = 1;
-	if(!str[i])
+	for (size_t j = 0; minish->p.cmd_opt[j]; j++)
+	{
+		printf("oui : %s\n", minish->p.cmd_opt[j]);
+	}
+	
+	if(!minish->p.cmd_opt[i])
 		ft_print_export(minish);
 	else
 	{
-		while(str[i])
+		while(minish->p.cmd_opt[i])
 		{
-			if(get_statut(str[i]) == 1)
-				new_env_node(str[i], 1, minish->export_env, 1);
-			else if (get_statut(str[i]) == 2)
+			if(get_statut(minish->p.cmd_opt[i]) == 1)
+				new_env_node(minish->p.cmd_opt[i], 1, minish->export_env, 1);
+			else if (get_statut(minish->p.cmd_opt[i]) == 2)
 			{
-				new_env_node(str[i], 2, minish->export_env, 1);
-				new_env_node(str[i], 2, minish->env, 2);
+				new_env_node(minish->p.cmd_opt[i], 2, minish->export_env, 1);
+				new_env_node(minish->p.cmd_opt[i], 2, minish->env, 2);
 			}
-			else if (get_statut(str[i]) == 4)
+			else if (get_statut(minish->p.cmd_opt[i]) == 4)
 			{
-				new_env_node(enleve_le_plus(str[i]), 4, minish->export_env, 1);
-				new_env_node(enleve_le_plus(str[i]), 4, minish->env, 2);
+				new_env_node(enleve_le_plus(minish->p.cmd_opt[i]), 4, minish->export_env, 1);
+				new_env_node(enleve_le_plus(minish->p.cmd_opt[i]), 4, minish->env, 2);
 			}
 			i++;
 		}
+		ft_print_export(minish);
 	}
 }

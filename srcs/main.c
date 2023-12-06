@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 15:52:08 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 16:26:10 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,17 +114,17 @@ int main(int ac, char **av, char **env)
 		status = 0;
 		/*if(strcmp(msh.line, "pwd") == 0)
 			builtin_pwd(&msh);*/
-		if(strcmp(msh.line, "env") == 0)
-		{
-			t_env *new = (*msh.env);
-			while(new)
-			{
-				printf("%s%s\n", new->name, new->content);
-				new = new->next;
-			}
-		}
-		if(ft_strncmp(msh.line, "export", 6) == 0)
-			builtin_export(ft_split(msh.line, ' '), &msh);
+		// if(strcmp(msh.line, "env") == 0)
+		// {
+		// 	t_env *new = (*msh.env);
+		// 	while(new)
+		// 	{
+		// 		printf("%s%s\n", new->name, new->content);
+		// 		new = new->next;
+		// 	}
+		// }
+		// if(ft_strncmp(msh.line, "export", 6) == 0)
+		// 	builtin_export( ft_split(msh.line, ' '),  */&msh);
 		if (!msh.line) // EOF
 			return (ft_handle_eof(), status); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
 		if (!ft_magic_malloc(ADD, 0, msh.line, NO_ENV))
