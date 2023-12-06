@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 15:30:16 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:35:46 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static char	*get_old_pwd(t_env **env)
 		}
 		tmp = tmp->next;
 	}
+	old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD", old_pwd), NO_ENV);
 	return (old_pwd);
 }
 
@@ -46,44 +47,21 @@ static char	*get_path(char	**str)
 	return (path);
 }
 
-void	change_env(char	*old_pwd, t_env **env)
+void	change_env(char	*old_pwd, t_msh *minish)
 {
-	t_env	*tmp;
-	char	*tmp2;
+	char	*tmp;
 	char	*newpath;
 
-	tmp = *env;
-	while(tmp)
-	{
-		if(ft_strcmp(tmp->name, "OLDPWD"))
-		{
-			tmp2 = tmp->content;
-			break ;
-		}
-		tmp = tmp->next;
-	}
-	tmp->content = old_pwd;
-	if (tmp2)
-		ft_magic_malloc(FREE, 0, tmp2, ENV);
-	newpath = getcwd(NULL, 0);
-	if (!newpath)
-		return ;
-	else
-	{
-		tmp = *env;
-		while(tmp)
-		{
-			if(ft_strcmp(tmp->name, "PWD"))
-			{
-				tmp2 = tmp->content;
-				break ;
-			}
-			tmp = tmp->next;
-		}
-		tmp->content = old_pwd;
-		if (tmp2)
-			ft_magic_malloc(FREE, 0, tmp2, ENV);
-	}	
+	new_env_node(old_pwd, 2, minish->env, 2);
+	new_env_node(old_pwd, 2, minish->export_env, 1);
+	tmp = getcwd(NULL, 0);
+	if (!tmp)
+	 	return ;
+	printf("newpath : %s\n", tmp);
+	newpath = ft_magic_malloc(ADD, 0, ft_strjoin("PWD=", tmp), NO_ENV);
+	new_env_node(newpath, 2, minish->env, 2);
+	new_env_node(newpath, 2, minish->export_env, 1);
+	ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 }
 
 void	builtin_cd(char **str, t_msh *minish)
@@ -94,18 +72,16 @@ void	builtin_cd(char **str, t_msh *minish)
 	old_pwd = get_old_pwd(minish->env);
 	if (!old_pwd)
 		return ;
+	printf("old pwd : %s\n", old_pwd);
 	path = get_path(str);
 	if (!path)
 	{
 		ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
 		return ;
 	}
+	printf("path : %s\n", path);
 	if (chdir(path) == 0)
-	{
-		printf("coucou\n");
-		change_env(old_pwd, minish->env);
-	}
+		change_env(old_pwd, minish);
 	else
 		perror("minishell");
-	ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
 }

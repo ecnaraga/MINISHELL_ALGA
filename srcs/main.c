@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 16:26:10 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:10:35 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,40 +91,26 @@ int main(int ac, char **av, char **env)
 	}*/
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
-	// for (size_t i = 0; env[i]; i++)
-	// {
-	// 	printf("%s\n", env[i]);
-	// }
-	// printf("-----------------------------------------------------------------\n");
 	msh.env = get_env(env);
-	msh.export_env = get_export_env(env);
-	
-	// t_env *new = (*msh.export_env);
-	// while(new)
-	// {
-	// 	printf("%s\n", new->name);
-	// 	new = new->next;
-	// }
-	
+	msh.export_env = get_export_env(env);	
 	while (1)
 	{
 		ft_signal_handler_msh();
 		msh.line = readline("Minishell$ ");
 		msh.previous_status = status;
 		status = 0;
-		/*if(strcmp(msh.line, "pwd") == 0)
-			builtin_pwd(&msh);*/
-		// if(strcmp(msh.line, "env") == 0)
-		// {
-		// 	t_env *new = (*msh.env);
-		// 	while(new)
-		// 	{
-		// 		printf("%s%s\n", new->name, new->content);
-		// 		new = new->next;
-		// 	}
-		// }
-		// if(ft_strncmp(msh.line, "export", 6) == 0)
-		// 	builtin_export( ft_split(msh.line, ' '),  */&msh);
+		/*--------------------------------------------------------*/
+		if(strcmp(msh.line, "pwd") == 0)
+			builtin_pwd(&msh);
+		if(strcmp(msh.line, "env") == 0)
+			builtin_env(&msh);
+		if(ft_strncmp(msh.line, "export", 6) == 0)
+			builtin_export(ft_split(msh.line, ' '), &msh);
+		if(ft_strncmp(msh.line, "cd", 2) == 0)
+			builtin_cd(ft_split(msh.line, ' '), &msh);
+		if(ft_strncmp(msh.line, "unset", 5) == 0)
+			builtin_unset(ft_split(msh.line, ' '), &msh);
+		/*--------------------------------------------------------*/
 		if (!msh.line) // EOF
 			return (ft_handle_eof(), status); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
 		if (!ft_magic_malloc(ADD, 0, msh.line, NO_ENV))

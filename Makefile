@@ -40,8 +40,10 @@ SRCS = main.c \
 	   ft_echo.c \
 	   ft_pwd.c \
 	   ft_export.c \
-	   ft_export_bis.c
-#    ft_cd.c
+	   ft_export_bis.c \
+	   ft_unset.c \
+	   ft_env.c \
+	   ft_cd.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

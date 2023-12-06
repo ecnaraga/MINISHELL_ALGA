@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/06 15:49:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:01:15 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ int		ft_search_builtin(t_msh *msh)
 		builtin_pwd(msh);
 		return (1);
 	}
-	else if (ft_strcmp(msh->p.cmd_opt[0], "export") == 0)
-	{
-		builtin_export(msh);
-		return (1);
-	}
+	// else if (ft_strcmp(msh->p.cmd_opt[0], "export") == 0)
+	// {
+	// 	builtin_export(msh);
+	// 	return (1);
+	// }
 	// else if (ft_strcmp(msh->p.cmd_opt[0], "unset") == 0)
 	// {
 	// 	ft_echo(msh);

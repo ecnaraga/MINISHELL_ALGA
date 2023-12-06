@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 16:05:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 18:03:16 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ static int	node_exist(t_env **env, char *str, int size)
 	while(tmp)
 	{
 		if (ft_strncmp(str, tmp->name, size) == 0)
-			return (0);
+			return (1);
 		tmp = tmp->next;
 	}
-	return (1);
+	return (0);
 }
 
 static void	change_env(t_env *node, t_env **env, int info)
@@ -112,18 +112,29 @@ void	doublon_handler(char *str, t_env **env, int name_size, int statut)
 	}
 }
 
-void	new_env_node(char *str, int statut, t_env **env, int info)
+void	error_export(char *str) // bash: export: `=': not a valid identifier
+{
+	char	*message;
+	char	*tmp;
+
+	tmp = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: export: `", str), NO_ENV);
+	message = ft_magic_malloc(ADD, 0, ft_strjoin(tmp, "\': not a valid identifier"), NO_ENV);
+	ft_magic_malloc(FREE, 0, tmp, NO_ENV);
+	ft_putstr_fd(message, 2);
+	ft_magic_malloc(FREE, 0, message, NO_ENV);
+}
+
+int	new_env_node(char *str, int statut, t_env **env, int info)
 {
 	t_env	*new;
 	int	name_size;
 	int	content_size;
 
-	printf("valide key : %d\n", valide_key(str));
 	if(!valide_key(str))
-		return ; //GERER SI L'INDENTIFIER N'EST PAS Ok : bash: export: `=': not a valid identifier
+		return (status = 1, error_export(str), 1); //GERER SI L'INDENTIFIER N'EST PAS Ok : bash: export: `=': not a valid identifier
 	name_size = get_name_size(str);
 	content_size = ft_strlen(str + name_size);
-	if(node_exist(env, str, name_size))
+	if(!node_exist(env, str, name_size))
 	{
 		if (info == 2)
 			new = ft_lst_new_malloc(name_size + 1, content_size + 1);
@@ -131,8 +142,8 @@ void	new_env_node(char *str, int statut, t_env **env, int info)
 			new = ft_lst_new_malloc(name_size + 1, content_size + 2 + 1);
 		if (!new)
 		{
-			ft_magic_malloc(FLUSH, 0, NULL, ENV);
-			return ;
+			ft_magic_malloc(FLUSH, 0, NULL, ENV); // ?
+			return (1);
 		}
 		ft_strlcpy(new->name, str, name_size + 1);
 		strlcpy_enjoyer(str + name_size, new, statut + info, content_size);
@@ -140,7 +151,7 @@ void	new_env_node(char *str, int statut, t_env **env, int info)
 	}
 	else
 		doublon_handler(str, env, name_size, statut + info);
-	return ;
+	return (0);
 }
 
 char	*enleve_le_plus(char *str)
@@ -153,7 +164,7 @@ char	*enleve_le_plus(char *str)
 	i = 0;
 	j = 0;
 	flag = 0;
-	tmp = ft_magic_malloc(MALLOC, sizeof(char) * ft_strlen(str), NULL, ENV);
+	tmp = ft_magic_malloc(MALLOC, sizeof(char) * ft_strlen(str), NULL, PIP);
 	while(str[i])
 	{
 		if(flag == 0 && (str[i + 1] && (str[i] == '+' && str[i + 1] == '=')))
@@ -165,41 +176,56 @@ char	*enleve_le_plus(char *str)
 		i++;
 		j++;
 	}
-	//free(str);
+	ft_magic_malloc(FREE, 0, str, PIP);
 	tmp[j] = '\0';
 	return (tmp);
 }
 
-void	builtin_export(t_msh *minish)
+void	builtin_export(char **str, t_msh *minish)
 {
 	int	i;
 
 	i = 1;
-	for (size_t j = 0; minish->p.cmd_opt[j]; j++)
-	{
-		printf("oui : %s\n", minish->p.cmd_opt[j]);
-	}
-	
-	if(!minish->p.cmd_opt[i])
+	// if(!minish->p.cmd_opt[i])
+	// 	ft_print_export(minish);
+	// else
+	// {
+	// 	while(minish->p.cmd_opt[i])
+	// 	{
+	// 		if(get_statut(minish->p.cmd_opt[i]) == 1)
+	// 			new_env_node(minish->p.cmd_opt[i], 1, minish->export_env, 1);
+	// 		else if (get_statut(minish->p.cmd_opt[i]) == 2)
+	// 		{
+	// 			new_env_node(minish->p.cmd_opt[i], 2, minish->export_env, 1);
+	// 			new_env_node(minish->p.cmd_opt[i], 2, minish->env, 2);
+	// 		}
+	// 		else if (get_statut(minish->p.cmd_opt[i]) == 4)
+	// 		{
+	// 			new_env_node(enleve_le_plus(minish->p.cmd_opt[i]), 4, minish->export_env, 1);
+	// 			new_env_node(enleve_le_plus(minish->p.cmd_opt[i]), 4, minish->env, 2);
+	// 		}
+	// 		i++;
+	// 	}
+	// }
+	if(!str[i])
 		ft_print_export(minish);
 	else
 	{
-		while(minish->p.cmd_opt[i])
+		while(str[i])
 		{
-			if(get_statut(minish->p.cmd_opt[i]) == 1)
-				new_env_node(minish->p.cmd_opt[i], 1, minish->export_env, 1);
-			else if (get_statut(minish->p.cmd_opt[i]) == 2)
+			if(get_statut(str[i]) == 1)
+				new_env_node(str[i], 1, minish->export_env, 1);
+			else if (get_statut(str[i]) == 2)
 			{
-				new_env_node(minish->p.cmd_opt[i], 2, minish->export_env, 1);
-				new_env_node(minish->p.cmd_opt[i], 2, minish->env, 2);
+				new_env_node(str[i], 2, minish->export_env, 1);
+				new_env_node(str[i], 2, minish->env, 2);
 			}
-			else if (get_statut(minish->p.cmd_opt[i]) == 4)
+			else if (get_statut(str[i]) == 4)
 			{
-				new_env_node(enleve_le_plus(minish->p.cmd_opt[i]), 4, minish->export_env, 1);
-				new_env_node(enleve_le_plus(minish->p.cmd_opt[i]), 4, minish->env, 2);
+				new_env_node(enleve_le_plus(str[i]), 4, minish->export_env, 1);
+				new_env_node(enleve_le_plus(str[i]), 4, minish->env, 2);
 			}
 			i++;
 		}
-		ft_print_export(minish);
 	}
 }
