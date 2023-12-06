@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_random_filename.c                               :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 10:17:50 by garance           #+#    #+#             */
-/*   Updated: 2023/12/06 10:34:15 by galambey         ###   ########.fr       */
+/*   Created: 2023/05/02 12:17:26 by galambey          #+#    #+#             */
+/*   Updated: 2023/12/06 13:04:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
-char	*ft_random_filename(char *path, int n)
+char	*ft_strcpy(char *dst, const char *src)
 {
-	char	*name;
-	char	*tmp;
-	int		accss;
+	size_t	i;
 
-	if (n == 0)
-		return (NULL);
-	name = ft_random_string(n);
-	if (!name)
-		return (NULL);
-	tmp = name;
-	name = ft_strjoin(path, name);
-	free(tmp);
-	if (!name)
-		write(2, "read: error\n", 12);
-	accss = access(name, F_OK | X_OK);
-	if (accss == 0)
+	i = 0;
+	while (src[i])
 	{
-		free (name);
-		ft_random_filename(path, n);
+		dst[i] = src[i];
+		i++;
 	}
-	return (name);
+	dst[i] = '\0';
+	return (dst);
 }

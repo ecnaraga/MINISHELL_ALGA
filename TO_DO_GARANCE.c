@@ -1,3 +1,9 @@
+/* 6/12 : Erreur PARSING: */
+/*
+echo & USER
+*/
+
+
 /* 1. PARENTHESE */
 /*
 Tests a revoir : 

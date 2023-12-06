@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 14:32:20 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:47:18 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 char	**ft_research_path(t_env **env)
 {
-	// t_list	*head; // BESOIN D UN HEAD ICI ? PAS SUR
+	t_env	*node;
 
 	if (!env)
 		return (NULL);
-	// head = *env;
-	while (*env)
+	node = *env;
+	while (node)
 	{
-		if (ft_strncmp((*env)->name, "PATH", 4) == 0)
-			return (ft_split_magic_malloc((*env)->content + 1, ':')); //implementer ft_magic ici
-		*env = (*env)->next;
+		if (ft_strncmp(node->name, "PATH", 4) == 0)
+			return (ft_split_magic_malloc(node->content + 1, ':')); //implementer ft_magic ici
+		node = node->next;
 	}
 	return (NULL);
 }
@@ -171,7 +171,8 @@ void	redef_stdin(t_msh *msh, int rule, int j)
 		else
 			ft_exit(msh->p.fd_p[j - 1][0], fd_infile, -1);
 	}
-	close(fd_infile);
+	if (fd_infile != -2)
+		close(fd_infile);
 }
 
 // /*
@@ -350,7 +351,8 @@ void	redef_stout(t_msh *msh, int rule, int j)
 		else
 			ft_exit(fd_outfile, -1, -1);
 	}
-	close(fd_outfile);
+	if (fd_outfile != -2)
+		close(fd_outfile);
 }
 
 //*********************************************************************************************
@@ -498,9 +500,20 @@ char	**ft_make_cmd(t_msh *msh)
 	{
 		if (msh->av->token == CMD) // normalement besoin de cette condition quand on implementera les parentheses mais pas certaine => a verifier
 		{
-			cmd[i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
-			if (!cmd[i])
-				ft_exit(-1, -1, -1);
+			if (msh->av->type && msh->av->type->expnd != 2)
+			{
+				printf("EXPAND\n");
+				cmd[i] = ft_expand(msh, cmd[i]);
+				// if (err != 0)
+				// 	ft_exit(-1, -1, -1);
+				printf("cmd[i] %s\n", cmd[i]);
+			}
+			else
+			{
+				cmd[i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
+				if (!cmd[i])
+					ft_exit(-1, -1, -1);
+			}
 			i++;
 			msh->av = ft_lstdel_and_relink_split(msh->av, prev, &head);
 		}

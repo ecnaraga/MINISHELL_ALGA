@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 18:39:15 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:51:20 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,41 @@ static void	ft_pipex(t_msh *msh)
 {
 	t_index	index;
 	t_split *head;
+	int par;
 
 	index.i = -1;
 	index.j = 0;
 	index.d = 0;
+	par = 0;
 	head = msh->av;
-	while (msh->av && msh->av->token != OPERATOR && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE)
+	// while (msh->av && msh->av->token != OPERATOR && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE)
+	// {
+	// 	if (msh->av->token == PIPE)
+	// 		index.j += 1;
+	// 	msh->av = msh->av->next;
+	// }
+	while (msh->av && msh->av->token != OPERATOR /*&& msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE*/)
 	{
-		if (msh->av->token == PIPE)
+		if (msh->av->token == PAR_OPEN)
+		{
+			while (msh->av)
+			{
+				if (msh->av->token == PAR_OPEN)
+					par++;
+				else if (msh->av->token == PAR_CLOSE)
+					par--;
+				if (msh->av->token == PAR_CLOSE && par == 0)
+					break;
+				msh->av = msh->av->next;
+			}
+		}	
+		else if (msh->av->token == PIPE)
 			index.j += 1;
 		msh->av = msh->av->next;
 	}
 	msh->av = head;
 	ft_create_fd_p(index.j, &msh->p);
+	ft_signal_handler_msh_bis();
 	while (++index.i < index.j)
 	{
 		if (pipe(msh->p.fd_p[index.d]) == -1)

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 11:05:53 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:58:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,7 +330,8 @@ int	ft_exec(t_msh *msh, int sub)
 	
 	(void) sub;
 	printf("FT_EXEC\n");
-	ft_heredoc(msh);
+	if (ft_heredoc(msh) == 130)
+		return (1);
 	head = msh->av;
 	ft_exec_operator(msh, &head);
 	ft_unlink_heredoc(msh->p.here_doc);

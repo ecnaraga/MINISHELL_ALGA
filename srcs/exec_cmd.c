@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 09:56:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:51:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	ft_cmd_alone(t_msh *msh)
 	// sleep(10);
 	// dprintf(2, "CMD_ALONE\n");
 	ft_parse(msh);
+	ft_signal_handler_msh_bis();
 	ft_exec_cmd(msh);
 	// sleep(10);
 	while (wait(&status) > 0)
