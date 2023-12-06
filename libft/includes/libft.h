@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:34:22 by garance           #+#    #+#             */
-/*   Updated: 2023/12/03 12:44:49 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/06 13:10:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ size_t					ft_strlen(const char *s);
 size_t					ft_strlen_bfr_char(const char *str, char c);
 size_t					ft_strlen_afr_char(const char *str, char c);
 int						ft_arraylen(char **array);
+char					*ft_strcpy(char *dst, const char *src);
 size_t					ft_strlcpy(char *dst, const char *src, size_t size);
 char					*ft_strcat(char *dst, const char *src);
 size_t					ft_strlcat(char *dst, const char *src, size_t size);
@@ -151,6 +152,7 @@ char					*ft_strjoin_bfr_char(char const *s1, char const *s2,
 							char c);
 char					*ft_strjoin_aftr_char(char const *s1, char const *s2,
 							char c);
+char					*ft_strjoin_char(char const *s1, char c);
 char					*ft_strtrim(char const *s1, char const *set);
 char					*ft_strtrim_exept_set(char const *s1, char const *set);
 char					*ft_substr(char const *s, unsigned int start,

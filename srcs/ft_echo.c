@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:15:29 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/01 14:53:04 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 12:08:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,25 +72,28 @@ Par contre : "-""nn'n'nnnnnnnn" n est pas considiere comme l option -n mais
 	dans ce cas le parsing affiche les single quote donc normalement deja gere
 Elle peut avoir 1 ou plusieurs n mais 1 seul tiret
 */
-void	ft_echo(t_split *av, int nb_arg) //Il faudra envoyer la structure du node avec dans le node le t_split *av + l'env x pouvoir utiliser l expand
+void	ft_echo(t_msh *msh/* , t_split *av, int nb_arg */) //Il faudra envoyer la structure du node avec dans le node le t_split *av + l'env x pouvoir utiliser l expand
 {
 	int i;
 	int new_line;
 
-	i = 0;
+	i = 1;
 	new_line = 0;
-	while (ft_option_echo(av[i].data) == 0) // implementer expand dans boucle
+	printf("BUILTIN\n");
+	while (msh->p.cmd_opt[i] && ft_option_echo(msh->p.cmd_opt[i]) == 0) // implementer expand dans boucle
 	{
 		new_line = 1;
 		i++;
 	}
-	while (i < nb_arg) // implementer expand dans boucle
+	// while (i < nb_arg) // implementer expand dans boucle
+	while (msh->p.cmd_opt[i]) // implementer expand dans boucle
 	{
 		// if (av[i].type != ARG && ft_is_char(av[i].data, '$')) //ARG x l instant car que ce type de defini dans le split x noter qu'il n'y avait pas de quote
 		// 	ft_expand(av, av[i].data); // devra remplacer $suivi de la chaine de char (ex $USER) par la valeur de la variable d environnement a chercher dans env
-		ft_putstr_fd(av[i].data, 1);
+		ft_putstr_fd(msh->p.cmd_opt[i], 1);
 		i++;
-		if (i < nb_arg)
+		// if (i < nb_arg)
+		if (msh->p.cmd_opt[i])
 			write(1, " ", 1);
 	}
 	if (new_line != 1)

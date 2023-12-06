@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 17:04:08 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:38:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	ft_free_ter(int signal)
 {
 	if (signal == SIGINT)
 	{
-		printf("WTF\n");
+		// printf("WTF\n");
 		status = 130;
 		ft_magic_malloc(FLUSH, 0, NULL, 0);
 		close(STDIN_FILENO);

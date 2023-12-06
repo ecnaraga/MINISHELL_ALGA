@@ -6,16 +6,58 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 15:30:54 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:49:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+int		ft_search_builtin(t_msh *msh)
+{
+	if (ft_strcmp(msh->p.cmd_opt[0], "echo") == 0)
+	{
+		ft_echo(msh);
+		return (1);
+	}
+	// else if (ft_strcmp(msh->p.cmd_opt[0], "cd") == 0)
+	// {
+	// 	builtin_cd(msh);
+	// 	return (1);
+	// }
+	else if (ft_strcmp(msh->p.cmd_opt[0], "pwd") == 0)
+	{
+		builtin_pwd(msh);
+		return (1);
+	}
+	else if (ft_strcmp(msh->p.cmd_opt[0], "export") == 0)
+	{
+		builtin_export(msh);
+		return (1);
+	}
+	// else if (ft_strcmp(msh->p.cmd_opt[0], "unset") == 0)
+	// {
+	// 	ft_echo(msh);
+	// 	return (1);
+	// }
+	// else if (ft_strcmp(msh->p.cmd_opt[0], "env") == 0)
+	// {
+	// 	ft_echo(msh);
+	// 	return (1);
+	// }
+	// else if (ft_strcmp(msh->p.cmd_opt[0], "exit") == 0)
+	// {
+	// 	ft_echo(msh);
+	// 	return (1);
+	// }
+	return (0);
+}
+
 void	ft_child_exec(t_msh *msh)
 {
 	int	err;
 
+	if (ft_search_builtin(msh) == 1)
+		ft_exit(-1, -1, -1);
 	err = ft_access_cmd(msh->p.path, msh->p.cmd_opt[0], &msh->p.good_path);
 	if (err > 0) //A IMPLEMENTER SI ERREUR
 		(ft_perr(err, msh->p.cmd_opt[0]), ft_exit(-1, -1, -1));

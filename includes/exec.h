@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 16:59:12 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:47:10 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ char	**ft_split_magic_malloc(char const *s, char c);
 int	ft_minishell(t_msh *msh, int sub);
 char	*ft_strtrim_msh(char **s1);
 int ft_exec_par(t_msh *msh, t_split **head, int rule);
+char	*ft_expand(t_msh *msh, char *cmd);
 
 #endif

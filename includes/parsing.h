@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 14:18:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/06 13:39:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # define PARSING_H
 
 int		ft_structtablen(t_split *tab);
-int		ft_expand(t_msh *minish);
 void	*ft_free_split_msh(t_split *strs);
 
 /*

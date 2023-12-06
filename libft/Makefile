@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: garance <garance@student.42.fr>            +#+  +:+       +#+         #
+#    By: galambey <galambey@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 14:09:36 by galambey          #+#    #+#              #
-#    Updated: 2023/12/03 12:43:50 by garance          ###   ########.fr        #
+#    Updated: 2023/12/06 13:10:13 by galambey         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRC = src/print/ft_putchar_fd.c \
 	src/string/ft_strlen_bfr_char.c \
       src/string/ft_strlen_afr_char.c \
       src/string/ft_arraylen.c \
+	  src/string/ft_strcpy.c \
       src/string/ft_strlcpy.c \
       src/string/ft_strcat.c \
       src/string/ft_strlcat.c \
@@ -54,6 +55,7 @@ SRC = src/print/ft_putchar_fd.c \
       src/string/ft_strjoin.c \
 	src/string/ft_strjoin_bfr_char.c \
       src/string/ft_strjoin_aftr_char.c \
+	  src/string/ft_strjoin_char.c \
       src/string/ft_toupper.c \
       src/string/ft_tolower.c \
       src/string/ft_strchr.c \

@@ -34,6 +34,7 @@ SRCS = main.c \
 	   exec_cmd.c \
 	   pipex.c \
 	   pipex_utils.c \
+	   expand.c \
 	   ft_split_magic_malloc.c \
 	   ft_strtrim_msh.c \
 	   ft_echo.c \
