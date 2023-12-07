@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 15:47:28 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/07 11:05:57 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 // TO DO : ATTENTION A CE TEST : echo $=HOME => Pour l instant traite dans parsing comme si variable d environnement a voir...
 //PENSER A EXPAND DANS LES RETOUR D ERREUR DE L EXEC ex $USER CMD NORT FOUNT
 // PENSER A GERE $? => represente exitstatus
+// IMPLEMENTER EXPAND DANS OUTFILE INFILE HEREDOC
 
 char *get_value(t_env **env, char *str)
 {

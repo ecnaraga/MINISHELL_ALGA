@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_error.c                                       :+:      :+:    :+:   */
+/*   ft_exec_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/01 16:40:56 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/07 14:17:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ void	ft_exit(int fd_1, int fd_2, int fd_3)
 		close(fd_2);
 	if (fd_3 > -1)
 		close(fd_3);
-	ft_magic_malloc(QUIT, 0, NULL, PIP);
+	ft_magic_malloc(QUIT, 0, NULL, 0);
+	// if (rule == CMD_ALONE)
+	// 	return (status);
 	exit(status);
 }
 

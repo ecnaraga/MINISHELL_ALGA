@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 15:55:21 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/07 10:13:15 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ int	get_statut(char *cmd);
 int	valide_key(char *key);
 //int	ft_strcmp(const char *s1, const char *s2);
 //size_t	ft_strlen(const char *s);
+int		ft_search_builtin(t_msh *msh);
 
 #endif

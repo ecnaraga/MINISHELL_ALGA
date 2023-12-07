@@ -29,12 +29,15 @@ SRCS = main.c \
 	   signal.c \
 	   ft_exec.c \
 	   heredoc.c \
-	   exec_error.c \
-	   exec_utils.c \
-	   exec_cmd.c \
+	   ft_exec_error.c \
+	   ft_exec_utils.c \
+	   ft_exec_utils_bis.c \
+	   ft_exec_stdin_utils.c \
+	   ft_exec_stdout_utils.c \
+	   ft_exec_cmd.c \
 	   pipex.c \
 	   pipex_utils.c \
-	   expand.c \
+	   ft_expand.c \
 	   ft_split_magic_malloc.c \
 	   ft_strtrim_msh.c \
 	   ft_echo.c \

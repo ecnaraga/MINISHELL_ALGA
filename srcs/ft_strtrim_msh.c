@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/05 10:52:15 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/07 12:53:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ static unsigned int	ft_count_end(char *s1)
 		{
 			if (par == 1)
 			{
-				count += 1;
+				// count += 1;
 				break ;
 			}
 			par--;
@@ -148,8 +148,11 @@ static unsigned int	ft_begin_new_s1(char *s1)
 	int	par;
 
 	ft_init_var(&i, &count, &par);
-	// while (s1[i] != '(')
-	// 	i++;
+	while (s1[i] != '(')
+	{
+		count++;
+		i++;
+	}
 	while (s1[i])
 	{
 		if (s1[i] == '(')
@@ -201,7 +204,7 @@ char	*ft_strtrim_msh(char **s1)
 		s2 = ft_magic_malloc(MALLOC, sizeof(char) * len2, NULL, NO_ENV);
 		if (s2 == NULL)
 			return (NULL);
-		ft_strlcpy(s2, *s1 + count , len2 - count - 1);
+		ft_strlcpy(s2, *s1 + count , len2 - 1);
 		tmp = *s1;
 		printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
 		*s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
