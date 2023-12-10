@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 16:05:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/10 11:57:03 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ static int	node_exist(t_env **env, char *str, int size)
 
 static void	change_env(t_env *node, t_env **env, int info)
 {
-	t_env *tmp;
+	t_env *tmp; // unused variable
 
+	(void) tmp;
 	tmp = *env;
 	ft_lstadd_back_env(env, node);
 	if (info == 1)

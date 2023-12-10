@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/07 17:57:34 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/10 12:54:23 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,9 @@ char *ft_strcpy_cmd(t_msh *msh, char **cmd, int *i, t_head *save)
 		}
 		(*i)++;
 		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);
+		return (cmd[*i - 1]);
 	}
-	else
+	else // UTILE ? 1 je ne crois pas + 2 je pense que si oui le retour apres le else va creer un conditional jump et pas possible de return (NULL) car sinon on ne passe pas a la suite...
 	{
 		save->prev = msh->av;
 		msh->av = msh->av->next;
@@ -152,6 +153,7 @@ char	**ft_make_cmd(t_msh *msh)
 	{
 		if (ft_strcpy_cmd(msh, cmd, &i, &save) == NULL)
 			return (NULL);
+	// A EFFACER UNNIQUEMENT SI SUR!!!!
 		// if (msh->av->token == CMD) // normalement besoin de cette condition quand on implementera les parentheses mais pas certaine => a verifier
 		// {
 		// 	if (msh->av->type && msh->av->type->expnd != 2)
