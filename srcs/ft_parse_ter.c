@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/30 15:53:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:46:44 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ int	ft_parse_ter(t_msh *msh)
 		return (status = 2, err_syntax(ft_err_op(msh->av->data, 0)));
 	while (msh->av->next)
 	{
+		// printf("msh->av->token %d msh->av->data %s\n", msh->av->token, msh->av->data);
 		if (msh->av->token == CHEVRON)
 		{
 			if (ft_handle_chev(msh, tmp, &head) == 1)
@@ -189,6 +190,7 @@ int	ft_parse_ter(t_msh *msh)
 	}
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// 	return (err_syntax(ft_err_op(msh->av[msh->ac - 1].data, 0), 2, 1));
+	// printf("msh->av->token %d msh->av->data %s\n", msh->av->token, msh->av->data);
 	if (msh->av->token == CHEVRON)
 		return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
 	if (msh->av->token == OPERATOR || msh->av->token == PIPE) // avoir si on decide de considerer en dernier un operator comme erreur ou non

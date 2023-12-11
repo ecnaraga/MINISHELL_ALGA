@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/07 12:53:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:47:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ static unsigned int	ft_begin_new_s1(char *s1)
 		}
 		else if (par == 0 && (s1[i] == '&' || s1[i] == '|'))
 		{
-			dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
+			// dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
 			break ;
 		}
 		count++;
@@ -206,7 +206,7 @@ char	*ft_strtrim_msh(char **s1)
 			return (NULL);
 		ft_strlcpy(s2, *s1 + count , len2 - 1);
 		tmp = *s1;
-		printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
+		// printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
 		*s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
 		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + count + len2 - 1), NO_ENV);
 		printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);

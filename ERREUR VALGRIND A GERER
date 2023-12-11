@@ -1,8 +1,42 @@
-"()"'()')(
-"cmd"
-==6073== Invalid read of size 1
-==6073==    at 0x10A2C4: ft_quote_order_bis (ft_parse_str_bis.c:36)
-==6073==    by 0x10A378: ft_quote_order (ft_parse_str_bis.c:54)
-==6073==    by 0x10A440: ft_parse_line (ft_parse_str_bis.c:71)
-==6073==    by 0x109324: ft_parsing (main.c:23)
-==6073==    by 0x1095D8: main (main.c:78)
+
+VOIR AVEC ALIX : 
+/*
+Minishell$ > TEST_ERROR echo "> out 1 > out2 > out3
+==1179980== Invalid read of size 1
+==1179980==    at 0x4020E7: ft_quote_order (ft_parse_str_bis.c:55)
+==1179980==    by 0x401FD8: ft_parse_line (ft_parse_str_bis.c:71)
+==1179980==    by 0x401301: ft_parsing (main.c:26)
+==1179980==    by 0x4014AA: ft_minishell (main.c:55)
+==1179980==    by 0x401630: main (main.c:141)
+==1179980==  Address 0x4b80499 is 0 bytes after a block of size 41 alloc'd
+==1179980==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1179980==    by 0x48ADBAC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1179980==    by 0x488B694: readline_internal_teardown (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1179980==    by 0x4895D2A: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1179980==    by 0x401589: main (main.c:112)
+==1179980== 
+==1179980== Invalid read of size 1
+==1179980==    at 0x402079: ft_quote_order (ft_parse_str_bis.c:49)
+==1179980==    by 0x401FD8: ft_parse_line (ft_parse_str_bis.c:71)
+==1179980==    by 0x401301: ft_parsing (main.c:26)
+==1179980==    by 0x4014AA: ft_minishell (main.c:55)
+==1179980==    by 0x401630: main (main.c:141)
+==1179980==  Address 0x4b80499 is 0 bytes after a block of size 41 alloc'd
+==1179980==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1179980==    by 0x48ADBAC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1179980==    by 0x488B694: readline_internal_teardown (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1179980==    by 0x4895D2A: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1179980==    by 0x401589: main (main.c:112)
+==1179980== 
+minishell: les quote ne sont pas appariees
+*/
+
+/*
+export gaga = rouge doit donner : bash: export: `=': not a valid identifier
+
+*/
+
+VOIR AVEC GARANCE : 
+/*
+Controle D dans heredoc
+*/

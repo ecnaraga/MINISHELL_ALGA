@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2023/11/13 11:45:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:30:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 static void	ft_init_var(t_index *x, t_quote *q)
 {
 	x->i = 1;
+	// if (begin == -1)
+	// 	x->i = 0;
 	x->j = 0;
 	x->d = 0;
 	q->d = 0;
@@ -85,8 +87,15 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 	t_quote	q;
 
 	ft_init_var(&x, &q);
+	strs->quote = 0;
 	if (begin > -1)
+	{
+		if (src[0] == '"' || src[0] == '\'')
+			strs->quote = 1;
 		ft_inc_quote(src[0], &q.d, &q.s);
+	}
+	if (begin  == -1 && (src[1] == '"' || src[1] == '\''))
+		strs->quote = 1;
 	while (size > 0 && src[x.i] && x.j < (size - 1))
 	{
 		ft_inc_quote(src[x.i], &q.d, &q.s);

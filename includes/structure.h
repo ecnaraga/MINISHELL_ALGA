@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/07 16:46:32 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 10:34:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_dollar
 typedef	struct s_split
 {
 	char		*data;
+	int			quote;
 	int			token;
 	int			dollar;
 	t_dollar	*type;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/10 11:57:03 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/11 17:45:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	new_env_node(char *str, int statut, t_env **env, int info)
 	int	name_size;
 	int	content_size;
 
-	printf("valide key : %d\n", valide_key(str));
+	// printf("valide key : %d\n", valide_key(str));
 	if(!valide_key(str))
 		return ; //GERER SI L'INDENTIFIER N'EST PAS Ok : bash: export: `=': not a valid identifier
 	name_size = get_name_size(str);
@@ -176,10 +176,10 @@ void	builtin_export(t_msh *minish)
 	int	i;
 
 	i = 1;
-	for (size_t j = 0; minish->p.cmd_opt[j]; j++)
-	{
-		printf("oui : %s\n", minish->p.cmd_opt[j]);
-	}
+	// for (size_t j = 0; minish->p.cmd_opt[j]; j++)
+	// {
+	// 	printf("oui : %s\n", minish->p.cmd_opt[j]);
+	// }
 	
 	if(!minish->p.cmd_opt[i])
 		ft_print_export(minish);

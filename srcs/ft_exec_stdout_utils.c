@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/07 17:48:48 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:11:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static void	ft_open_outfile_tr(t_msh *msh, int *fd_outfile, t_head *save/*  t_sp
 {
 	if (*fd_outfile != -2)
 		close(*fd_outfile);
+	if (msh->av->type)
+		msh->av->data = ft_expand(msh, msh->av->data, OUTFILE_TRUNC);
 	*fd_outfile = open(msh->av->data, O_CREAT | O_TRUNC | O_WRONLY, 0744);
 	if (*fd_outfile > -1)
 		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);
@@ -43,6 +45,8 @@ static void	ft_open_outfile_notr(t_msh *msh, int *fd_outfile, t_head *save/*  t_
 {
 	if (*fd_outfile != -2)
 		close(*fd_outfile);
+	if (msh->av->type)
+		msh->av->data = ft_expand(msh, msh->av->data, OUTFILE_NO_TRUNC);
 	*fd_outfile = open(msh->av->data, O_CREAT | O_APPEND | O_WRONLY, 0744);
 	if (*fd_outfile > -1)
 		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);

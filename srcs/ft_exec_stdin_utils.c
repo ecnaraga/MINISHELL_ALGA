@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/07 17:34:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:11:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static void	ft_open_infile(t_msh *msh, int *fd_infile, t_head *save/*  t_split *
 {
 	if (*fd_infile != -2)
 		close(*fd_infile);
+	if (msh->av->type)
+		msh->av->data = ft_expand(msh, msh->av->data, INFILE);
 	*fd_infile = open(msh->av->data, O_RDONLY);
 	if (*fd_infile > -1)
 		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);

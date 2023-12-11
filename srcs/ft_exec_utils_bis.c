@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/07 15:19:21 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 10:10:24 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2)
 				msh->p.here_doc = msh->p.here_doc->next;
 			}
 			if (msh->p.here_doc)
+			{
+				unlink(msh->p.here_doc->content);
 				msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, prev_hd, &head_hd);
+			}
 			msh->p.here_doc = head_hd;
 		}
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);

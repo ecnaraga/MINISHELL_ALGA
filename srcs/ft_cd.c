@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 15:30:16 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:44:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	builtin_cd(char **str, t_msh *minish)
 	}
 	if (chdir(path) == 0)
 	{
-		printf("coucou\n");
+		// printf("coucou\n");
 		change_env(old_pwd, minish->env);
 	}
 	else

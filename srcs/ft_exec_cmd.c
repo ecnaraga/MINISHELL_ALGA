@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/07 15:41:08 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:44:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin)
 	{
 		pid = fork();
 		if (pid == -1)
-			perror("fork");
+			(dup2(old_stdout, 1), dup2(old_stdin, 0), perror("fork")); // return ? fin propre?
 		if (pid == 0)
 		{
 			close(old_stdout);
@@ -47,15 +47,20 @@ int	ft_exec_cmd(t_msh *msh)
 	if (old_stdin == -1)
 		return (ft_parent(msh, -1, -1), status);
 	old_stdout = redef_stout(msh, CMD_ALONE, 0);
+	// dprintf(2, "msh->av %p\n", msh->av);
 	if (old_stdout == -1)
-		return (ft_parent(msh, old_stdin, -1), status);
+		return (dup2(old_stdout, 1), dup2(old_stdin, 0), ft_parent(msh, old_stdin, -1), status);
 	msh->p.cmd_opt = ft_make_cmd(msh);
 	if (!msh->p.cmd_opt)
-		return (ft_parent(msh, old_stdin, old_stdout), status);
+		return (dup2(old_stdout, 1), dup2(old_stdin, 0), ft_parent(msh, old_stdin, old_stdout), status);
 	if (!msh->p.cmd_opt[0])
 	{
 		ft_perr(E_NO_CMD, msh->av->data);
-		return (ft_parent(msh, old_stdout, old_stdin), status);
+		return (dup2(old_stdout, 1), dup2(old_stdin, 0), ft_parent(msh, old_stdout, old_stdin), status);
+	}
+	if (!msh->p.cmd_opt[0][0])
+	{
+		return (dup2(old_stdout, 1), dup2(old_stdin, 0), ft_parent(msh, old_stdout, old_stdin), status);
 	}
 	ft_exec_cmd_bis(msh, old_stdout, old_stdin);
 	return (status);

@@ -6,7 +6,7 @@
 #    By: galambey <galambey@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 14:09:36 by galambey          #+#    #+#              #
-#    Updated: 2023/12/06 13:10:13 by galambey         ###   ########.fr        #
+#    Updated: 2023/12/11 17:09:35 by galambey         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,6 +64,7 @@ SRC = src/print/ft_putchar_fd.c \
       src/string/ft_strnstr.c \
       src/string/ft_strtrim.c \
       src/string/ft_strtrim_exept_set.c \
+	  src/string/ft_strtrim_except_tips.c \
       src/string/ft_substr.c \
       src/string/ft_striteri.c \
       src/string/ft_strmapi.c \
