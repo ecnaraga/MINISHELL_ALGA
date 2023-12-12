@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/20 14:42:04 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/29 12:33:29 by athiebau         ###   ########.fr       */
+/*   Created: 2023/12/06 17:57:04 by athiebau          #+#    #+#             */
+/*   Updated: 2023/12/12 11:58:53 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	builtin_pwd(t_msh *minish)
+void	builtin_env(t_msh *minish)
 {
-	t_env	*tmp;
+	t_env *new;
 
-	tmp = *(minish->env);
-	while (tmp)
+	printf("BUILTIN\n");
+	new = *(minish->env);
+	while (new)
 	{
-		if (!ft_strcmp(tmp->name, "PWD"))
-		{
-			printf("%s%s\n", (char *)tmp->name, (char *)tmp->content);
-			break ;
-		}
-		tmp = tmp->next;
+		printf("%s%s\n", new->name, new->content);
+		new = new->next;
 	}
 }

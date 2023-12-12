@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 13:47:10 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:10:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ void	ft_first_pipe(t_msh *msh);
 void	ft_middle_pipe(t_msh *msh, int j);
 void	ft_last_pipe(t_msh *msh, int j);
 void	ft_child_exec(t_msh *msh);
-void	ft_parent(pid_t pid, t_msh *msh, int fd_1, int fd_2);
+void	ft_parent(t_msh *msh, int fd_1, int fd_2);
 
 /*exec_utils.c*/
 char	**ft_research_path(t_env **env);
 // char	**ft_research_path(t_list **env);
 int	ft_access_cmd(char **path, char *cmd, char **good_path);
-void	redef_stdin(t_msh *msh, int rule, int j);
-void	redef_stout(t_msh *msh, int rule, int j);
+int	redef_stdin(t_msh *msh, int rule, int j);
+// void	redef_stout(t_msh *msh, int rule, int j);
+int	redef_stout(t_msh *msh, int rule, int j);
 char	**ft_make_cmd(t_msh *msh);
 
 /*exec_error.c*/
@@ -55,6 +56,6 @@ char	**ft_split_magic_malloc(char const *s, char c);
 int	ft_minishell(t_msh *msh, int sub);
 char	*ft_strtrim_msh(char **s1);
 int ft_exec_par(t_msh *msh, t_split **head, int rule);
-char	*ft_expand(t_msh *msh, char *cmd);
+char	*ft_expand(t_msh *msh, char *cmd, int rule);
 
 #endif

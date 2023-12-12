@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 18:35:46 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/12 11:59:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,19 @@ void	change_env(char	*old_pwd, t_msh *minish)
 	ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 }
 
-void	builtin_cd(char **str, t_msh *minish)
+void	builtin_cd(t_msh *minish)
 {
 	char	*path;
 	char	*old_pwd;
 
+	printf("BUILTIN\n");
+	if(minish->p.cmd_opt[2])
+		return ;//voir pour message erreur
 	old_pwd = get_old_pwd(minish->env);
 	if (!old_pwd)
 		return ;
 	printf("old pwd : %s\n", old_pwd);
-	path = get_path(str);
+	path = get_path(minish->p.cmd_opt);
 	if (!path)
 	{
 		ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 15:47:28 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:43:25 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 // TO DO : ATTENTION A CE TEST : echo $=HOME => Pour l instant traite dans parsing comme si variable d environnement a voir...
 //PENSER A EXPAND DANS LES RETOUR D ERREUR DE L EXEC ex $USER CMD NORT FOUNT
 // PENSER A GERE $? => represente exitstatus
+// IMPLEMENTER EXPAND DANS OUTFILE INFILE HEREDOC
 
-char *get_value(t_env **env, char *str)
+char *get_value(t_env **env, char *str, int rule)
 {
 	t_env	*node;
 
@@ -27,7 +28,12 @@ char *get_value(t_env **env, char *str)
 		if (strcmp(node->name, str) == 0)
 		{
 			ft_magic_malloc(FREE, 0, str, NO_ENV);
-			return (ft_magic_malloc(ADD, 0, ft_strdup(node->content + 1), NO_ENV));
+			if (rule == CMD)
+				return (ft_magic_malloc(ADD, 0, ft_strtrim(node->content + 1 , " \b\t\n\v\f\r"), NO_ENV));
+			if (rule == OTHER)
+				return (ft_magic_malloc(ADD, 0, ft_strtrim_except_tips(node->content + 1 , " \b\t\n\v\f\r"), NO_ENV));
+			if (rule == INFILE || rule == OUTFILE_NO_TRUNC || rule == OUTFILE_TRUNC)
+				return (ft_magic_malloc(ADD, 0, ft_strdup(node->content + 1), NO_ENV));
 		}
 		else
 			node = node->next;
@@ -56,7 +62,7 @@ REGLES A SUIVRE :
 - Si dollar entre double_quote : expand
 - Si dollar entre de single_quote : ne pas expand
 */
-char	*ft_expand(t_msh *msh, char *cmd)
+char	*ft_expand(t_msh *msh, char *cmd, int rule)
 {
 	char *tmp;
 	char *tmp2;
@@ -75,7 +81,6 @@ char	*ft_expand(t_msh *msh, char *cmd)
 	// }
 	i = 0;
 	j = 0;
-	printf("msh->av->data %s\n", msh->av->data);
 	cmd = NULL;
 	while (msh->av->data[i])
 	// while (j < msh->av->dollar)
@@ -86,10 +91,8 @@ char	*ft_expand(t_msh *msh, char *cmd)
 			{
 				tmp2 = cmd;
 				cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
-				printf("hello\n");
 				if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
-				{	printf("hello\n");
-					ft_exit(-1, -1, -1);}
+					ft_exit(-1, -1, -1);
 				if (tmp2)
 					ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
 				while (msh->av->data[i] && msh->av->data[i] == '$')
@@ -128,23 +131,31 @@ char	*ft_expand(t_msh *msh, char *cmd)
 				{
 					tmp = ft_magic_malloc(ADD, 0, ft_substr(msh->av->data, i + 1, msh->av->type[j].len_variable - 1), NO_ENV);
 					if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
-					{	printf("hello1\n");
-						ft_exit(-1, -1, -1);}
-					printf("tmp %s\n", tmp);
-					tmp = get_value(msh->env, tmp);
+						ft_exit(-1, -1, -1);
+					tmp = get_value(msh->env, tmp, rule);
 					if (status == 255)
 						ft_exit(-1, -1, -1);
 					tmp2 = cmd;
 					cmd = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, tmp), NO_ENV);
 					if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
-					{	printf("hello2\n");
-						ft_exit(-1, -1, -1);}
+						ft_exit(-1, -1, -1);
 					if (tmp2)
 						ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
 					ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 					i += msh->av->type[j].len_variable;
 					j++;
 				}
+			}
+			else if (msh->av->type[j].expnd == 2)
+			{
+				tmp2 = cmd;
+				cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
+				if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
+					ft_exit(-1, -1, -1);
+				if (tmp2)
+					ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
+				i++;
+				j++;
 			}
 		}
 		else

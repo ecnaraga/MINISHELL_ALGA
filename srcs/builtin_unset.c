@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/06 18:06:29 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/12 11:58:25 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,26 +69,27 @@ void	del_env(char *cmd, t_msh *minish)
 	}
 }
 
-void	builtin_unset(char **str, t_msh *minish)
+void	builtin_unset(t_msh *minish)
 {
 	int i;
 
 	i = 0;
-	// if (minish->p.cmd_opt[++i])
-	// {
-	// 	while (minish->p.cmd_opt[i])
-	// 	{
-	// 		del_env(minish->p.cmd_opt[i], minish);
-	// 		i++;
-	// 	}
-	// }
-	printf("entre dans unset\n");
-	if (str[++i])
+	printf("BUILTIN\n");
+	if (minish->p.cmd_opt[++i])
 	{
-		while (str[i])
+		while (minish->p.cmd_opt[i])
 		{
-			del_env(str[i], minish);
+			del_env(minish->p.cmd_opt[i], minish);
 			i++;
 		}
 	}
+	// printf("entre dans unset\n");
+	// if (str[++i])
+	// {
+	// 	while (str[i])
+	// 	{
+	// 		del_env(str[i], minish);
+	// 		i++;
+	// 	}
+	// }
 }

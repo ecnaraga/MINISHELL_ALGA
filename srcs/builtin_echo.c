@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:15:29 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 12:08:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 11:54:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ Par contre : "-""nn'n'nnnnnnnn" n est pas considiere comme l option -n mais
 	dans ce cas le parsing affiche les single quote donc normalement deja gere
 Elle peut avoir 1 ou plusieurs n mais 1 seul tiret
 */
-void	ft_echo(t_msh *msh/* , t_split *av, int nb_arg */) //Il faudra envoyer la structure du node avec dans le node le t_split *av + l'env x pouvoir utiliser l expand
+void	builtin_echo(t_msh *msh/* , t_split *av, int nb_arg */) //Il faudra envoyer la structure du node avec dans le node le t_split *av + l'env x pouvoir utiliser l expand
 {
 	int i;
 	int new_line;

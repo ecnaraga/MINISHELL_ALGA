@@ -29,21 +29,24 @@ SRCS = main.c \
 	   signal.c \
 	   ft_exec.c \
 	   heredoc.c \
-	   exec_error.c \
-	   exec_utils.c \
-	   exec_cmd.c \
+	   ft_exec_error.c \
+	   ft_exec_utils.c \
+	   ft_exec_utils_bis.c \
+	   ft_exec_stdin_utils.c \
+	   ft_exec_stdout_utils.c \
+	   ft_exec_cmd.c \
 	   pipex.c \
 	   pipex_utils.c \
-	   expand.c \
+	   ft_expand.c \
 	   ft_split_magic_malloc.c \
 	   ft_strtrim_msh.c \
-	   ft_echo.c \
-	   ft_pwd.c \
-	   ft_export.c \
-	   ft_export_bis.c \
-	   ft_unset.c \
-	   ft_env.c \
-	   ft_cd.c
+	   builtin_echo.c \
+	   builtin_pwd.c \
+	   builtin_export.c \
+	   builtin_export_bis.c \
+	   builtin_unset.c \
+	   builtin_env.c \
+	   builtin_cd.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

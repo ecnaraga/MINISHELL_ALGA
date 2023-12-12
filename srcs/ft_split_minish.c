@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/11/27 22:36:23 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/11 12:27:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,13 @@ static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss
 		if (ft_alloc_type(new) == 1)
 			return (1);
 		if (l.lt > 0)
-			ft_strlcpy_msh(new, s + i - l.k - 1, l.lt + 1, i - l.k - 1);
+		{
+			// printf("i - l.k - 1 % d\n", i - l.k - 1);
+			// if (i - l.k - 1)
+			// 	ft_strlcpy_msh(new, s/*  + i - l.k - 1 */, l.lt + 1, i - l.k - 1);
+			// else
+				ft_strlcpy_msh(new, s + i - l.k - 1, l.lt + 1, i - l.k - 1);
+		}
 		else
 			new->data[0] = '\0';
 		ft_lstadd_back_split(strs, new);

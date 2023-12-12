@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/06 18:23:10 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/12 12:15:36 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	builtin_env(t_msh *minish);
 /*
 echo
 */
-void	ft_echo(t_msh *msh/*t_split *av , int nb_arg */);
+void	builtin_echo(t_msh *msh/*t_split *av , int nb_arg */);
 
 /*
 pwd
@@ -33,7 +33,7 @@ void	builtin_pwd(t_msh *minish);
 /*
 cd
 */
-void	builtin_cd(char **str, t_msh *minish);
+void	builtin_cd(t_msh *minish);
 
 /*
 get_env
@@ -58,14 +58,15 @@ void	order_export_env(t_env **export_env);
 /*
 export
 */
-void	builtin_export(char **str, t_msh *minish);
+void	builtin_export(t_msh *minish);
 void	ft_print_export(t_msh *minish);
 int	get_statut(char *cmd);
 int	valide_key(char *key);
 int	new_env_node(char *str, int statut, t_env **env, int info);
+int		ft_search_builtin(t_msh *msh);
 
 /*
 unset
 */
-void	builtin_unset(char **str, t_msh *minish);
+void	builtin_unset(t_msh *minish);
 #endif

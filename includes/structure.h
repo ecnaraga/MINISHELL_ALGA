@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 14:18:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/11 10:34:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_dollar
 typedef	struct s_split
 {
 	char		*data;
+	int			quote;
 	int			token;
 	int			dollar;
 	t_dollar	*type;
@@ -94,7 +95,19 @@ typedef struct s_par
 	int multi_cmd;
 }		t_par;
 
+typedef struct s_head
+{
+	t_split *head;
+	t_split *prev;
+	t_list *head_hd;
+	t_list *prev_hd;
+}		t_head;
 
+typedef struct s_fd
+{
+	int file;
+	int	old_std;
+}		t_fd;
 
 typedef int (*t_storage)(t_msh *msh, t_par *p, int *i);
 
@@ -150,6 +163,7 @@ enum		e_std
 	FIRST,
 	MID,
 	LAST,
+	CHILD,
 };
 
 #endif
