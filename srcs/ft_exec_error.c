@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/12 11:20:35 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 13:50:13 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	ft_check_cmd(char *cmd)
 	}
 	if (count_slash == ft_strlen(cmd))
 		return (1);
-	if (count_slash > 0 && count_slash + count_slash == ft_strlen(cmd))
+	if (count_slash > 0 && count_slash + count_space == ft_strlen(cmd))
 		return (2);
 	if (access(cmd, F_OK | X_OK) == 0)
 		return (3);

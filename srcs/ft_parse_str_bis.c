@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 11:43:32 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:29:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ static void	ft_quote_order_bis(char *str, char c, int *i, int *nb_q)
 	{
 		*nb_q += 1;
 	}
-	//if (str[*i] && str[*i + 1])
-	*i += 1;
+	if (str[*i] /* && str[*i + 1] */)
+		*i += 1;
 }
 
 static int	ft_quote_order(char *str)

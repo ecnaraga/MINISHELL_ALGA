@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 12:27:31 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:26:21 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss
 		new->token = TO_DEFINE;
 		if (ft_alloc_type(new) == 1)
 			return (1);
-		if (l.lt > 0)
+		if (l.lt >= 0)
 		{
 			// printf("i - l.k - 1 % d\n", i - l.k - 1);
 			// if (i - l.k - 1)

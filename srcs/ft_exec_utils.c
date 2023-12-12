@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 17:44:50 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:17:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,12 @@ char	**ft_make_cmd(t_msh *msh)
 	save.prev = NULL;
 	cmd_nb = ft_count_cmd(msh);
 	if (cmd_nb == -1)
+	{
+		printf("msh->av->data %s\n", msh->av->data);
+		if (msh->av->quote)
+			write(2, "minishell: : command not found\n", 32);
 		return (NULL);
+	}
 	cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (cmd_nb + 1), NULL, PIP);
 	if (!cmd)
 		return (NULL);

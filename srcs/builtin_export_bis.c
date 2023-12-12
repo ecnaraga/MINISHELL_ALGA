@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:47:35 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 11:56:08 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:58:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	valide_key(char *key)
 	i = 1;
 	if (ft_isalpha(key[0]) || key[0] == '_')
 	{
-		while(key[i] != '=' && key[i])
+		while(key[i] && key[i] != '=')
 		{
 			if (ft_isalnum(key[i]) || key[i] == '_')
 				return (1);
