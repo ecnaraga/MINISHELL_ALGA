@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str_bis.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/25 11:10:45 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/12 11:18:32 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ static void	ft_quote_order_bis(char *str, char c, int *i, int *nb_q)
 {
 	*i += 1;
 	*nb_q += 1;
-	while (str[*i] != c && str[*i])
+	while (str[*i] && str[*i] != c)
 		*i += 1;
-	if (str[*i] == c)
+	if (str[*i] && str[*i] == c)
 		*nb_q += 1;
-	if (str[*(i + 1)])
+	if (str[*i] && str[*i + 1])
 		*i += 1;
 }
 
