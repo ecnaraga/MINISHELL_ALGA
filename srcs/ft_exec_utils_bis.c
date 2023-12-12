@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/11 10:10:24 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 10:52:53 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	ft_child_exec(t_msh *msh)
 	int	err;
 
 	err = ft_access_cmd(msh->p.path, msh->p.cmd_opt[0], &msh->p.good_path);
+	dprintf(2, "err %d\n", err);
 	if (err > 0) //A IMPLEMENTER SI ERREUR
 		(ft_perr(err, msh->p.cmd_opt[0]), ft_exit(-1, -1, -1));
 	execve(msh->p.good_path, msh->p.cmd_opt, NULL);
