@@ -29,6 +29,7 @@ SRCS = main.c \
 	   signal.c \
 	   ft_exec.c \
 	   heredoc.c \
+	   heredoc_utils.c \
 	   ft_exec_error.c \
 	   ft_exec_utils.c \
 	   ft_exec_utils_bis.c \

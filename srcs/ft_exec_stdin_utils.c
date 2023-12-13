@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 17:11:29 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:23:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,10 @@ static void ft_open_heredoc(t_msh *msh, int *fd_infile, t_head *save)
 	if (*fd_infile != -2)
 		close(*fd_infile);
 	save->head_hd = msh->p.here_doc;
-	// prev_hd = NULL;
-	while (msh->p.here_doc && msh->av && ft_strcmp((char *)msh->p.here_doc->content, msh->av->data) != 0)//
+	while (msh->p.here_doc && msh->av && (ft_strcmp(msh->p.here_doc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.here_doc->name, msh->av->data) == 0 && msh->p.here_doc->read == 1)))//
 		msh->p.here_doc = msh->p.here_doc->next;
-	*fd_infile = open(msh->p.here_doc->next->content, O_RDONLY);
-	// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, save->prev_hd, &save->head_hd); // A REVOIR
-	// msh->p.here_doc = ft_lstdel_and_relink(msh->p.here_doc, save->prev_hd, &save->head_hd); // A REVOIRnormalement c est l element suivant
-	if (*fd_infile > -1)
-		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);
+	*fd_infile = open(msh->p.here_doc->content, O_RDONLY);
+	msh->p.here_doc->read = 1;
 	msh->p.here_doc = save->head_hd;
 }
 
@@ -64,6 +60,7 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 {
 	char *str;
 	
+	dprintf(2, "INVALID\n");
 	str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
 	//IF ERROR MALLOC POUR LE CMD_ALONE? 
 	if (str)
@@ -134,7 +131,11 @@ int	redef_stdin(t_msh *msh, int rule, int j)
 		if (msh->av->token == INFILE)
 			ft_open_infile(msh, &fd.file, &save);
 		else if (msh->av->token == HERE_DOC)
+		{
 			ft_open_heredoc(msh, &fd.file, &save);
+			save.prev = msh->av;
+			msh->av = msh->av->next;
+		}
 		else
 		{
 			save.prev = msh->av;

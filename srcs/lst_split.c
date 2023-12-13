@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 17:47:57 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 11:37:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,13 @@ void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *))
 	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 }
 
-void    del_three(t_list *lst)
+void    del_three(t_env *lst)
 {
+    lst->name = ft_magic_malloc(FREE, 0, lst->name, NO_ENV);
     lst->content = ft_magic_malloc(FREE, 0, lst->content, NO_ENV);
 }
 
-void	ft_lstdelone_magic(t_list*lst, void (*del)(t_list*))
+void	ft_lstdelone_magic(t_env*lst, void (*del)(t_env*))
 {
 	if (!lst || !del)
 		return ;
@@ -108,9 +109,9 @@ t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head)
 	return (tmp);
 }
 
-t_list	*ft_lstdel_and_relink(t_list *lst, t_list *prev, t_list **head)
+t_env	*ft_lstdel_and_relink(t_env *lst, t_env *prev, t_env **head)
 {
-	t_list	*tmp;
+	t_env	*tmp;
 	
 	if (!lst)
 		return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:04:43 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/30 11:29:05 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/13 15:48:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,16 @@ t_env	*ft_lst_new_malloc(size_t size, size_t size2)
 	if (!temp->content)
 		return (NULL);
 	temp->next = NULL;
+	temp->read = 0;
 	return (temp);
 }
 
 int	check_env(t_env **env, char **str)
 {
+	(void) env;
 	if (!str || str[0] == NULL)
 	{
-		ft_magic_malloc(FREE, 0, env, ENV);
+		// ft_magic_malloc(FREE, 0, env, ENV);
 		return (1);
 	}
 	else

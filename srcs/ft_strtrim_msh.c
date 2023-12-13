@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 17:47:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:26:10 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ char	*ft_strtrim_msh(char **s1)
 		// printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
 		*s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
 		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + count + len2 - 1), NO_ENV);
-		printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
+		// printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
 		ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 	}
 	return (s2);

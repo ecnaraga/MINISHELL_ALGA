@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/11 17:43:25 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 17:02:35 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,22 @@
 
 
 // TO DO : ATTENTION A CE TEST : echo $=HOME => Pour l instant traite dans parsing comme si variable d environnement a voir...
-//PENSER A EXPAND DANS LES RETOUR D ERREUR DE L EXEC ex $USER CMD NORT FOUNT
-// PENSER A GERE $? => represente exitstatus
-// IMPLEMENTER EXPAND DANS OUTFILE INFILE HEREDOC
+
+/*
+Check if the first char after the $ is a valid char that can begin an
+	environment variable (alpha or _) or a ?
+- If yes return 0
+- If not return 1
+	In that case as the subject tell us to expand only an ENVIRONMENT VARIABLE
+		by its value and to expand the $?, we treat all other case like bash
+		with $: or $+ for example
+*/
+int	ft_first_valid_char(char c)
+{
+	if (ft_isalpha(c) != 0 || c == '_' || c == '?')
+		return (0);
+	return (1);
+}
 
 char *get_value(t_env **env, char *str, int rule)
 {
@@ -99,7 +112,7 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 					i++;
 				j++;
 			}
-			else if (msh->av->type[j].expnd == 1 && msh->av->type[j].len_variable == 1)
+			else if ((msh->av->type[j].expnd == 1 && (msh->av->type[j].len_variable == 1 || ft_first_valid_char(msh->av->data[i + 1]) == 1)) || msh->av->type[j].expnd == 2)
 			{
 				tmp2 = cmd;
 				cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
@@ -110,6 +123,17 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 				i++;
 				j++;
 			}
+			// else if (msh->av->type[j].expnd == 2)
+			// {
+			// 	tmp2 = cmd;
+			// 	cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
+			// 	if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
+			// 		ft_exit(-1, -1, -1);
+			// 	if (tmp2)
+			// 		ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
+			// 	i++;
+			// 	j++;
+			// }
 			else if (msh->av->type[j].expnd == 1 && msh->av->type[j].len_variable > 1)
 			{
 				if (msh->av->data[i + 1] == '?')
@@ -146,17 +170,7 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 					j++;
 				}
 			}
-			else if (msh->av->type[j].expnd == 2)
-			{
-				tmp2 = cmd;
-				cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
-				if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
-					ft_exit(-1, -1, -1);
-				if (tmp2)
-					ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-				i++;
-				j++;
-			}
+			
 		}
 		else
 		{

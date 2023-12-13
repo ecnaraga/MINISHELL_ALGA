@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 11:58:47 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:23:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_exstrjoin(char const *s1, char const *s2)
 		len = ft_strlen(s1);
 	else
 		len = ft_strlen(s1) + ft_strlen(s2);
-	s = (char *)malloc(sizeof(char) * (len + 1));
+	s = ft_magic_malloc(MALLOC, sizeof(char) * (len + 1), NULL, ENV);
 	if (!s)
 		return (NULL);
 	s[0] = '\0';
@@ -150,7 +150,7 @@ int	new_env_node(char *str, int statut, t_env **env, int info)
 			new = ft_lst_new_malloc(name_size + 1, content_size + 2 + 1);
 		if (!new)
 		{
-			ft_magic_malloc(FLUSH, 0, NULL, ENV); // ?
+			ft_magic_malloc(FLUSH, 0, NULL, ENV); // ? QUIT PLUTOT NON? 
 			return (1);
 		}
 		ft_strlcpy(new->name, str, name_size + 1);
@@ -172,7 +172,7 @@ char	*enleve_le_plus(char *str)
 	i = 0;
 	j = 0;
 	flag = 0;
-	tmp = ft_magic_malloc(MALLOC, sizeof(char) * ft_strlen(str), NULL, PIP);
+	tmp = ft_magic_malloc(MALLOC, sizeof(char) * ft_strlen(str), NULL, ENV);
 	while (str[i])
 	{
 		if (flag == 0 && (str[i + 1] && (str[i] == '+' && str[i + 1] == '=')))
@@ -218,11 +218,12 @@ void	builtin_export(t_msh *minish)
 			i++;
 		}
 	}
-	if (!minish->p.cmd_opt[i])
-		for (size_t j = 0; minish->p.cmd_opt[j]; j++)
-		{
-			printf("oui : %s\n", minish->p.cmd_opt[j]);
-		}
+	// if (!minish->p.cmd_opt[i])
+	// 	for (size_t j = 0; minish->p.cmd_opt[j]; j++)
+	// 	{
+	// 		printf("oui : %s\n", minish->p.cmd_opt[j]);
+	// 	}
+		
 	// if(!minish->p.cmd_opt[i])
 	// 	ft_print_export(minish);
 	// else

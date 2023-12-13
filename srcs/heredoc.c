@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 17:16:37 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 11:40:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 TO DO : BIEN CHECKER LES FREE ET UNLINK
 */
 
-int	ft_check_unique_name(char *tmp, t_list **heredoc)
+int	ft_check_unique_name(char *tmp, t_env **heredoc)
 {
-	t_list *head;
+	t_env *head;
 
 	head = *heredoc;
 	while (*heredoc)
@@ -35,39 +35,42 @@ int	ft_check_unique_name(char *tmp, t_list **heredoc)
 Create a random name for the here_doc and at it at the end of the linked list
 	(after the limiter added)
 */
-void	create_here_doc(t_split *av, t_list **heredoc)
+void	create_here_doc(t_split *av, t_env **heredoc)
 {
-	t_list	*new;
+	t_env	*new;
+	// t_list	*new;
 	char *tmp;
 	
 	/*Add the limiter in the linked list*/
 	tmp = ft_magic_malloc(ADD, 0, ft_strdup(av->data), NO_ENV);
-	new = ft_magic_malloc(ADD, 0, ft_lstnew(tmp), NO_ENV);
+	// new = ft_magic_malloc(ADD, 0, ft_lstnew(tmp), NO_ENV);
+	new = ft_lst_new_heredoc(tmp);
 	if (!new)
 		(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
-	ft_lstadd_back(heredoc, new);
+	// ft_lstadd_back(heredoc, new);
 	/* Create and add the name of the here_doc in the linked list*/
 	while (1)
 	{
-		tmp = ft_magic_malloc(ADD, 0, ft_random_filename("/tmp/", 8), NO_ENV);
-		if (!tmp)
+		new->content = ft_magic_malloc(ADD, 0, ft_random_filename("/tmp/", 8), NO_ENV);
+		if (!new->content)
 			(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
-		if (ft_check_unique_name(tmp, heredoc) == 0)
+		if (ft_check_unique_name(new->content, heredoc) == 0)
 			break;
 		else
-			ft_magic_malloc(FREE, 0, tmp, NO_ENV);
+			ft_magic_malloc(FREE, 0, new->content, NO_ENV);
 	}
-	new = ft_magic_malloc(ADD, 0, ft_lstnew(tmp), NO_ENV);
-	if (!new)
-		(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
-	ft_lstadd_back(heredoc, new);
+	ft_lstadd_back_env(heredoc, new);
+	// new = ft_magic_malloc(ADD, 0, ft_lstnew(tmp), NO_ENV);
+	// if (!new)
+	// 	(write(2, "malloc: error\n", 15), exit(EXIT_FAILURE)); //PENSER A FREE 
+	// ft_lstadd_back(heredoc, new);
 }
 
 /*
 Function called in a loop in the parent function
 Copy into the file create for an heredoc, the stdin line entered by the user. 
 */
-static int	ft_recover_prompt(int fd_temp, char *lim, t_list *here_doc)
+static int	ft_recover_prompt(int fd_temp, char *lim, t_env *here_doc)
 {
 	char	*line;
 
@@ -105,15 +108,15 @@ Function called in a loop in the parent function
 For each limiter encountered, create a heredoc and recover the stdin to copy it
 	into the file created
 */
-int	ft_prompt(t_msh *msh, t_split *av, t_list **here_doc)
+int	ft_prompt(t_msh *msh, t_split *av, t_env **here_doc)
 {
 	int		fd_temp;
 	char	*lim;
-	t_list *head;
+	t_env *head;
 
 	create_here_doc(av, here_doc);
 	head = *here_doc;
-	while ((*here_doc)->next)
+	while ((*here_doc)->next/*  && ft_strcmp((*here_doc)->name, msh->av->data) != 0 */)
 		*here_doc = (*here_doc)->next;
 	fd_temp = open((*here_doc)->content, O_CREAT | O_APPEND | O_WRONLY, 0744);
 	if (fd_temp == -1)
@@ -170,7 +173,7 @@ int	ft_heredoc(t_msh *msh)
 	return (0);
 }
 
-void	ft_unlink_heredoc(t_list *heredoc)
+void	ft_unlink_heredoc(t_env *heredoc)
 {
 	int i;
 

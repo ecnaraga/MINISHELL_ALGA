@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/11 17:42:38 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:26:25 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ int	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, t_split **head, int rule)
 	sub_msh->line = ft_strtrim_msh(&msh->line);
 	dprintf(2, "sub_msh->line %s\n", sub_msh->line);
 	sub_msh->env = msh->env;
+	sub_msh->export_env = msh->export_env;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -242,7 +243,7 @@ int ft_exec_par(t_msh *msh, t_split **head, int rule)
 			if (par == 0)
 				break ;
 		}
-		dprintf(2, "msh->av->data %s msh->av->token %d par = %d\n", msh->av->data, msh->av->token, par);
+		// dprintf(2, "msh->av->data %s msh->av->token %d par = %d\n", msh->av->data, msh->av->token, par);
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, head);
 	}
 	while (msh->av && msh->av->token == PAR_CLOSE) // et pourquoi pas if a la place
@@ -326,7 +327,7 @@ int	ft_exec(t_msh *msh, int sub)
 		return (1);
 	head = msh->av;
 	ft_exec_operator(msh, &head);
-	ft_unlink_heredoc(msh->p.here_doc);
+	// ft_unlink_heredoc(msh->p.here_doc);
 	ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	return (0);
 }

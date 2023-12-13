@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/11 17:10:33 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:14:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ void	ft_first_pipe(t_msh *msh);
 void	ft_middle_pipe(t_msh *msh, int j);
 void	ft_last_pipe(t_msh *msh, int j);
 void	ft_child_exec(t_msh *msh);
-void	ft_parent(t_msh *msh, int fd_1, int fd_2);
+void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule);
 
 /*exec_utils.c*/
 char	**ft_research_path(t_env **env);
 // char	**ft_research_path(t_list **env);
 int	ft_access_cmd(char **path, char *cmd, char **good_path);
-int	redef_stdin(t_msh *msh, int rule, int j);
+char **ft_transcript_env(t_env **env, char *str);
+int redef_stdin(t_msh *msh, int rule, int j);
 // void	redef_stout(t_msh *msh, int rule, int j);
 int	redef_stout(t_msh *msh, int rule, int j);
 char	**ft_make_cmd(t_msh *msh);
@@ -47,7 +48,10 @@ void	ft_perr(int err, char *cmd);
 
 /*heredoc.c*/
 int	ft_heredoc(t_msh *msh);
-void	ft_unlink_heredoc(t_list *heredoc);
+void	ft_unlink_heredoc(t_env *heredoc);
+
+/*heredoc_lst_utils.c*/
+t_env	*ft_lst_new_heredoc(char *lim);
 
 /*split_magic_malloc.c*/
 char	**ft_split_magic_malloc(char const *s, char c);

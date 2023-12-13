@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/12 14:17:03 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:56:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,54 @@ int	ft_access_cmd(char **path, char *cmd, char **good_path)
 		return (E_NO_CMD);
 	return (ft_find_good_path(path, good_path, cmd, accss));
 }
+void	ft_inc_shlvl(char **env_tab, char *str)//IF ERROR MALLOC?
+{
+	int	i;
+	int shlvl;
+	char *tmp;
+
+	i = -1;
+	if (ft_strcmp(str, "/usr/bin/bash") != 0 && ft_strcmp(str, "/usr/bin/sh") != 0 && ft_strcmp(str, "/usr/bin/zsh") != 0 && ft_strcmp(str, "./minishell")!= 0 )
+		return;
+	while (env_tab[++i])
+	{
+		if (ft_strncmp(env_tab[i], "SHLVL", 5) == 0)
+		{
+			shlvl = ft_atoi(env_tab[i] + 6) + 1;
+			tmp = ft_magic_malloc(ADD, 0, ft_itoa(shlvl), PIP);
+			ft_magic_malloc(FREE, 0, env_tab[i], PIP);
+			env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin("SHLVL=", tmp), PIP);
+			ft_magic_malloc(FREE, 0, tmp, PIP);
+			return ;
+		}
+	}
+	env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin("SHLVL=", "0"), PIP);
+	env_tab[++i] = NULL;
+}
+
+char **ft_transcript_env(t_env **env, char *str)
+{
+	t_env	*head;
+	char	**env_tab;
+	int i;
+	
+	head = *env;
+	env_tab = ft_magic_malloc(MALLOC, sizeof(char *) * (ft_lstsize_env(*env) + 2), NULL, PIP);
+	// if (ERROR MALLOC)
+	i = 0;
+	while (*env)
+	{
+		env_tab[i] = ft_magic_malloc(MALLOC, sizeof(char) * (ft_strlen((*env)->name) + ft_strlen((*env)->content) + 1), NULL, PIP);
+		// if (ERROR MALLOC)
+		env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin((*env)->name, (*env)->content), PIP);
+		i++;
+		*env = (*env)->next;
+	}
+	env_tab[i] = NULL;
+	*env = head;
+	ft_inc_shlvl(env_tab, str);
+	return (env_tab);
+}
 
 /*
 Count the numbers of elements that we will put in the cmd (cmd + option +
@@ -138,7 +186,6 @@ char	**ft_make_cmd(t_msh *msh)
 	t_head	save;
 	char	**cmd;
 	int		i;
-	// int		j;
 	int		cmd_nb;
 
 	save.head = msh->av;
@@ -146,7 +193,6 @@ char	**ft_make_cmd(t_msh *msh)
 	cmd_nb = ft_count_cmd(msh);
 	if (cmd_nb == -1)
 	{
-		printf("msh->av->data %s\n", msh->av->data);
 		if (msh->av->quote)
 			write(2, "minishell: : command not found\n", 32);
 		return (NULL);

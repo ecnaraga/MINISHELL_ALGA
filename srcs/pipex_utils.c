@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/12 11:27:59 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/13 13:13:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_first_pipe(t_msh *msh)
 		}
 	}
 	else
-		ft_parent(msh, msh->p.fd_p[0][1], -1);
+		ft_parent(msh, msh->p.fd_p[0][1], -1, PIP);
 }
 
 void	ft_middle_pipe(t_msh *msh, int j)
@@ -83,7 +83,7 @@ void	ft_middle_pipe(t_msh *msh, int j)
 		}
 	}
 	else
-		ft_parent(msh, msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1]);
+		ft_parent(msh, msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], PIP);
 }
 
 void	ft_last_pipe(t_msh *msh, int j)
@@ -119,5 +119,5 @@ void	ft_last_pipe(t_msh *msh, int j)
 		}
 	}
 	else
-		ft_parent(msh, msh->p.fd_p[j - 1][0], -1);
+		ft_parent(msh, msh->p.fd_p[j - 1][0], -1, PIP);
 }
