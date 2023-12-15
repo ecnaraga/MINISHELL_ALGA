@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/13 11:35:33 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/15 14:26:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define NO_ENV 0
 # define ENV 1
 # define PIP 2
+# define I 0
+# define O 1
 
 extern int	status;
 

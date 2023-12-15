@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 15:51:20 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/15 13:16:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,32 @@ static void	ft_init_var(t_pipex *p)
 	p->good_path = NULL;
 	p->cmd_opt = NULL;
 	p->fd_p = NULL;
-	// p->prompt = 0; //revoir qund mettre le p-> prompt a 0 ou 1 selon la place du here doc est ce que cela change ? 
-	// Pour l instant p->prompt set a 1 si presence de heredoc dans ft_heredoc called dans ft_exec
 }
 
-void	ft_parse(t_msh *msh)
+void	ft_parse(t_msh *msh, int sub)
 {
 	ft_init_var(&msh->p);
-	msh->p.path = ft_research_path(msh->env);
+	msh->p.path = ft_research_path(msh, msh->env, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
 }
 
-static void	ft_create_fd_p(int size, t_pipex *p)
+static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 {
 	int	j;
 
 	j = -1;
 	p->fd_p = ft_magic_malloc(MALLOC, sizeof(int *) * (size + 1), NULL, PIP);
 	if (!p->fd_p)
-		ft_exit(-1, -1, -1);
+		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	while (++j < size)
 	{
 		p->fd_p[j] = ft_magic_malloc(MALLOC, sizeof(int) * 2, NULL, PIP);
 		if (!p->fd_p)
-			ft_exit(-1, -1, -1);
+			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	}
-	p->fd_p[size] = NULL;// ??
+	p->fd_p[size] = NULL;
 }
 
-static void	ft_pipex(t_msh *msh)
+static void	ft_pipex(t_msh *msh, int sub)
 {
 	t_index	index;
 	t_split *head;
@@ -61,6 +59,7 @@ static void	ft_pipex(t_msh *msh)
 	// 		index.j += 1;
 	// 	msh->av = msh->av->next;
 	// }
+	/*Boucle qui compte le nb de pipe*/
 	while (msh->av && msh->av->token != OPERATOR /*&& msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE*/)
 	{
 		if (msh->av->token == PAR_OPEN)
@@ -81,33 +80,49 @@ static void	ft_pipex(t_msh *msh)
 		msh->av = msh->av->next;
 	}
 	msh->av = head;
-	ft_create_fd_p(index.j, &msh->p);
+	ft_create_fd_p(msh, sub, index.j, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
 	ft_signal_handler_msh_bis();
 	while (++index.i < index.j)
 	{
-		if (pipe(msh->p.fd_p[index.d]) == -1)
+		if (pipe(msh->p.fd_p[index.d]) == -1) // IF PIPE FAIL ON RETURN DANS PIPEX MULTI
 		{
-			(perror("pipe"));
+			perror("pipe");
+			status = 255;
 			if (index.d > 0)
 				close(msh->p.fd_p[index.d - 1][0]);
 			return ;
 		}
 		if (index.i == 0)
-			ft_first_pipe(msh);//
+			ft_first_pipe(msh); 
 		else if (index.i >= 1)
-			ft_middle_pipe(msh, index.d);//
+			ft_middle_pipe(msh, index.d);
+		if (status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
+		{
+			close(msh->p.fd_p[index.d][0]);
+			close(msh->p.fd_p[index.d][1]);
+			if (index.d > 0)
+				close(msh->p.fd_p[index.d - 1][0]);
+			return ;
+		}
 		index.d++;
 	}
-	ft_last_pipe(msh, index.d);//
+	ft_last_pipe(msh, index.d);
+	if (status == 255) // IF FORK FAILED IN LAST ON RETURN DANS PIPEX MULTI
+	{
+		close(msh->p.fd_p[index.d - 1][0]);
+		return ;
+	}
 }
 
-int	pipex_multi(t_msh *msh)
+int	pipex_multi(t_msh *msh, int sub)
 {
-	ft_parse(msh);
-	ft_pipex(msh);
+	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	ft_pipex(msh, sub);
 	// sleep(10);
 	while (wait(&status) > 0)
 		;
+	if (status == 255) // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
+		ft_exit_bis(msh, sub, -1, -1);
 	if (WIFEXITED(status))
 		status = WEXITSTATUS(status);
 	printf("status %d\n", status);

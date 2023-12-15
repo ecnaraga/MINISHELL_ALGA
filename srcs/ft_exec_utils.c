@@ -6,13 +6,18 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/13 16:56:56 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/15 13:20:48 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	**ft_research_path(t_env **env)
+/*
+Return a tab of strings of the the known paths.
+If malloc ko, the process is quit in ft_split.
+Return NULL if there is no env or if the path has been unset or contain nothing.
+*/
+char	**ft_research_path(t_msh *msh, t_env **env, int sub)
 {
 	t_env	*node;
 
@@ -22,7 +27,8 @@ char	**ft_research_path(t_env **env)
 	while (node)
 	{
 		if (ft_strncmp(node->name, "PATH", 4) == 0)
-			return (ft_split_magic_malloc(node->content + 1, ':'));
+			// return (ft_split_magic_malloc(node->content, ':')); Quand merge avec alix qui a change l env > plus de = 
+			return (ft_split_magic_malloc(msh, sub, node->content + 1, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
 		node = node->next;
 	}
 	return (NULL);
@@ -145,6 +151,7 @@ int		ft_count_cmd(t_msh *msh)
 		msh->av = msh->av->next;
 	}
 	msh->av = head;
+	printf("count %d\n", count);
 	if (count == 0)
 		return (-1);
 	return (count);
@@ -181,13 +188,14 @@ int		ft_count_cmd(t_msh *msh)
 /*
 Create the tab of string containing the cmd + option + arguments
 */
-char	**ft_make_cmd(t_msh *msh)
+char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 {
 	t_head	save;
 	char	**cmd;
 	int		i;
 	int		cmd_nb;
 
+	printf("FT_MAKECMD\n");
 	save.head = msh->av;
 	save.prev = NULL;
 	cmd_nb = ft_count_cmd(msh);
@@ -195,11 +203,11 @@ char	**ft_make_cmd(t_msh *msh)
 	{
 		if (msh->av->quote)
 			write(2, "minishell: : command not found\n", 32);
-		return (NULL);
+		return (NULL); // OK GERE DANS LE PARENT
 	}
 	cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (cmd_nb + 1), NULL, PIP);
 	if (!cmd)
-		return (NULL);
+		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
 	i = 0;
 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
 	{
@@ -212,9 +220,11 @@ char	**ft_make_cmd(t_msh *msh)
 			{
 				printf("EXPAND\n");
 				if (i == 0)
-					cmd[i] = ft_expand(msh, cmd[i], CMD); //if error return null
+					cmd[i] = ft_expand(msh, cmd[i], CMD); // IF ERROR MALLOC, EXPAND RETURN (NULL)
 				else
-					cmd[i] = ft_expand(msh, cmd[i], OTHER); //if error return null
+					cmd[i] = ft_expand(msh, cmd[i], OTHER); // IF ERROR MALLOC, EXPAND RETURN (NULL)
+				if (status == 255)
+					ft_exit_bis(msh, sub, fd1, fd2); // IF ERREUR MALLOC DANS EXPAND ON QUITTE LE PROCESS EN COURS
 				// if (err != 0)
 				// 	ft_exit(-1, -1, -1);
 				/* dprintf(2, "cmd[*i] %s cmd[*i][0] |%c| i %d\n", cmd[i], cmd[i][0], i);
@@ -231,7 +241,7 @@ char	**ft_make_cmd(t_msh *msh)
 			{
 				cmd[i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
 				if (!cmd[i])
-					return (NULL);
+					ft_exit_bis(msh, sub, fd1, fd2); // IF ERREUR MALLOC DANS EXPAND ON QUITTE LE PROCESS EN COURS
 			}
 			i++;
 			msh->av = ft_lstdel_and_relink_split(msh->av, save.prev, &save.head);

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/27 17:02:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/14 11:16:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	ft_par_open(t_msh *msh, t_par *p, int *i)
 	{
 		while (ft_isspace(msh->line[++(*i)]) == 0)
 			;
-		return (status = 2, err_syntax(ft_error_message(msh->line + *i)));
+		return (status = 2, err_syntax(ft_error_message(msh->line + *i))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE
 	}
 	// if (p->prec == PAR_OPEN)
 	// 	p->multi_par = 1;

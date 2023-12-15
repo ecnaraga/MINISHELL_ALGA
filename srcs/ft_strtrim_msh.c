@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/13 13:26:10 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/15 13:15:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ The line command becomes all that exist after the sub_line command (so after
 The sub-line command contains the content that is between the first parenthesis
 	encountered
 */
-char	*ft_strtrim_msh(char **s1)
+char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub)
 {
 	size_t	count;
 	char			*s2;
@@ -202,12 +202,14 @@ char	*ft_strtrim_msh(char **s1)
 		else
 			len2 = ft_count_end(*s1) + 1;
 		s2 = ft_magic_malloc(MALLOC, sizeof(char) * len2, NULL, NO_ENV);
-		if (s2 == NULL)
-			return (NULL);
+		if (!s2)
+			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
 		ft_strlcpy(s2, *s1 + count , len2 - 1);
 		tmp = *s1;
 		// printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
 		*s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
+		if (!(*s1))
+			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
 		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + count + len2 - 1), NO_ENV);
 		// printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
 		ft_magic_malloc(FREE, 0, tmp, NO_ENV);

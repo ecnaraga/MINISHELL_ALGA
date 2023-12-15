@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/12/13 11:37:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/14 10:28:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ t_split	*ft_lstnew_split(void)
 	t_split	*temp;
 
 	temp = NULL;
-	temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV);
+	temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV); // SI MALLOC KO ON QUITTE
 	if (temp == NULL)
-		return (NULL);
+		ft_exit(-1, -1, -1);
+		// return (NULL);
 	temp->dollar = 0;
 	temp->type = NULL;
 	temp->next = NULL;
