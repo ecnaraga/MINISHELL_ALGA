@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 11:58:25 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:54:59 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	del_env(char *cmd, t_msh *minish)
 	{
 		if(!strcmp(cmd, tmp->name))
 		{
-			printf("suppr env\n");
 			del_node(tmp, minish->env);
 			break;
 		}
@@ -61,7 +60,6 @@ void	del_env(char *cmd, t_msh *minish)
 	{
 		if(!strcmp(cmd, tmp->name))
 		{
-			printf("suppr export\n");
 			del_node(tmp, minish->export_env);
 			break;
 		}

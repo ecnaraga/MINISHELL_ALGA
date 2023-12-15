@@ -3,28 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:42:04 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 12:05:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 15:12:44 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	builtin_pwd(t_msh *minish)
+int	builtin_pwd()
 {
-	t_env	*tmp;
+	char	*pwd;
 
-	printf("BUILTIN\n");
-	tmp = *(minish->env);
-	while (tmp)
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
 	{
-		if (!ft_strcmp(tmp->name, "PWD"))
-		{
-			printf("%s%s\n", tmp->name, tmp->content);
-			break ;
-		}
-		tmp = tmp->next;
+		perror("pwd: error retrieving current directory:");
+		return (1);
 	}
+	printf("%s\n", pwd);
+	free(pwd);
+	return (0);
 }

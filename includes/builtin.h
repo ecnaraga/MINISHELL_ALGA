@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/12 12:15:36 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/12 16:23:31 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void	builtin_echo(t_msh *msh/*t_split *av , int nb_arg */);
 /*
 pwd
 */
-void	builtin_pwd(t_msh *minish);
+int	builtin_pwd();
 
 /*
 cd
 */
-void	builtin_cd(t_msh *minish);
+int	builtin_cd(t_msh *minish);
 
 /*
 get_env
@@ -52,7 +52,7 @@ int	check_env(t_env **export_env, char **str);
 get_export_env
 */
 t_env	**get_export_env(char **str);
-size_t	ft_exstrlcpy(char *dst, const char *src, size_t size);
+void	ft_exstrlcpy(char *dst, const char *src, size_t size);
 void	order_export_env(t_env **export_env);
 
 /*

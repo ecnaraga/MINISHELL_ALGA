@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export_bis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:47:35 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 14:58:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/14 16:40:09 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_print_export(t_msh *minish)
 	tmp = *(minish->export_env);
 	while (tmp)
 	{
-		printf("export %s%s\n", (char *)tmp->name, (char *)tmp->content);
+		printf("export %s=%s\n", (char *)tmp->name, (char *)tmp->content);
 		tmp = tmp->next;
 	}
 }
@@ -50,8 +50,8 @@ int	valide_key(char *key)
 	{
 		while(key[i] && key[i] != '=')
 		{
-			if (ft_isalnum(key[i]) || key[i] == '_')
-				return (1);
+			if (ft_isalnum(key[i]) || key[i] == '_' || (key[i] == '+' && key[i + 1] == '='))
+				i++;
 			else
 				return (0);	
 		}

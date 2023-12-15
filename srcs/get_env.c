@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/04 16:46:07 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/14 16:19:44 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	get_sizes(int *size_name, int *size_content, int *i, char **str)
 {
 	*size_name = get_name_size(str[*i]);
-	*size_content = ft_strlen(str[*i] + *size_name);
+	*size_content = ft_strlen(str[*i] + (*size_name + 1));
 }
 
 int	fill_env(t_env **env, char **str)
@@ -39,7 +39,7 @@ int	fill_env(t_env **env, char **str)
 			return (1);
 		}
 		ft_strlcpy(new->name, str[i], size_name + 1);
-		ft_strlcpy(new->content, str[i] + size_name, size_content + 1);
+		ft_strlcpy(new->content, str[i] + (size_name + 1), size_content + 1);
 		ft_lstadd_back_env(env, new);
 	}
 	return (0);

@@ -6,23 +6,24 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/05 16:43:08 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/14 17:58:31 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-size_t	ft_exstrlcpy(char *dst, const char *src, size_t size)
+void	ft_exstrlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
 	j = 0;
-	src++;
+	if (src[j] == '=')
+		j++;
+	//printf("%c\n", src[j]);
 	if (size > 0)
 	{	
-		dst[i++] = '=';
 		dst[i++] = '"';
 		while (src[j] && j < (size - 1))
 		{
@@ -33,7 +34,6 @@ size_t	ft_exstrlcpy(char *dst, const char *src, size_t size)
 		dst[i++] = '"';
 		dst[i] = '\0';
 	}
-	return (ft_strlen(src));
 }
 
 int	get_name_size(char *str)
@@ -43,7 +43,7 @@ int	get_name_size(char *str)
 	i = -1;
 	while (str[++i])
 	{
-		if (str[i] == '=')
+		if (str[i] == '=' || (str[i] == '+' && str[i + 1] == '='))
 			return (i);
 	}
 	return (i);
@@ -63,7 +63,7 @@ static int	fill_export_env(t_env **export_env, char **str)
 	while (str[++i])
 	{
 		name_size = get_name_size(str[i]);
-		content_size = ft_strlen(str[i] + name_size);
+		content_size = ft_strlen(str[i] + (name_size + 1));
 		new = ft_lst_new_malloc(name_size + 1, content_size + 2 + 1);
 		if (!new)
 		{
@@ -71,7 +71,7 @@ static int	fill_export_env(t_env **export_env, char **str)
 			return (1);
 		}
 		ft_strlcpy(new->name, str[i], name_size + 1);
-		ft_exstrlcpy(new->content, str[i] + name_size, content_size + 2 + 1);
+		ft_exstrlcpy(new->content, str[i] + (name_size + 1), content_size + 2 + 1);
 		ft_lstadd_back_env(export_env, new);
 	}
 	return (0);

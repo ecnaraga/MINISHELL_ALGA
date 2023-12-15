@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:04:43 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/30 11:29:05 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/12 17:11:37 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ t_env	*ft_lst_new_malloc(size_t size, size_t size2)
 	temp = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
 	if (temp == NULL)
 		return (NULL);
-	temp->name = ft_magic_malloc(MALLOC, sizeof(char) * size, NULL, ENV);
+	temp->name = ft_magic_malloc(ADD, 0, ft_calloc(sizeof(char), size), ENV);
 	if (!temp->name)
 		return (NULL);
-	temp->content = ft_magic_malloc(MALLOC, sizeof(char) * size2, NULL, ENV);
+	temp->content = ft_magic_malloc(ADD, 0, ft_calloc(sizeof(char), size2), ENV);
 	if (!temp->content)
 		return (NULL);
 	temp->next = NULL;
