@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/14 16:33:25 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/18 14:28:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@ Call all the parsing function + split the line + tokenisation
 */
 int ft_parsing(t_msh *msh, int sub)
 {
-	if (sub == 0 && ft_parse_line(msh) != 0) // POUR ALIX : PB INVALID READ
+	if (sub == 0 && ft_parse_line(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	// printf("PASSAGE ALIX TO GAGA\n");
-	if (sub == 0 && ft_parse_bis(msh) != 0)
+	if (sub == 0 && ft_parse_bis(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
-	msh->av = ft_split_msh(msh->line);
+	msh->av = ft_split_msh(msh->line); // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 	if (!msh->av)
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	msh->ac = ft_lstsize_split(msh->av);
 	if (msh->ac == 0)
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	ft_token(msh);
-	if (sub == 0 && ft_parse_ter(msh) != 0)
+	if (sub == 0 && ft_parse_ter(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	return (0);
 }
@@ -50,10 +50,13 @@ void	ft_handle_eof(void)
 	rl_clear_history();
 }
 
-int	ft_minishell(t_msh *msh, int sub)
+void	ft_minishell(t_msh *msh, int sub)
+// int	ft_minishell(t_msh *msh, int sub)
 {
-	if (ft_parsing(msh, sub) != 0)
-		return (1);
+	if (ft_parsing(msh, sub) != 0)  // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
+		return ;
+		// return (1);
+		
 	// int i = 0;
 	// t_split *head;
 	// head = msh->av;
@@ -72,11 +75,13 @@ int	ft_minishell(t_msh *msh, int sub)
 	// 	i++;
 	// }
 	// msh->av = head;
-	if (ft_exec(msh, sub) != 0)
-		return (1);
+	
+	if (ft_exec(msh, sub) != 0) // OK GERE ET PROTEGE A l interieur
+		return ;
+		// return (1);
 	if (sub == 1)
 		ft_exit(-1, -1, -1);
-	return (0);
+	// return (0);
 }
 
 int main(int ac, char **av, char **env)
@@ -84,11 +89,14 @@ int main(int ac, char **av, char **env)
 	t_msh msh;
 	
 	(void)av;
-	/*if (isatty(0) == 1) //A REGLER test ./minishell | ./minishell
+	if (isatty(0) == 1) //A REGLER test ./minishell | ./minishell
 	{
-		printf("stdin : %d\n", isatty(0));
-		printf("stdout : %d\n", isatty(1));
-	}*/
+		int fd = open("/dev/stdin", O_RDWR);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
+	if (isatty(0) == 0) //A REGLER test ./minishell | ./minishell
+		exit (0);
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
 	msh.env = get_env(env);
@@ -96,7 +104,7 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		ft_signal_handler_msh();
-		msh.line = readline("Minishell$ ");
+		msh.line = readline("Minishell$ "); // PROTEGE OK
 		msh.previous_status = status;
 		status = 0;
 		// /*--------------------------------------------------------*/
@@ -115,7 +123,8 @@ int main(int ac, char **av, char **env)
 			return (ft_handle_eof(), status); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
 		if (!ft_magic_malloc(ADD, 0, msh.line, NO_ENV))
 		{
-			ft_magic_malloc(FLUSH, 0, NULL, 0);
+			ft_magic_malloc(QUIT, 0, NULL, 0); // SI MALLOC KO ON QUITTE
+			// ft_magic_malloc(FLUSH, 0, NULL, 0);
 			continue ;
 		}	
 		if (!msh.line[0])
@@ -163,6 +172,6 @@ int main(int ac, char **av, char **env)
 		// 	msh.av = msh.av->next;
 		// 	i++;
 		// }
-		ft_magic_malloc(FLUSH, 0, NULL, 0);
+		ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	}
 }

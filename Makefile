@@ -29,9 +29,11 @@ SRCS = main.c \
 	   signal.c \
 	   ft_exec.c \
 	   heredoc.c \
+	   heredoc_utils.c \
 	   ft_exec_error.c \
 	   ft_exec_utils.c \
 	   ft_exec_utils_bis.c \
+	   ft_exec_utils_make_cmd.c \
 	   ft_exec_stdin_utils.c \
 	   ft_exec_stdout_utils.c \
 	   ft_exec_cmd.c \
@@ -39,6 +41,7 @@ SRCS = main.c \
 	   pipex_utils.c \
 	   ft_expand.c \
 	   ft_split_magic_malloc.c \
+	   ft_split_magic_isspace.c \
 	   ft_strtrim_msh.c \
 	   builtin_echo.c \
 	   builtin_pwd.c \

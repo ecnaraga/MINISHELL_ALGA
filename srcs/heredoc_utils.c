@@ -1,37 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_parse_utils.c                                   :+:      :+:    :+:   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 16:13:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/14 11:08:05 by galambey         ###   ########.fr       */
+/*   Created: 2023/12/13 10:16:25 by galambey          #+#    #+#             */
+/*   Updated: 2023/12/15 13:15:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/*
-Incremente les double quotes(d_q) si pas entre single quotes (s_q)
-Incremente les single quotes(s_q) si pas entre double quotes (d_q)
-Ps : 39 = single quote
-*/
-void	ft_inc_quote(char c, int *d_q, int *s_q)
+t_env	*ft_lst_new_heredoc(t_msh *msh, char *lim, int sub)
 {
-	if (*s_q % 2 == 0 && c == '"')
-		*d_q += 1;
-	else if (*d_q % 2 == 0 && c == 39)
-		*s_q += 1;
-}
+	t_env	*temp;
 
-/*
-Return 0 if c is an isspace
-*/
-int	ft_isspace(char c)
-{
-	if (c == ' ' || (c >= '\t' && c <= '\r'))
-		return (0);
-	else
-		return (1);
+	temp = NULL;
+	temp = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, NO_ENV);
+	if (temp == NULL)
+		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
+	temp->name = lim;
+	temp->content = NULL;
+	temp->read = 0;
+	temp->next = NULL;
+	return (temp);
 }

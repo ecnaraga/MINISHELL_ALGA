@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/14 16:19:44 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/18 14:28:25 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	fill_env(t_env **env, char **str)
 	i = -1;
 
 	if (check_env(env, str) == 1)
-		return (1);
+		return (0);
 	while (str[++i])
 	{
 		get_sizes(&size_name, &size_content, &i, str);
@@ -51,7 +51,7 @@ t_env	**get_env(char **str)
 
 	env = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
 	if (!env)
-		return (NULL);
+		return (ft_exit(-1, -1, -1), NULL);
 	*env = NULL;
 	if (fill_env(env, str) == 1)
 		return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_export_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/14 17:58:31 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/18 14:28:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	fill_export_env(t_env **export_env, char **str)
 	i = -1;
 	new = NULL;
 	if (check_env(export_env, str) == 1)
-		return (1);
+		return (0);
 	while (str[++i])
 	{
 		name_size = get_name_size(str[i]);
@@ -82,6 +82,8 @@ void	order_export_env(t_env **export_env)
 	t_env	*node;
 	char	*tmp;
 
+	if (!*export_env)
+		return ;
 	node = *export_env;
 	while (node->next)
 	{

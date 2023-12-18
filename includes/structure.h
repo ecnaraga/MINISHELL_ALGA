@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/11 10:34:17 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:08:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define NO_ENV 0
 # define ENV 1
 # define PIP 2
+# define I 0
+# define O 1
 
 extern int	status;
 
@@ -41,6 +43,7 @@ typedef	struct s_env
 {
 	char	*name;
 	char	*content;
+	int		read;
 	struct s_env	*next;
 }		t_env;
 
@@ -50,8 +53,8 @@ typedef struct s_pipex
 	char		**path;
 	char		*good_path;
 	char		**cmd_opt;
-	t_list		*here_doc; // limiter > nom cree > limiter > nom cree
-	short int	prompt;
+	t_env		*here_doc; // limiter > nom cree > limiter > nom cree
+	short int	re_split;
 }				t_pipex;
 
 typedef	struct s_msh
@@ -99,8 +102,8 @@ typedef struct s_head
 {
 	t_split *head;
 	t_split *prev;
-	t_list *head_hd;
-	t_list *prev_hd;
+	t_env *head_hd;
+	t_env *prev_hd;
 }		t_head;
 
 typedef struct s_fd

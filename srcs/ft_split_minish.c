@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/12/12 14:26:21 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/14 11:42:18 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,8 @@ Tableau de structure strs->type : strs[i]->type[d]
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
 */
-static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
+static void	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
+// static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
 {
 	int			j;
 	t_letter	l;
@@ -157,14 +158,15 @@ static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss
 	j = -1;
 	while (s[i] && ++j < wd)
 	{
-		new = ft_lstnew_split();
+		new = ft_lstnew_split(); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
 		l = ft_count_letter(s, &q, &i, &new->dollar);
 		new->data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
 		if (new->data == NULL)
-			return (1);
+			ft_exit(-1, -1, -1); // SI MALLOC KO => ON QUITTE MINISHELL
 		new->token = TO_DEFINE;
-		if (ft_alloc_type(new) == 1)
-			return (1);
+		ft_alloc_type(new);  // SI MALLOC KO ON QUITTE DANS FT_ALLOC_TYPE
+		// if (ft_alloc_type(new) == 1)
+			// return (1);
 		if (l.lt >= 0)
 		{
 			// printf("i - l.k - 1 % d\n", i - l.k - 1);
@@ -176,8 +178,8 @@ static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss
 		else
 			new->data[0] = '\0';
 		ft_lstadd_back_split(strs, new);
-		}
-	return (0);
+	}
+	// return (0);
 }
 
 /*
@@ -191,19 +193,14 @@ t_split	*ft_split_msh(char const *s)
 {
 	int		wd;
 	t_split	*strs;
-	// t_list	*strss;
 
 	if (!s)
 		return (NULL);
 	wd = ft_countwords(s);
-	// strs = ft_magic_malloc(MALLOC, sizeof(t_split) * (wd + 1), NULL, NO_ENV);
-	// if (strs == NULL)
-	// 	return (NULL);
 	strs = NULL;
-	if (ft_split_strs(s, &strs, wd) == 1)
-		return (NULL);
-	// strs[wd].data = NULL;
-	// strs[wd].type = NULL;
+	ft_split_strs(s, &strs, wd); // SI MALLOC KO ON QUITTE A L INTERIEUR
+	// if (ft_split_strs(s, &strs, wd) == 1)
+	// 	return (NULL);
 	return (strs);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/11/27 22:37:29 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/14 10:29:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ Dynamically allocates a structure array of the size of the number of potential
 	environment variables (dollar) present in the word, which will be used to
 	specify whether or not expand the potential variable
 */
-int	ft_alloc_type(t_split *new)
+void	ft_alloc_type(t_split *new)
+// int	ft_alloc_type(t_split *new)
 {
 	int	d;
 
@@ -74,10 +75,11 @@ int	ft_alloc_type(t_split *new)
 		new->type = ft_magic_malloc(MALLOC, sizeof(t_dollar)
 				* new->dollar, NULL, NO_ENV);
 		if (new->type == NULL)
-			return (1);
+			ft_exit(-1, -1, -1); // SI MALLOC KO ON QUITTE
+			// return (1);
 		d = -1;
 		while (++d < new->dollar)
 			new->type[d].expnd = TO_DEFINE;
 	}
-	return (0);
+	// return (0);
 }

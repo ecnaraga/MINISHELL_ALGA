@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/29 12:02:49 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/13 17:31:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	*add_spaces(char *str)
 	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1),
 			NULL, NO_ENV);
 	if (!fstr)
-		return (NULL);
+		ft_exit(-1, -1, -1); // SI MALLOC KO => ON QUITTE MINISHELL
 	i = -1;
 	j = 0;
 	while (str[++i])

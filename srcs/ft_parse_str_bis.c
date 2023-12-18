@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 14:29:50 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/14 11:00:13 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ int	ft_parse_line(t_msh *minish)
 {
 	if (ft_quote_order(minish->line) == 2)
 		return (1);
-	minish->line = add_spaces(minish->line);
-	if (!minish->line)
-		return (1);
+	minish->line = add_spaces(minish->line); // SI MALLOC KO ON QUITTE DANS ADD_SPACES
+	// if (!minish->line)
+	// 	return (1);
 	printf("Sortie ft_parse_line : _%s_\n", minish->line);
 	return (0);
 }

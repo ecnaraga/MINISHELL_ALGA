@@ -11,3 +11,12 @@ VOIR AVEC GARANCE :
 /*
 Controle D dans heredoc
 */
+
+<< LAM << LAM cat :>>>>>> il va falloir modif la liste chainee des heredoc et faire avec la struct suivante :
+char *lim;
+char *name;
+int read; si == a 0 n a pas encore ete read sinon == 1
+
+( export gaga=orange && ( echo $gaga || echo salut ) )
+( export )
+<< LAM <<LAM cat && (export gaga=orange && (echo $gaga || echo salut) ) && << LAM cat export gaga=orange && ( echo $gaga || echo salut )
