@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 16:54:59 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/18 13:46:19 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,4 @@ void	builtin_unset(t_msh *minish)
 			i++;
 		}
 	}
-	// printf("entre dans unset\n");
-	// if (str[++i])
-	// {
-	// 	while (str[i])
-	// 	{
-	// 		del_env(str[i], minish);
-	// 		i++;
-	// 	}
-	// }
 }

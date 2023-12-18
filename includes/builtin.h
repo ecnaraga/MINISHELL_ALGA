@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/12 16:23:31 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/18 13:47:27 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,5 @@ int		ft_search_builtin(t_msh *msh);
 unset
 */
 void	builtin_unset(t_msh *minish);
+void	del_env(char *cmd, t_msh *minish);
 #endif
