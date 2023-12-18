@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/18 14:24:30 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 14:44:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,17 @@ int	builtin_cd(t_msh *minish)
 
 	if(minish->p.cmd_opt[2])
 	{
-		printf("minishell: cd: too many arguments\n");
-		return (status = 1, 1);
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		return (status = 1, 0);
 	}
 	old_pwd = get_old_pwd(minish->env);
+	if (status == 255)
+		return (255);
 	path = get_path(minish->p.cmd_opt);
 	if (!path)
 	{
 		ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
-		return (status = 1, 1);
+		return (status = 1, 0);
 	}
 	if (chdir(path) == 0)
 		change_env(old_pwd, minish);
