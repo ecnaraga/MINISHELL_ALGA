@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/15 14:47:04 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 13:50:27 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ t_env	*ft_lst_new_heredoc(t_msh *msh, char *lim, int sub);
 /*split_magic_malloc.c*/
 char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s, char c);
 
+/*split_magic_malloc_isspace*/
+int	ft_countword(const char *s);
+char	**ft_split_isspace_magic_malloc(char const *s);
 
 void	ft_minishell(t_msh *msh, int sub);
 char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub);

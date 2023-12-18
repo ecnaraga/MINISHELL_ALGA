@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/15 13:16:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:08:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	ft_init_var(t_pipex *p)
 	p->good_path = NULL;
 	p->cmd_opt = NULL;
 	p->fd_p = NULL;
+	p->re_split = 0;
 }
 
 void	ft_parse(t_msh *msh, int sub)

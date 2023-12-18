@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/15 14:26:12 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:08:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_pipex
 	char		*good_path;
 	char		**cmd_opt;
 	t_env		*here_doc; // limiter > nom cree > limiter > nom cree
-	short int	prompt;
+	short int	re_split;
 }				t_pipex;
 
 typedef	struct s_msh
