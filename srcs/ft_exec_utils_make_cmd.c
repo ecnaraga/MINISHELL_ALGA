@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 14:27:45 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 16:53:25 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int		ft_count_cmd(t_msh *msh)
 		msh->av = msh->av->next;
 	}
 	msh->av = head;
-	printf("count %d\n", count);
 	if (count == 0)
 		return (-1);
 	return (count);
@@ -150,7 +149,6 @@ char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 	t_head	save;
 	int		cmd_nb;
 
-	printf("FT_MAKECMD\n");
 	save.head = msh->av;
 	save.prev = NULL;
 	cmd_nb = ft_count_cmd(msh);
@@ -169,3 +167,96 @@ char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 	msh->av = save.head;
 	return (msh->p.cmd_opt);
 }
+
+/*
+Count the numbers of elements that we will put in the cmd (cmd + option +
+	arguments)
+*/
+// int		ft_count_cmd(t_msh *msh)
+// {
+// 	t_split	*head;
+// 	int		count;
+
+// 	head = msh->av;
+// 	count = 0;
+// 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
+// 	{
+// 		if (msh->av->token == CMD)
+// 			count++;
+// 		msh->av = msh->av->next;
+// 	}
+// 	msh->av = head;
+// 	printf("count %d\n", count);
+// 	if (count == 0)
+// 		return (-1);
+// 	return (count);
+// }
+
+// char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
+// {
+// 	t_head	save;
+// 	char	**cmd;
+// 	int		i;
+// 	int		cmd_nb;
+
+// 	printf("FT_MAKECMD\n");
+// 	save.head = msh->av;
+// 	save.prev = NULL;
+// 	cmd_nb = ft_count_cmd(msh);
+// 	if (cmd_nb == -1)
+// 	{
+// 		if (msh->av->quote)
+// 			write(2, "minishell: : command not found\n", 32);
+// 		return (NULL); // OK GERE DANS LE PARENT
+// 	}
+// 	cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (cmd_nb + 1), NULL, PIP);
+// 	if (!cmd)
+// 		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
+// 	i = 0;
+// 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
+// 	{
+// 		// if (ft_strcpy_cmd(msh, cmd, &i, &save) == NULL)
+// 		// 	return (NULL);
+// 	// A EFFACER UNNIQUEMENT SI SUR!!!!
+// 		if (msh->av->token == CMD) // normalement besoin de cette condition quand on implementera les parentheses mais pas certaine => a verifier
+// 		{
+// 			if (msh->av->type /* && msh->av->type->expnd != 2 */)
+// 			{
+// 				printf("EXPAND\n");
+// 				if (i == 0)
+// 					cmd[i] = ft_expand(msh, cmd[i], CMD); // IF ERROR MALLOC, EXPAND RETURN (NULL)
+// 				else
+// 					cmd[i] = ft_expand(msh, cmd[i], OTHER); // IF ERROR MALLOC, EXPAND RETURN (NULL)
+// 				if (status == 255)
+// 					ft_exit_bis(msh, sub, fd1, fd2); // IF ERREUR MALLOC DANS EXPAND ON QUITTE LE PROCESS EN COURS
+// 				// if (err != 0)
+// 				// 	ft_exit(-1, -1, -1);
+// 				/* dprintf(2, "cmd[*i] %s cmd[*i][0] |%c| i %d\n", cmd[i], cmd[i][0], i);
+// 				printf("cmd[i] %s\n", cmd[i]); */
+// 				// j = 0;
+// 				// while (cmd[i][j] && ft_isspace(cmd[i][j] == 0))
+// 				// 	j++;
+// 				// if (!cmd[i][j])
+// 				// 	cmd[i][0] = '\0';
+// 				if (msh->av->quote && !cmd[0][0])
+// 					write(2, "minishell: : command not found\n", 32);
+// 			}
+// 			else
+// 			{
+// 				cmd[i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
+// 				if (!cmd[i])
+// 					ft_exit_bis(msh, sub, fd1, fd2); // IF ERREUR MALLOC DANS EXPAND ON QUITTE LE PROCESS EN COURS
+// 			}
+// 			i++;
+// 			msh->av = ft_lstdel_and_relink_split(msh->av, save.prev, &save.head);
+// 		}
+// 		else
+// 		{
+// 			save.prev = msh->av;
+// 			msh->av = msh->av->next;
+// 		}
+// 	}
+// 	cmd[i] = NULL;
+// 	msh->av = save.head;
+// 	return (cmd);
+// }

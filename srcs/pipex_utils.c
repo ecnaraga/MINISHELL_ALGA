@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/15 16:14:42 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 18:25:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	ft_first_pipe(t_msh *msh)
 		redef_stdin(msh, FIRST, 0, 1); // OK PROTEGER
 		redef_stdout(msh, FIRST, 0, 1); // OK PROTEGER
 		close(msh->p.fd_p[0][1]);
+		dprintf(2, "REDEF OK\n");
 		ft_child_pipe_exec(msh);
 		// dprintf(2, "msh->av->data %s\n", msh->av->data);
 		// head = msh->av;
@@ -96,6 +97,7 @@ void	ft_middle_pipe(t_msh *msh, int j)
 		close(msh->p.fd_p[j - 1][0]);
 		redef_stdout(msh, MID, j, 1); // OK PROTEGER
 		close(msh->p.fd_p[j][1]);
+		ft_child_pipe_exec(msh);
 		// head = msh->av;
 		// if (msh->av->token == PAR_OPEN)
 		// {
@@ -136,6 +138,7 @@ void	ft_last_pipe(t_msh *msh, int j)
 		redef_stdin(msh, LAST, j, 1); // OK PROTEGER
 		close(msh->p.fd_p[j - 1][0]);
 		redef_stdout(msh, LAST, j, 1); // OK PROTEGER
+		ft_child_pipe_exec(msh);
 		// head = msh->av;
 		// if (msh->av->token == PAR_OPEN)
 		// {
@@ -151,7 +154,7 @@ void	ft_last_pipe(t_msh *msh, int j)
 		// 		((E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1));
 		// 	if (ft_search_builtin(msh) != 0) // OK PROTEGER
 		// 		ft_exit(-1, -1, -1);
-		// 	ft_child_exec(msh);
+			// ft_child_exec(msh);
 		// }
 	}
 	else

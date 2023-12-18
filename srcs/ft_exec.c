@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/15 16:46:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 17:09:05 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,9 +284,15 @@ void	ft_choice_exec(t_msh *msh, t_split **head, int sub)
 {
 	(void) head;
 	if (msh->av->token == PAR_OPEN)
+	{
+		printf("TEST PAR OPEN\n");
 		ft_exec_par(msh, head, CMD_ALONE, sub); // OK PROTEGE A L INTERIEUR
+	}
 	else if (ft_search_pipe(msh) == 1)
+	{
+		printf("PIPEX_MULTI\n");
 		pipex_multi(msh, sub); // OK PROTEGE A L INTERIEUR
+	}
 	else
 		ft_cmd_alone(msh, sub); // OK PROTEGE A L INTERIEUR
 }

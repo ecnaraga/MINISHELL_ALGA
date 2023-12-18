@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/18 10:13:34 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 18:26:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	**ft_research_path(t_msh *msh, t_env **env, int sub)
 	while (node)
 	{
 		if (ft_strncmp(node->name, "PATH", 4) == 0)
-			// return (ft_split_magic_malloc(node->content, ':')); Quand merge avec alix qui a change l env > plus de = 
-			return (ft_split_magic_malloc(msh, sub, node->content + 1, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
+			return (ft_split_magic_malloc(msh, sub, node->content, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
+			// return (ft_split_magic_malloc(msh, sub, node->content + 1, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
 		node = node->next;
 	}
 	return (NULL);
@@ -45,11 +45,11 @@ static int	ft_find_good_path(char **path, char **good_path, char *cmd,
 	{
 		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(path[i], "/"), PIP);
 		if (!good_path)
-			return (E_STRJOIN);
+			return (255);// OK PROTEGER
 		tmp = *good_path;
 		*good_path = ft_magic_malloc(ADD, 0, ft_strjoin(*good_path, cmd), PIP);
 		if (!*good_path)
-			return (E_STRJOIN);
+			return (255);// OK PROTEGER
 		ft_magic_malloc(FREE, 0, tmp, PIP);
 		accss = access(*good_path, F_OK | X_OK);
 		if (accss == 0)
@@ -70,14 +70,14 @@ int	ft_access_cmd(char **path, char *cmd, char **good_path)
 	if (accss == 0)
 	{
 		tmp = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, "/"), PIP);
-		if (!tmp)
-			return (E_STRJOIN);
+		if (!tmp) // OK PROTEGER
+			return (255);
 		accss = access(tmp, F_OK | X_OK);
 		if (accss == 0)
 			return (ft_magic_malloc(FREE, 0, tmp, PIP), E_NO_CMD);
 		*good_path = ft_magic_malloc(ADD, 0, ft_strdup(cmd), PIP);
-		if (!*good_path)
-			return (E_STRDUP);
+		if (!*good_path) // OK PROTEGER
+			return (255);
 		return (E_OK);
 	}
 	if (!path)
@@ -99,13 +99,19 @@ void	ft_inc_shlvl(char **env_tab, char *str)//IF ERROR MALLOC?
 		{
 			shlvl = ft_atoi(env_tab[i] + 6) + 1;
 			tmp = ft_magic_malloc(ADD, 0, ft_itoa(shlvl), PIP);
+			if (status == 255) // OK PROTEGER
+				return ;
 			ft_magic_malloc(FREE, 0, env_tab[i], PIP);
 			env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin("SHLVL=", tmp), PIP);
+			if (status == 255) // OK PROTEGER
+				return ;
 			ft_magic_malloc(FREE, 0, tmp, PIP);
 			return ;
 		}
 	}
 	env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin("SHLVL=", "0"), PIP);
+	if (status == 255) // OK PROTEGER
+		return ;
 	env_tab[++i] = NULL;
 }
 
@@ -113,23 +119,32 @@ char **ft_transcript_env(t_env **env, char *str)
 {
 	t_env	*head;
 	char	**env_tab;
+	char *tmp;
 	int i;
 	
 	head = *env;
 	env_tab = ft_magic_malloc(MALLOC, sizeof(char *) * (ft_lstsize_env(*env) + 2), NULL, PIP);
-	// if (ERROR MALLOC)
+	if (!env_tab)  // OK PROTEGER
+			return (NULL);
 	i = 0;
 	while (*env)
 	{
-		env_tab[i] = ft_magic_malloc(MALLOC, sizeof(char) * (ft_strlen((*env)->name) + ft_strlen((*env)->content) + 1), NULL, PIP);
-		// if (ERROR MALLOC)
-		env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin((*env)->name, (*env)->content), PIP);
+		env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin((*env)->name, "="), PIP);
+		if (!env_tab[i])  // OK PROTEGER
+			return (NULL);
+		tmp = env_tab[i];
+		env_tab[i] = ft_magic_malloc(ADD, 0, ft_strjoin(env_tab[i], (*env)->content), PIP);
+		ft_magic_malloc(FREE, 0, tmp, PIP);
+		if (!env_tab[i])  // OK PROTEGER
+			return (NULL);
 		i++;
 		*env = (*env)->next;
 	}
 	env_tab[i] = NULL;
 	*env = head;
 	ft_inc_shlvl(env_tab, str);
+	if (status == 255) // OK PROTEGER
+		return (NULL);
 	return (env_tab);
 }
 
@@ -151,7 +166,7 @@ char **ft_transcript_env(t_env **env, char *str)
 // 		msh->av = msh->av->next;
 // 	}
 // 	msh->av = head;
-// 	printf("count %d\n", count);
+// 	dprintf(2, "count %d\n", count);
 // 	if (count == 0)
 // 		return (-1);
 // 	return (count);
@@ -195,7 +210,7 @@ char **ft_transcript_env(t_env **env, char *str)
 // 	int		i;
 // 	int		cmd_nb;
 
-// 	printf("FT_MAKECMD\n");
+// 	dprintf(2, "FT_MAKECMD\n");
 // 	save.head = msh->av;
 // 	save.prev = NULL;
 // 	cmd_nb = ft_count_cmd(msh);
@@ -218,7 +233,7 @@ char **ft_transcript_env(t_env **env, char *str)
 // 		{
 // 			if (msh->av->type /* && msh->av->type->expnd != 2 */)
 // 			{
-// 				printf("EXPAND\n");
+// 				// printf("EXPAND\n");
 // 				if (i == 0)
 // 					msh->p.cmd_opt[i] = ft_expand(msh, msh->p.cmd_opt[i], CMD); // IF ERROR MALLOC, EXPAND RETURN (NULL)
 // 				else

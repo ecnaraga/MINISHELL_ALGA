@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 11:08:33 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 18:25:55 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ static void	ft_pipex(t_msh *msh, int sub)
 			return ;
 		}
 		if (index.i == 0)
-			ft_first_pipe(msh); 
+		{
+			ft_first_pipe(msh);
+		}
 		else if (index.i >= 1)
 			ft_middle_pipe(msh, index.d);
 		if (status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
@@ -119,14 +121,13 @@ int	pipex_multi(t_msh *msh, int sub)
 {
 	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
 	ft_pipex(msh, sub);
-	// sleep(10);
 	while (wait(&status) > 0)
 		;
 	if (status == 255) // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
 		ft_exit_bis(msh, sub, -1, -1);
 	if (WIFEXITED(status))
 		status = WEXITSTATUS(status);
-	printf("status %d\n", status);
+	dprintf(2, "status %d\n", status);
 	// if (msh->p.path)
 	// 	ft_free_split(msh->p.path);
 	// ft_unlink_heredoc(msh->p.here_doc);

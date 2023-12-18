@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/14 17:33:43 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/18 15:52:35 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ char *get_value(t_env **env, char *str, int rule)
 		{
 			ft_magic_malloc(FREE, 0, str, NO_ENV);
 			if (rule == CMD)
-				return (ft_magic_malloc(ADD, 0, ft_strtrim(node->content + 1 , " \b\t\n\v\f\r"), NO_ENV));
+				return (ft_magic_malloc(ADD, 0, ft_strtrim(node->content, " \b\t\n\v\f\r"), NO_ENV));
 			if (rule == OTHER)
-				return (ft_magic_malloc(ADD, 0, ft_strtrim_except_tips(node->content + 1 , " \b\t\n\v\f\r"), NO_ENV));
+				return (ft_magic_malloc(ADD, 0, ft_strtrim_except_tips(node->content, " \b\t\n\v\f\r"), NO_ENV));
 			if (rule == INFILE || rule == OUTFILE_NO_TRUNC || rule == OUTFILE_TRUNC)
-				return (ft_magic_malloc(ADD, 0, ft_strdup(node->content + 1), NO_ENV));
+				return (ft_magic_malloc(ADD, 0, ft_strdup(node->content), NO_ENV));
 		}
 		else
 			node = node->next;
