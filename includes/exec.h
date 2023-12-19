@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:25:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:35:55 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,20 @@ int	ft_cmd_alone(t_msh *msh, int sub);
 int	pipex_multi(t_msh *msh, int sub);
 
 /* pipex_handle_pipe.c */                                // NORME OK
-void	ft_first_pipe(t_msh *msh);
-void	ft_middle_pipe(t_msh *msh, int j);
-void	ft_last_pipe(t_msh *msh, int j);
+void	ft_first_pipe(t_msh *msh, t_lpid **pid_l);
+void	ft_middle_pipe(t_msh *msh, int j, t_lpid **pid_l);
+void	ft_last_pipe(t_msh *msh, int j, t_lpid **pid_l);
+
+/* lpid_utils.c */
+t_lpid	*ft_lpidnew(int content);
+t_lpid	*ft_lpidlast(t_lpid *lst);
+void	ft_lpidadd_back(t_lpid **lst, t_lpid *new);
 
 /*heredoc.c*/
 int	ft_heredoc(t_msh *msh);
 t_env	*ft_copy_heredoc(t_msh *msh, t_env *hdoc, int sub);
 void	ft_unlink_heredoc(t_env *hdoc);
+char	*get_next_line_magic(int fd);
 
 /*heredoc_lst_utils.c*/
 t_env	*ft_lst_new_heredoc(t_msh *msh, char *lim, int sub);

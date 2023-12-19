@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 14:28:54 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:26:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int main(int ac, char **av, char **env)
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
 	msh.env = get_env(env);
-	msh.export_env = get_export_env(env);	
+	msh.export_env = get_export_env(env);
 	while (1)
 	{
 		ft_signal_handler_msh();

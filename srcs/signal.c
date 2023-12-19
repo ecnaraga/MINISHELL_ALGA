@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/05 17:38:31 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 18:42:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@ If SIG_INT is catched:
 - Set the exit status at 130
 - Redisplay the prompt
 */
-void	ft_free(int signal)
+void	ft_free(int sig)
 {
-	if (signal == SIGINT)
+	if (sig == SIGINT)
 	{
 		ft_magic_malloc(FLUSH, 0, NULL, 0);
 		status = 130;
-		printf("\n");
+		// printf("\n");
+		write(2, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
@@ -57,7 +58,8 @@ void	ft_free_bis(int signal)
 	{
 		ft_magic_malloc(FLUSH, 0, NULL, 0);
 		status = 130;
-		printf("\n");
+		write(2, "\n", 1);
+		// exit(130);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		// rl_redisplay();

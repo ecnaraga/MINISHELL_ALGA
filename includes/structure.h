@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:07:01 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:37:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,12 @@ typedef struct s_fd
 	int file;
 	int	old_std;
 }		t_fd;
+
+typedef struct s_lpid
+{
+	pid_t pid;
+	struct s_lpid *next;
+}		t_lpid;
 
 typedef int (*t_storage)(t_msh *msh, t_par *p, int *i);
 

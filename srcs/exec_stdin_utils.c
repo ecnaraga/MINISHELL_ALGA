@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/19 11:01:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 14:55:10 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ static void ft_open_heredoc(t_msh *msh, int *fd_infile, t_head *save)
 		close(*fd_infile);
 	save->head_hd = msh->p.hdoc;
 	while (msh->p.hdoc && msh->av && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))//
+	{	
+		dprintf(2, "msh->av->data |%s| msh->p.hdoc->name |%s| msh->p.hdoc->content |%s| msh->p.hdoc->read %d\n", msh->av->data, msh->p.hdoc->name, msh->p.hdoc->content, msh->p.hdoc->read);
 		msh->p.hdoc = msh->p.hdoc->next;
+	}	
 	*fd_infile = open(msh->p.hdoc->content, O_RDONLY);  // IF ERREUR OPEN > GERE DANS REDEF_STDIN
 	msh->p.hdoc->read = 1;
 	msh->p.hdoc = save->head_hd;
@@ -95,6 +98,8 @@ static int	ft_error_duptwo(t_msh *msh, int rule, t_fd fd, int j)
 		close(fd.old_std);
 		return (-1);
 	}
+	if (rule == PAR_OPEN)
+		ft_exit(fd.file, -1, -1);
 	if (rule == FIRST)
 		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
 	if (rule == MID)
@@ -104,31 +109,39 @@ static int	ft_error_duptwo(t_msh *msh, int rule, t_fd fd, int j)
 	return (-1);
 }
 
-static int	ft_error_dup(t_msh *msh, int rule, t_fd fd, int j)
-{
-	perror("dup");
-	status = 1;
-	if (rule == CMD_ALONE)
-	{
-		close(fd.file);
-		return (-1);
-	}
-	if (rule == FIRST)
-		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
-	if (rule == MID)
-		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd.file);
-	else
-		ft_exit(msh->p.fd_p[j - 1][0], fd.file, -1);
-	return (-1);
-}
+// static int	ft_error_dup(t_msh *msh, int rule, t_fd fd, int j)
+// {
+// 	perror("dup");
+// 	status = 1;
+// 	if (rule == CMD_ALONE)
+// 	{
+// 		close(fd.file);
+// 		return (-1);
+// 	}
+// 	// if (rule == FIRST)
+// 	// 	ft_exit(msh->p.fd_p[0][1], fd.file, -1);
+// 	// if (rule == MID)
+// 	// 	ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd.file);
+// 	// else
+// 	// 	ft_exit(msh->p.fd_p[j - 1][0], fd.file, -1);
+// 	return (-1);
+// }
 
 int	ft_dup_stdin(t_msh *msh, t_fd *fd, int rule, int j)
 {
 	fd->old_std = -2;
 	if (rule == CMD_ALONE)
+	{
 		fd->old_std = dup(STDIN_FILENO);
-	if (fd->old_std == -1)
-		return (ft_error_dup(msh, rule, *fd, j)); // IF ERREUR DUP QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1
+		if (fd->old_std == -1)
+		{
+			perror("dup"); // IF ERREUR DUP RETOURNE -1
+			status = 1;
+			close(fd->file);
+			return (-1);
+		}
+			// return (ft_error_dup(msh, rule, *fd, j)); 
+	}
 	if (fd->file != -2 && dup2(fd->file, STDIN_FILENO) == -1)
 		return (ft_error_duptwo(msh, rule, *fd, j)); // IF ERREUR DUP2 QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1
 	if (fd->file != -2)
@@ -140,7 +153,7 @@ void	ft_exit_stdin_error_malloc(t_msh *msh, int rule, int j, int sub)
 {
 	if (sub == 0)
 		ft_unlink_heredoc(msh->p.hdoc);
-	if (rule == CMD_ALONE)
+	if (rule == CMD_ALONE || rule == PAR_OPEN)
 		ft_exit(-1, -1, -1);
 	if (rule == FIRST)
 		ft_exit(msh->p.fd_p[0][1], -1, -1);
@@ -161,6 +174,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 	t_fd	fd;
 	t_head	save;
 
+	// printf("REDEF STDIN msh->p.hdoc->read %d\n", msh->p.hdoc->read);
 	save.head = msh->av;
 	save.prev = NULL;
 	fd.file = -2;

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:04:16 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 14:53:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,16 +200,26 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, /* t_split **head,  */int sub
 		(status = 255, ft_exit_bis(msh, sub, -1, -1)); // SI FORK KO, ON QUITTE LE PROCESS ACTUEL 
 	if (pid == 0)
 	{
+		// msh->p.hdoc = sub_msh->p.hdoc;
+		// printf("FT_CREATE sub_msh->p.hdoc->read %d\n", sub_msh->p.hdoc->read);
+		// printf("FT_CREATE msh->p.hdoc->read %d\n", msh->p.hdoc->read);
 		while (msh->av && msh->av->token != OPERATOR)
 		{
-			if (msh->av->token == INFILE || msh->av->token == HDOC)
+			if (msh->av->token == HDOC)
 			{
-				if (redef_stdin(msh, CMD_ALONE, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
+				if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
+					ft_exit(-1, -1, -1);
+				msh->av = msh->av->next;
+				continue ;
+			}
+			if (msh->av->token == INFILE)
+			{
+				if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 					ft_exit(-1, -1, -1);
 			}
 			else if (msh->av->token == OUTFILE_TRUNC || msh->av->token == OUTFILE_NO_TRUNC)
 			{	
-				if (redef_stdout(msh, CMD_ALONE, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
+				if (redef_stdout(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 					ft_exit(-1, -1, -1); 
 			}
 			else
@@ -262,8 +272,11 @@ void ft_exec_par(t_msh *msh, t_split **head, int rule, int sub)
 			if (msh->p.hdoc)
 				msh->p.hdoc->read = 1;
 			msh->p.hdoc = head_hd;
+			dprintf(2, "EXEC_PAR hdoc->read = %d\n", msh->p.hdoc->read);
+			// msh->av = msh->av->next;
 		}
 		// dprintf(2, "msh->av->data %s msh->av->token %d par = %d\n", msh->av->data, msh->av->token, par);
+		// else
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, head);
 	}
 	while (msh->av && msh->av->token == PAR_CLOSE) // et pourquoi pas if a la place

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:58:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 17:49:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 	t_env *head_hd;
 	t_env *prev_hd;
 	
+	signal(SIGINT, SIG_IGN);
 	if (fd_1 > -1)
 		close(fd_1);
 	if (fd_2 > -1)

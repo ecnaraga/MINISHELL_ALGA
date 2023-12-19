@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:09:37 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 16:47:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,33 @@ Copy into the file create for an heredoc, the stdin line entered by the user.
 static int	ft_recover_prompt(t_msh *msh, int fd_temp, char *lim)
 {
 	char	*line;
+	char *str;
+	char *tmp;
 
 	ft_signal_handler_msh_ter();
 	write(1, "> ", 2);
-	line = get_next_line(STDIN_FILENO);
+	line = get_next_line_magic(STDIN_FILENO);
 	if (status == 130)
 	{
 		if (open("/dev/stdout", O_RDONLY) == -1)
 			(close(fd_temp), status = 1, ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR OPEN , status == 1 + ON QUITTE
 		return (close(fd_temp), 130); // SI CTRL + C OK GERE
 	}
-	if (!line)
+	if (status == 255)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
+	if (!line)
+	{
+		str = ft_magic_malloc(ADD, 0, ft_strjoin_bfr_char("bash: warning: here-document delimited by end-of-file (wanted `", lim, '\n'), NO_ENV);
+		if (status == 255)
+			(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
+		tmp = ft_magic_malloc(ADD, 0, ft_strjoin(str, "')\n"), NO_ENV);
+		if (status == 255)
+			(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
+		write(2, tmp, ft_strlen(tmp));
+		ft_magic_malloc(FREE, 0, str, NO_ENV); 
+		ft_magic_malloc(FREE, 0, tmp, NO_ENV); 
+		return (close(fd_temp), 1); // SI ERREUR MALLOC GNL > ON QUITTE
+	}
 	// {
 	// 	(close(fd_temp), write(2, "get_next_line: error\n", 21), ft_magic_malloc(FREE, 0, lim, NO_ENV));
 	// 	(unlink(hdoc->content)/*, ft_magic_malloc(FREE, 0, p->name_hdoc, NO_ENV)*/); //Penser a free
@@ -157,6 +172,11 @@ t_env	*ft_copy_heredoc(t_msh *msh, t_env *hdoc, int sub)
 		new->content = ft_magic_malloc(ADD, 0, ft_strdup(hdoc->content), NO_ENV);
 		if (!new->content)
 			ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
+		// if (hdoc->read == 1)
+		// 	new->read = 1;
+		// else
+		// 	new->read = 0;
+		dprintf(2, "hdoc->read = %d\n", hdoc->read);
 		new->read = hdoc->read;
 		ft_lstadd_back_env(&sub_hdoc, new);
 		hdoc = hdoc->next;

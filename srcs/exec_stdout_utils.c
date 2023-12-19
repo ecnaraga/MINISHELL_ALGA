@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/19 11:01:50 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 14:09:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ static int	ft_error_duptwo(t_msh *msh, int rule, t_fd fd, int j)
 		close (fd.old_std);
 		return (-1);
 	}
+	if (rule == PAR_OPEN)
+		ft_exit(fd.file, -1, -1);
 	if (rule == FIRST)
 		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
 	if (rule == MID)
@@ -99,31 +101,39 @@ static int	ft_error_duptwo(t_msh *msh, int rule, t_fd fd, int j)
 	return (-1);
 }
 
-static int	ft_error_dup(t_msh *msh, int rule, t_fd fd, int j)
-{
-	perror("dup");
-	status = 1;
-	if (rule == CMD_ALONE)
-	{
-		close(fd.file);
-		return (-1);
-	}
-	if (rule == FIRST)
-		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
-	if (rule == MID)
-		ft_exit(msh->p.fd_p[j][1], fd.file, -1);
-	else
-		ft_exit(fd.file, -1, -1);
-	return (-1);
-}
+// static int	ft_error_dup(t_msh *msh, int rule, t_fd fd, int j)
+// {
+// 	perror("dup");
+// 	status = 1;
+// 	if (rule == CMD_ALONE)
+// 	{
+// 		close(fd.file);
+// 		return (-1);
+// 	}
+// 	if (rule == FIRST)
+// 		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
+// 	if (rule == MID)
+// 		ft_exit(msh->p.fd_p[j][1], fd.file, -1);
+// 	else
+// 		ft_exit(fd.file, -1, -1);
+// 	return (-1);
+// }
 
 int	ft_dup_stdout(t_msh *msh, t_fd *fd, int rule, int j)
 {
 	fd->old_std = -2;
 	if (rule == CMD_ALONE)
+	{
 		fd->old_std = dup(STDOUT_FILENO);
-	if (fd->old_std == -1)
-		return (ft_error_dup(msh, rule, *fd, j)); // IF ERREUR DUP QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1
+		if (fd->old_std == -1)
+		{
+			perror("dup"); // IF ERREUR DUP RETOURNE -1
+			status = 1;
+			close(fd->file);
+			return (-1);
+		}
+		// return (ft_error_dup(msh, rule, *fd, j)); // IF ERREUR DUP QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1
+	}
 	if (fd->file != -2 && dup2(fd->file, STDOUT_FILENO) == -1)
 		return (ft_error_duptwo(msh, rule, *fd, j));
 	if (fd->file != -2)
@@ -134,7 +144,7 @@ void	ft_exit_stdout_error_malloc(t_msh *msh, int rule, int j, int sub)
 {
 	if (sub == 0)
 		ft_unlink_heredoc(msh->p.hdoc);
-	if (rule == CMD_ALONE)
+	if (rule == CMD_ALONE || rule == PAR_OPEN)
 		ft_exit(-1, -1, -1);
 	if (rule == FIRST)
 		ft_exit(msh->p.fd_p[0][1], -1, -1);

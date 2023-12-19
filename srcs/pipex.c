@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 10:38:04 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 18:59:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 	p->fd_p[size] = NULL;
 }
 
-static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index)
+static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 {
 	while (++index.i < nb_pipe)
 	{
@@ -71,9 +71,9 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index)
 			return ;
 		}
 		if (index.i == 0)
-			ft_first_pipe(msh);
+			ft_first_pipe(msh, pid_l);
 		else if (index.i >= 1)
-			ft_middle_pipe(msh, index.j);
+			ft_middle_pipe(msh, index.j, pid_l);
 		if (status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
 		{
 			(close(msh->p.fd_p[index.j][0]), close(msh->p.fd_p[index.j][1]));
@@ -83,7 +83,7 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index)
 		}
 		index.j++;
 	}
-	ft_last_pipe(msh, index.j);
+	ft_last_pipe(msh, index.j, pid_l);
 }
 
 int	pipex_multi(t_msh *msh, int sub)
@@ -91,21 +91,42 @@ int	pipex_multi(t_msh *msh, int sub)
 	size_t	nb_pipe;
 	t_split *head;
 	t_index	index;
+	t_lpid	*pid_l;
+	int tmp;
 	
+	pid_l = NULL;
 	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
 	head = msh->av;
 	nb_pipe = ft_count_pipe(msh, head);
 	ft_create_fd_p(msh, sub, nb_pipe, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	ft_signal_handler_msh_bis();
+	// ft_signal_handler_msh_bis();
 	index.i = -1;
 	index.j = 0;
-	ft_pipex(msh, nb_pipe, index);
-	while (wait(&status) > 0)
-		;
+	ft_pipex(msh, nb_pipe, index, &pid_l);
+	tmp = 0;
+	while (pid_l)
+	{
+		waitpid(pid_l->pid, &status, WUNTRACED);
+		// dprintf(2, "child status %d\n", WEXITSTATUS(status));
+		if (WIFSIGNALED(status))
+			status += 128;
+		if (status == 130 && tmp == 0)
+		{
+			write(1, "\n", 1);
+			tmp = 1;
+		}
+		pid_l = pid_l->next;
+	}
+	// while (wait(&status) > 0) // passer en waitpid
+	// 	;
+
 	if (status == 255) // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
 		ft_exit_bis(msh, sub, -1, -1);
 	if (WIFEXITED(status))
 		status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		status += 128;
+	ft_signal_handler_msh();
 	dprintf(2, "status %d\n", status);
 	ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
