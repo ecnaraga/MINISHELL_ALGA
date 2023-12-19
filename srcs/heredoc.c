@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/15 13:16:12 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:09:37 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@
 TO DO : BIEN CHECKER LES FREE ET UNLINK
 */
 
-int	ft_check_unique_name(char *tmp, t_env **heredoc)
+int	ft_check_unique_name(char *tmp, t_env **hdoc)
 {
 	t_env *head;
 
-	head = *heredoc;
-	while (*heredoc)
+	head = *hdoc;
+	while (*hdoc)
 	{
-		if (ft_strcmp((*heredoc)->content, tmp) == 0)
+		if (ft_strcmp((*hdoc)->content, tmp) == 0)
 			return (1);
-		*heredoc = (*heredoc)->next;
+		*hdoc = (*hdoc)->next;
 	}
-	*heredoc = head;
+	*hdoc = head;
 	return (0);
 }
 
@@ -35,7 +35,7 @@ int	ft_check_unique_name(char *tmp, t_env **heredoc)
 Create a random name for the here_doc and at it at the end of the linked list
 	(after the limiter added)
 */
-void	create_here_doc(t_msh *msh, t_split *av, t_env **heredoc)
+void	create_here_doc(t_msh *msh, t_split *av, t_env **hdoc)
 {
 	t_env	*new;
 	char *tmp;
@@ -51,12 +51,12 @@ void	create_here_doc(t_msh *msh, t_split *av, t_env **heredoc)
 		new->content = ft_magic_malloc(ADD, 0, ft_random_filename("/tmp/", 8), NO_ENV);
 		if (!new->content)
 			ft_exit_bis(msh, 0, -1, -1); // IF MALLOC KO ON QUITTE 
-		if (ft_check_unique_name(new->content, heredoc) == 0)
+		if (ft_check_unique_name(new->content, hdoc) == 0)
 			break;
 		else
 			ft_magic_malloc(FREE, 0, new->content, NO_ENV);
 	}
-	ft_lstadd_back_env(heredoc, new);
+	ft_lstadd_back_env(hdoc, new);
 }
 
 /*
@@ -80,7 +80,7 @@ static int	ft_recover_prompt(t_msh *msh, int fd_temp, char *lim)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
 	// {
 	// 	(close(fd_temp), write(2, "get_next_line: error\n", 21), ft_magic_malloc(FREE, 0, lim, NO_ENV));
-	// 	(unlink(here_doc->content)/*, ft_magic_malloc(FREE, 0, p->name_here_doc, NO_ENV)*/); //Penser a free
+	// 	(unlink(hdoc->content)/*, ft_magic_malloc(FREE, 0, p->name_hdoc, NO_ENV)*/); //Penser a free
 	// 	exit(EXIT_FAILURE);
 	// }
 	line = ft_magic_malloc(ADD, 0, line, NO_ENV);
@@ -97,25 +97,25 @@ Function called in a loop in the parent function
 For each limiter encountered, create a heredoc and recover the stdin to copy it
 	into the file created
 */
-int	ft_prompt(t_msh *msh, t_split *av, t_env **here_doc)
+int	ft_prompt(t_msh *msh, t_split *av, t_env **hdoc)
 {
 	int		fd_temp;
 	char	*lim;
 	t_env *head;
 
-	create_here_doc(msh, av, here_doc); // IF MALLOC KO ON QUITTE A L'INTERIEUR 
-	head = *here_doc;
-	while ((*here_doc)->next/*  && ft_strcmp((*here_doc)->name, msh->av->data) != 0 */)
-		*here_doc = (*here_doc)->next;
-	fd_temp = open((*here_doc)->content, O_CREAT | O_APPEND | O_WRONLY, 0744);
+	create_here_doc(msh, av, hdoc); // IF MALLOC KO ON QUITTE A L'INTERIEUR 
+	head = *hdoc;
+	while ((*hdoc)->next/*  && ft_strcmp((*hdoc)->name, msh->av->data) != 0 */)
+		*hdoc = (*hdoc)->next;
+	fd_temp = open((*hdoc)->content, O_CREAT | O_APPEND | O_WRONLY, 0744);
 	if (fd_temp == -1)
-		(perror((*here_doc)->content), status = 1, ft_exit_bis(msh, 0, -1, -1)); // IF ERREUR OPEN -> status = 1 + ON QUITTE
+		(perror((*hdoc)->content), status = 1, ft_exit_bis(msh, 0, -1, -1)); // IF ERREUR OPEN -> status = 1 + ON QUITTE
 	lim = ft_magic_malloc(ADD, 0, ft_strjoin(av->data, "\n"), NO_ENV);
 	if (!lim)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // IF MALLOC KO ON QUITTE
 	// {
 	// 	(close(fd_temp), write(2, "ft_strjoin: error\n", 18));
-	// 	unlink((*here_doc)->content)/* ,free(p->name_here_doc)*/;
+	// 	unlink((*hdoc)->content)/* ,free(p->name_hdoc)*/;
 	// 	exit(EXIT_FAILURE);  //PENSER A FREE 
 	// }
 	while (1)
@@ -129,7 +129,7 @@ int	ft_prompt(t_msh *msh, t_split *av, t_env **here_doc)
 			return (130);
 	}
 	ft_signal_handler_msh();
-	*here_doc = head;
+	*hdoc = head;
  	(close(fd_temp), ft_magic_malloc(FREE, 0, lim, NO_ENV));
 	return (0);
 }
@@ -139,30 +139,30 @@ Create a copy of the list of heredoc
 If there is no list of heredoc, return sub_heredoc = NULL
 If error malloc, quit the actual process
 */
-t_env	*ft_copy_heredoc(t_msh *msh, t_env *heredoc, int sub)
+t_env	*ft_copy_heredoc(t_msh *msh, t_env *hdoc, int sub)
 {
 	t_env *head;
-	t_env *sub_heredoc;
+	t_env *sub_hdoc;
 	t_env *new;
 	char *tmp;
 
-	head = heredoc;
-	sub_heredoc = NULL;
-	while (heredoc)
+	head = hdoc;
+	sub_hdoc = NULL;
+	while (hdoc)
 	{
-		tmp = ft_magic_malloc(ADD, 0, ft_strdup(heredoc->name), NO_ENV);
+		tmp = ft_magic_malloc(ADD, 0, ft_strdup(hdoc->name), NO_ENV);
 		if (!tmp)
 			ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
 		new = ft_lst_new_heredoc(msh, tmp, sub); // SI MALLOC KO ON QUITTE DANS F_LST_NEW_HEREDOC 
-		new->content = ft_magic_malloc(ADD, 0, ft_strdup(heredoc->content), NO_ENV);
+		new->content = ft_magic_malloc(ADD, 0, ft_strdup(hdoc->content), NO_ENV);
 		if (!new->content)
 			ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
-		new->read = heredoc->read;
-		ft_lstadd_back_env(&sub_heredoc, new);
-		heredoc = heredoc->next;
+		new->read = hdoc->read;
+		ft_lstadd_back_env(&sub_hdoc, new);
+		hdoc = hdoc->next;
 	}
-	heredoc = head;
-	return (sub_heredoc);
+	hdoc = head;
+	return (sub_hdoc);
 }
 
 /*
@@ -174,12 +174,12 @@ int	ft_heredoc(t_msh *msh)
 	t_split *head;
 	
 	head = msh->av;
-	msh->p.here_doc = NULL;
+	msh->p.hdoc = NULL;
 	while (msh->av)
 	{
-		if (msh->av->token == HERE_DOC)
+		if (msh->av->token == HDOC)
 		{
-			if (ft_prompt(msh, msh->av, &msh->p.here_doc) == 130) // IF MALLOC KO OU ERREUR OPEN ON QUITTE A L INTERIEUR
+			if (ft_prompt(msh, msh->av, &msh->p.hdoc) == 130) // IF MALLOC KO OU ERREUR OPEN ON QUITTE A L INTERIEUR
 				return (130); // CTRL + C OK GERE
 		}
 		msh->av = msh->av->next;
@@ -188,15 +188,15 @@ int	ft_heredoc(t_msh *msh)
 	return (0);
 }
 
-void	ft_unlink_heredoc(t_env *heredoc)
+void	ft_unlink_heredoc(t_env *hdoc)
 {
 	int i;
 
 	i = 0;
-	while (heredoc)
+	while (hdoc)
 	{
-		unlink(heredoc->content);
-		heredoc = heredoc->next;
+		unlink(hdoc->content);
+		hdoc = hdoc->next;
 		i++;
 	}
 }

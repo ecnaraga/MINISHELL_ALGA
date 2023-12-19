@@ -1,16 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_utils_bis.c                                :+:      :+:    :+:   */
+/*   exec_utils_bis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 18:27:10 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:25:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static int		ft_search_builtin_bis(t_msh *msh)
+{
+	if (ft_strcmp(msh->p.cmd_opt[0], "unset") == 0)
+		return (builtin_unset(msh), 1);
+	else if (ft_strcmp(msh->p.cmd_opt[0], "env") == 0)
+	{
+		builtin_env(msh);
+		if (status == 255)
+			return (255);
+		return (1);
+	}
+	// else if (ft_strcmp(msh->p.cmd_opt[0], "exit") == 0)
+	// {
+	// 	ft_echo(msh);
+	// 	return (1);
+	// }
+	return (0);
+}
 
 /*
 If error malloc in a builtin return 255
@@ -37,21 +56,7 @@ int		ft_search_builtin(t_msh *msh)
 			return (255);
 		return (1);
 	}
-	else if (ft_strcmp(msh->p.cmd_opt[0], "unset") == 0)
-		return (builtin_unset(msh), 1);
-	else if (ft_strcmp(msh->p.cmd_opt[0], "env") == 0)
-	{
-		builtin_env(msh);
-		if (status == 255)
-			return (255);
-		return (1);
-	}
-	// else if (ft_strcmp(msh->p.cmd_opt[0], "exit") == 0)
-	// {
-	// 	ft_echo(msh);
-	// 	return (1);
-	// }
-	return (0);
+	return (ft_search_builtin_bis(msh));
 }
 
 void	ft_child_exec(t_msh *msh)
@@ -69,7 +74,23 @@ void	ft_child_exec(t_msh *msh)
 	if (status == 255) // OK PROTEGER
 		ft_exit(-1, -1, -1);
 	execve(msh->p.good_path, msh->p.cmd_opt, env);
-	(perror("execve"), ft_exit(-1, -1, -1)); //implementer F_EXIT);
+	(perror("execve"), ft_exit(-1, -1, -1));
+}
+
+static void	update_hdoc_list(t_msh *msh, t_env *head, t_env *prev)
+{
+	head = msh->p.hdoc;
+	prev = NULL;
+	while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0
+		|| (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0
+				&& msh->p.hdoc->read == 1)))
+	{
+		prev = msh->p.hdoc;
+		msh->p.hdoc = msh->p.hdoc->next;
+	}
+	if (msh->p.hdoc)
+		msh->p.hdoc->read = 1;
+	msh->p.hdoc = head;
 }
 
 //TO DO : free tous les elemnts jusqu au pipe ou prochain operateur
@@ -84,21 +105,12 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 	if (fd_2 > -1)
 		close(fd_2);
 	head = msh->av;
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR /* && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE */)
+	head_hd = NULL;
+	prev_hd = NULL;
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
 	{
-		if (msh->av->token == HERE_DOC && rule != CMD_ALONE)
-		{
-			head_hd = msh->p.here_doc;
-			prev_hd = NULL;
-			while (msh->p.here_doc && (ft_strcmp(msh->p.here_doc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.here_doc->name, msh->av->data) == 0 && msh->p.here_doc->read == 1)))
-			{
-				prev_hd = msh->p.here_doc;
-				msh->p.here_doc = msh->p.here_doc->next;
-			}
-			if (msh->p.here_doc)
-				msh->p.here_doc->read = 1;
-			msh->p.here_doc = head_hd;
-		}
+		if (msh->av->token == HDOC && rule != CMD_ALONE)
+			update_hdoc_list(msh, head_hd, prev_hd);
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
 	}
 	if (msh->av && (msh->av->token == PIPE || msh->av->token == PAR_CLOSE))

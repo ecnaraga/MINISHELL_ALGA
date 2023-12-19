@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 11:08:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:07:01 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_pipex
 	char		**path;
 	char		*good_path;
 	char		**cmd_opt;
-	t_env		*here_doc; // limiter > nom cree > limiter > nom cree
+	t_env		*hdoc; // limiter > nom cree > limiter > nom cree
 	short int	re_split;
 }				t_pipex;
 
@@ -120,7 +120,7 @@ enum	e_token
 	INFILE,// 1
 	OUTFILE_TRUNC,// 2
 	OUTFILE_NO_TRUNC,// 3
-	HERE_DOC,// 4
+	HDOC,// 4
 	OPERATOR,// 5
 	PIPE,//6
 	PAR_OPEN,// 7

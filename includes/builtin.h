@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 14:29:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 10:59:20 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	ft_print_export(t_msh *minish);
 int	get_statut(char *cmd);
 int	valide_key(char *key);
 int	new_env_node(char *str, int statut, t_env **env, int info);
-int		ft_search_builtin(t_msh *msh);
 
 /*
 unset

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_stdout_utils.c                             :+:      :+:    :+:   */
+/*   exec_stdout_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/15 10:19:48 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:01:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int	ft_dup_stdout(t_msh *msh, t_fd *fd, int rule, int j)
 void	ft_exit_stdout_error_malloc(t_msh *msh, int rule, int j, int sub)
 {
 	if (sub == 0)
-		ft_unlink_heredoc(msh->p.here_doc);
+		ft_unlink_heredoc(msh->p.hdoc);
 	if (rule == CMD_ALONE)
 		ft_exit(-1, -1, -1);
 	if (rule == FIRST)

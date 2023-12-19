@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_error.c                                    :+:      :+:    :+:   */
+/*   exec_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/15 14:53:02 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:01:13 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 		close(fd1);
 	if (fd2 > -1)
 		close(fd2);
-	if (sub == 0 && msh->p.here_doc)
-		ft_unlink_heredoc(msh->p.here_doc);
+	if (sub == 0 && msh->p.hdoc)
+		ft_unlink_heredoc(msh->p.hdoc);
 	rl_clear_history(); // RAJOUT A TESTER
 	ft_magic_malloc(QUIT, 0, NULL, 0);
 	exit(status);

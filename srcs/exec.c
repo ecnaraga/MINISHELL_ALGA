@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec.c                                          :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 17:09:05 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:04:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, /* t_split **head,  */int sub
 	{
 		while (msh->av && msh->av->token != OPERATOR)
 		{
-			if (msh->av->token == INFILE || msh->av->token == HERE_DOC)
+			if (msh->av->token == INFILE || msh->av->token == HDOC)
 			{
 				if (redef_stdin(msh, CMD_ALONE, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 					ft_exit(-1, -1, -1);
@@ -239,7 +239,7 @@ void ft_exec_par(t_msh *msh, t_split **head, int rule, int sub)
 (void) rule;
 	par = 0;
 	dprintf(2, "msh->av->token %d\n", msh->av->token);
-	sub_msh.p.here_doc = ft_copy_heredoc(msh, msh->p.here_doc, sub); // SI MALLOC KO ON QUITTE DANS 
+	sub_msh.p.hdoc = ft_copy_heredoc(msh, msh->p.hdoc, sub); // SI MALLOC KO ON QUITTE DANS 
 	while (msh->av->token != PAR_CLOSE || par != 0)
 	{
 		if (msh->av->token == PAR_OPEN)
@@ -250,18 +250,18 @@ void ft_exec_par(t_msh *msh, t_split **head, int rule, int sub)
 			if (par == 0)
 				break ;
 		}
-		if (msh->av->token == HERE_DOC)
+		if (msh->av->token == HDOC)
 		{
-			head_hd = msh->p.here_doc;
+			head_hd = msh->p.hdoc;
 			prev_hd = NULL;
-			while (msh->p.here_doc && (ft_strcmp(msh->p.here_doc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.here_doc->name, msh->av->data) == 0 && msh->p.here_doc->read == 1)))
+			while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))
 			{
-				prev_hd = msh->p.here_doc;
-				msh->p.here_doc = msh->p.here_doc->next;
+				prev_hd = msh->p.hdoc;
+				msh->p.hdoc = msh->p.hdoc->next;
 			}
-			if (msh->p.here_doc)
-				msh->p.here_doc->read = 1;
-			msh->p.here_doc = head_hd;
+			if (msh->p.hdoc)
+				msh->p.hdoc->read = 1;
+			msh->p.hdoc = head_hd;
 		}
 		// dprintf(2, "msh->av->data %s msh->av->token %d par = %d\n", msh->av->data, msh->av->token, par);
 		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, head);
@@ -355,7 +355,7 @@ int	ft_exec(t_msh *msh, int sub)
 	head = msh->av;
 	ft_exec_operator(msh, &head, sub); // OK PROTEGE A L INTERIEUR
 	if (sub == 0)
-		ft_unlink_heredoc(msh->p.here_doc);
+		ft_unlink_heredoc(msh->p.hdoc);
 	ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	return (0);
 }
