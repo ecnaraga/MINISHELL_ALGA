@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 10:37:46 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/19 12:27:07 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:33:28 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ long long	ft_atol(char *nptr, int *err)
 	s = 1;
 	result = 0;
 	count = 0;
+	res = 0;
 	if (nptr[i] == '+' || nptr[i] == '-')
 	{
 		if (nptr[i] == '-')
@@ -91,11 +92,6 @@ static int	args_handler(char **args)
 	char	*tmp;
 	char	*tmp2;
 
-	if (args[2])
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		return (status = 2, 2);
-	}
 	if (!is_nbr(args[1]))
 	{
 		printf("exit\n");
@@ -109,6 +105,11 @@ static int	args_handler(char **args)
 		ft_putstr_fd(tmp2, 2);
 		ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
 		return (status = 2, 1);
+	}
+	if (args[2])
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		return (status = 1, 2);
 	}
 	else
 	{
