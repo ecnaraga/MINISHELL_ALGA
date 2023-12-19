@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 10:56:41 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:59:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 	int		built;
 
 	built = ft_search_builtin(msh);
-	if (status == 255)
+	if (status == 255 || built == 2)
 		ft_exit_bis(msh, sub, old_stdout, old_stdin); // SI ERREUR DE MALLOC DANS UN BUILTIN ON QUITTE LE PROCESS ACTUEL
 	if (built == 0)
 	{

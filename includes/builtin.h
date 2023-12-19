@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 10:59:20 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 12:00:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ int	builtin_pwd();
 cd
 */
 int	builtin_cd(t_msh *minish);
+
+/*
+exit
+*/
+int	builtin_exit(t_msh *minish);
 
 /*
 get_env

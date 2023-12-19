@@ -49,7 +49,8 @@ SRCS = main.c \
 	   builtin_export_bis.c \
 	   builtin_unset.c \
 	   builtin_env.c \
-	   builtin_cd.c
+	   builtin_cd.c \
+	   builtin_exit.c
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)
