@@ -6,24 +6,39 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 18:25:55 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 10:38:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_init_var(t_pipex *p)
+static int	ft_count_pipe(t_msh *msh, t_split *head)
 {
-	p->good_path = NULL;
-	p->cmd_opt = NULL;
-	p->fd_p = NULL;
-	p->re_split = 0;
-}
+	int par;
+	int count;
 
-void	ft_parse(t_msh *msh, int sub)
-{
-	ft_init_var(&msh->p);
-	msh->p.path = ft_research_path(msh, msh->env, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	par = 0;
+	count = 0;
+	while (msh->av && msh->av->token != OPERATOR)
+	{
+		if (msh->av->token == PAR_OPEN)
+		{
+			while (msh->av)
+			{
+				if (msh->av->token == PAR_OPEN)
+					par++;
+				else if (msh->av->token == PAR_CLOSE)
+					par--;
+				if (msh->av->token == PAR_CLOSE && par == 0)
+					break;
+				msh->av = msh->av->next;
+			}
+		}	
+		else if (msh->av->token == PIPE)
+			count += 1;
+		msh->av = msh->av->next;
+	}
+	return (msh->av = head, count);
 }
 
 static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
@@ -43,84 +58,48 @@ static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 	p->fd_p[size] = NULL;
 }
 
-static void	ft_pipex(t_msh *msh, int sub)
+static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index)
 {
-	t_index	index;
-	t_split *head;
-	int par;
-
-	index.i = -1;
-	index.j = 0;
-	index.d = 0;
-	par = 0;
-	head = msh->av;
-	// while (msh->av && msh->av->token != OPERATOR && msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE)
-	// {
-	// 	if (msh->av->token == PIPE)
-	// 		index.j += 1;
-	// 	msh->av = msh->av->next;
-	// }
-	/*Boucle qui compte le nb de pipe*/
-	while (msh->av && msh->av->token != OPERATOR /*&& msh->av->token != PAR_OPEN && msh->av->token != PAR_CLOSE*/)
+	while (++index.i < nb_pipe)
 	{
-		if (msh->av->token == PAR_OPEN)
-		{
-			while (msh->av)
-			{
-				if (msh->av->token == PAR_OPEN)
-					par++;
-				else if (msh->av->token == PAR_CLOSE)
-					par--;
-				if (msh->av->token == PAR_CLOSE && par == 0)
-					break;
-				msh->av = msh->av->next;
-			}
-		}	
-		else if (msh->av->token == PIPE)
-			index.j += 1;
-		msh->av = msh->av->next;
-	}
-	msh->av = head;
-	ft_create_fd_p(msh, sub, index.j, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	ft_signal_handler_msh_bis();
-	while (++index.i < index.j)
-	{
-		if (pipe(msh->p.fd_p[index.d]) == -1) // IF PIPE FAIL ON RETURN DANS PIPEX MULTI
+		if (pipe(msh->p.fd_p[index.j]) == -1) // IF PIPE FAIL ON RETURN DANS PIPEX MULTI
 		{
 			perror("pipe");
 			status = 255;
-			if (index.d > 0)
-				close(msh->p.fd_p[index.d - 1][0]);
+			if (index.j > 0)
+				close(msh->p.fd_p[index.j - 1][0]);
 			return ;
 		}
 		if (index.i == 0)
-		{
 			ft_first_pipe(msh);
-		}
 		else if (index.i >= 1)
-			ft_middle_pipe(msh, index.d);
+			ft_middle_pipe(msh, index.j);
 		if (status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
 		{
-			close(msh->p.fd_p[index.d][0]);
-			close(msh->p.fd_p[index.d][1]);
-			if (index.d > 0)
-				close(msh->p.fd_p[index.d - 1][0]);
+			(close(msh->p.fd_p[index.j][0]), close(msh->p.fd_p[index.j][1]));
+			if (index.j > 0)
+				close(msh->p.fd_p[index.j - 1][0]);
 			return ;
 		}
-		index.d++;
+		index.j++;
 	}
-	ft_last_pipe(msh, index.d);
-	if (status == 255) // IF FORK FAILED IN LAST ON RETURN DANS PIPEX MULTI
-	{
-		close(msh->p.fd_p[index.d - 1][0]);
-		return ;
-	}
+	ft_last_pipe(msh, index.j);
 }
 
 int	pipex_multi(t_msh *msh, int sub)
 {
+	size_t	nb_pipe;
+	t_split *head;
+	t_index	index;
+	
 	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	ft_pipex(msh, sub);
+	head = msh->av;
+	nb_pipe = ft_count_pipe(msh, head);
+	ft_create_fd_p(msh, sub, nb_pipe, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	ft_signal_handler_msh_bis();
+	index.i = -1;
+	index.j = 0;
+	ft_pipex(msh, nb_pipe, index);
 	while (wait(&status) > 0)
 		;
 	if (status == 255) // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
@@ -128,9 +107,6 @@ int	pipex_multi(t_msh *msh, int sub)
 	if (WIFEXITED(status))
 		status = WEXITSTATUS(status);
 	dprintf(2, "status %d\n", status);
-	// if (msh->p.path)
-	// 	ft_free_split(msh->p.path);
-	// ft_unlink_heredoc(msh->p.here_doc);
 	ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }

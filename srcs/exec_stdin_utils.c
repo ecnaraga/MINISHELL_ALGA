@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exec_stdin_utils.c                              :+:      :+:    :+:   */
+/*   exec_stdin_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/14 19:08:42 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:01:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ static void ft_open_heredoc(t_msh *msh, int *fd_infile, t_head *save)
 {
 	if (*fd_infile != -2)
 		close(*fd_infile);
-	save->head_hd = msh->p.here_doc;
-	while (msh->p.here_doc && msh->av && (ft_strcmp(msh->p.here_doc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.here_doc->name, msh->av->data) == 0 && msh->p.here_doc->read == 1)))//
-		msh->p.here_doc = msh->p.here_doc->next;
-	*fd_infile = open(msh->p.here_doc->content, O_RDONLY);  // IF ERREUR OPEN > GERE DANS REDEF_STDIN
-	msh->p.here_doc->read = 1;
-	msh->p.here_doc = save->head_hd;
+	save->head_hd = msh->p.hdoc;
+	while (msh->p.hdoc && msh->av && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))//
+		msh->p.hdoc = msh->p.hdoc->next;
+	*fd_infile = open(msh->p.hdoc->content, O_RDONLY);  // IF ERREUR OPEN > GERE DANS REDEF_STDIN
+	msh->p.hdoc->read = 1;
+	msh->p.hdoc = save->head_hd;
 }
 
 
@@ -139,7 +139,7 @@ int	ft_dup_stdin(t_msh *msh, t_fd *fd, int rule, int j)
 void	ft_exit_stdin_error_malloc(t_msh *msh, int rule, int j, int sub)
 {
 	if (sub == 0)
-		ft_unlink_heredoc(msh->p.here_doc);
+		ft_unlink_heredoc(msh->p.hdoc);
 	if (rule == CMD_ALONE)
 		ft_exit(-1, -1, -1);
 	if (rule == FIRST)
@@ -172,7 +172,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 			if (ft_open_infile(msh, &fd.file, &save) == 255)
 				ft_exit_stdin_error_malloc(msh, rule, j, sub); // IF ERREUR MALLOC DANS EXPAND DANS FT_OPEN_INFILE > ON QUITTE LE PROCESS ACTUEL
 		}
-		else if (msh->av->token == HERE_DOC)
+		else if (msh->av->token == HDOC)
 		{
 			ft_open_heredoc(msh, &fd.file, &save);
 			save.prev = msh->av;

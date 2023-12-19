@@ -27,18 +27,18 @@ SRCS = main.c \
 	   ft_magic_malloc.c \
 	   ft_magic_malloc_utils.c \
 	   signal.c \
-	   ft_exec.c \
 	   heredoc.c \
 	   heredoc_utils.c \
-	   ft_exec_error.c \
-	   ft_exec_utils.c \
-	   ft_exec_utils_bis.c \
-	   ft_exec_utils_make_cmd.c \
-	   ft_exec_stdin_utils.c \
-	   ft_exec_stdout_utils.c \
-	   ft_exec_cmd.c \
+	   exec.c \
+	   exec_error.c \
+	   exec_utils.c \
+	   exec_utils_bis.c \
+	   exec_utils_make_cmd.c \
+	   exec_stdin_utils.c \
+	   exec_stdout_utils.c \
+	   exec_cmd.c \
 	   pipex.c \
-	   pipex_utils.c \
+	   pipex_handle_pipe.c \
 	   ft_expand.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \

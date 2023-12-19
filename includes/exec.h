@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/18 13:50:27 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:25:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,42 +15,43 @@
 
 # include "../includes/minishell.h"
 
-/*exec_cmd.c*/
-int	ft_cmd_alone(t_msh *msh, int sub);
-
-/*ft_exec.c*/
+/*exec.c*/
 int	ft_exec(t_msh *msh, int sub);
 
-/*pipex.c*/
-int	pipex_multi(t_msh *msh, int sub);
-void	ft_parse(t_msh *msh, int sub);
-
-/*ft_pipex_utils.c*/
-void	ft_first_pipe(t_msh *msh);
-void	ft_middle_pipe(t_msh *msh, int j);
-void	ft_last_pipe(t_msh *msh, int j);
-void	ft_child_exec(t_msh *msh);
-void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule);
-
 /*exec_utils.c*/
+void	ft_parse(t_msh *msh, int sub);
 char	**ft_research_path(t_msh *msh, t_env **env, int sub);
-// char	**ft_research_path(t_list **env);
 int	ft_access_cmd(char **path, char *cmd, char **good_path);
 char **ft_transcript_env(t_env **env, char *str);
 int redef_stdin(t_msh *msh, int rule, int j, int sub);
-// void	redef_stout(t_msh *msh, int rule, int j);
 int	redef_stdout(t_msh *msh, int rule, int j, int sub);
 char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2);
+
+/* exec_utils_bis */                                      // NORME OK
+int		ft_search_builtin(t_msh *msh);
+void	ft_child_exec(t_msh *msh);
+void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule);
 
 /*exec_error.c*/
 void	ft_exit(int fd_1, int fd_2, int fd_3);
 void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2);
 int	ft_perr(int err, char *cmd);
 
+/*exec_cmd.c*/
+int	ft_cmd_alone(t_msh *msh, int sub);
+
+/*pipex.c*/                                              // NORME OK
+int	pipex_multi(t_msh *msh, int sub);
+
+/* pipex_handle_pipe.c */                                // NORME OK
+void	ft_first_pipe(t_msh *msh);
+void	ft_middle_pipe(t_msh *msh, int j);
+void	ft_last_pipe(t_msh *msh, int j);
+
 /*heredoc.c*/
 int	ft_heredoc(t_msh *msh);
-t_env	*ft_copy_heredoc(t_msh *msh, t_env *heredoc, int sub);
-void	ft_unlink_heredoc(t_env *heredoc);
+t_env	*ft_copy_heredoc(t_msh *msh, t_env *hdoc, int sub);
+void	ft_unlink_heredoc(t_env *hdoc);
 
 /*heredoc_lst_utils.c*/
 t_env	*ft_lst_new_heredoc(t_msh *msh, char *lim, int sub);

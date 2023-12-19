@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/14 11:45:38 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:05:00 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	ft_token_chev_left(t_msh *msh)
 {
 	msh->av->token = CHEVRON;
 	if (msh->av->next && msh->av->data[1] && msh->av->data[1] == '<')
-		msh->av->next->token = HERE_DOC;
+		msh->av->next->token = HDOC;
 	else if (msh->av->next)
 		msh->av->next->token = INFILE;
 }
