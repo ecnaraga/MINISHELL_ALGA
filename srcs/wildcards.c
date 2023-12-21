@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 17:11:05 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/21 17:14:52 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,17 +120,12 @@ char	**wildcards(char *str, t_msh *minish)
 	closedir(dir);
 	str3 = ft_split(str2, ' ');
 	free(str2);
-	str3 = make_in_order(str3);
-	for (size_t i = 0; str3[i]; i++)
-	{
-		printf("str final : %s\n", str3[i]);
-	}
-	
-	return (NULL);
+	str3 = make_in_order(str3);	
+	return (str3);
 }
 
-int	main(int ac, char **av)
-{
-	wildcards(av[1], NULL);
-	return (0);
-}
+// int	main(int ac, char **av)
+// {
+// 	wildcards(av[1], NULL);
+// 	return (0);
+// }
