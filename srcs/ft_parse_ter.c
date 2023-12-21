@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/14 11:53:21 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,32 +18,32 @@
 , &head_hd<< LIM cat << LAM | cat << LOM
 */
 
-char	*ft_error_message_final(char *str)
+char	*ft_error_message_final(char *str, t_msh *msh)
 {
 	char	*message;
 
 	if (!str[0])
 	{
-		message = ft_magic_malloc(ADD, 0, ft_strdup
-				("minishell: syntax error near unexpected token `newline'\n"), NO_ENV); // SI MALLOC KO ON QUITTE
+		message = mlcgic(mlcp(ft_strdup("minishell: syntax error near unexpected token `newline'\n"), 1), ADD, NO_ENV, msh);
+		// message = ft_magic_malloc(ADD, 0, ft_strdup("minishell: syntax error near unexpected token `newline'\n"), NO_ENV); // SI MALLOC KO ON QUITTE
 		if (!message)
-			ft_exit(-1, -1, -1);
+			ft_exit(-1, -1, -1, msh);
 	}
 	else
 	{
-		message = ft_magic_malloc(ADD, 0,
-				ft_strjoin("minishell: syntax error near unexpected token `",
-					str), NO_ENV); // SI MALLOC KO ON QUITTE
+		message = mlcgic(mlcp(ft_strjoin("minishell: syntax error near unexpected token `", str), 1), ADD, NO_ENV, msh);
+		// message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str), NO_ENV); // SI MALLOC KO ON QUITTE
 		if (!message)
-			ft_exit(-1, -1, -1);
-		message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"), NO_ENV); // SI MALLOC KO ON QUITTE
+			ft_exit(-1, -1, -1, msh);
+		message = mlcgic(mlcp(ft_strjoin(message, "'\n"), 1), ADD, NO_ENV, msh);
+		// message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"), NO_ENV); // SI MALLOC KO ON QUITTE
 		if (!message)
-			ft_exit(-1, -1, -1);
+			ft_exit(-1, -1, -1, msh);
 	}
 	return (message);
 }
 
-char	*err_chev(char *str, int skip)
+char	*err_chev(char *str, int skip, t_msh *msh)
 {
 	int		i;
 	int		j;
@@ -69,10 +69,10 @@ char	*err_chev(char *str, int skip)
 		tmp[j++] = str[i++];
 	if (str[i] && str[i] != c && j == 1)
 		tmp[j++] = str[i++];
-	return (tmp[j] = '\0', ft_error_message_final(tmp)); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+	return (tmp[j] = '\0', ft_error_message_final(tmp, msh)); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 }
 
-char	*ft_err_op(char *str, int skip)
+char	*ft_err_op(char *str, int skip, t_msh *msh)
 {
 	int	i;
 
@@ -90,7 +90,7 @@ char	*ft_err_op(char *str, int skip)
 		str[i + 1] = '\0';
 	else if (str[i + 1])
 		str[i + 2] = '\0';
-	return (ft_error_message_final(str + i)); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+	return (ft_error_message_final(str + i, msh)); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 }
 
 /*
@@ -114,13 +114,13 @@ int	ft_check_chev(t_msh *msh)
 {
 	if (msh->av->token == CHEVRON && (ft_strlen(msh->av->data) > 2
 			|| ft_same_char(msh->av->data) == 1))
-		return (status = 2, err_syntax(err_chev(msh->av->data, 1))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(err_chev(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	if (msh->av->next->data && msh->av->token == CHEVRON
 		&& msh->av->next->token == CHEVRON)
-		return (status = 2, err_syntax(err_chev(msh->av->next->data, 0))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(err_chev(msh->av->next->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	if (msh->av->next->data && msh->av->token == CHEVRON
 		&& (msh->av->next->token == OPERATOR || msh->av->next->token == PIPE))
-		return (status = 2, err_syntax(ft_err_op(msh->av->next->data, 0))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(ft_err_op(msh->av->next->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	return (0);
 }
 
@@ -128,10 +128,10 @@ int	ft_check_op(t_msh *msh)
 {
 	if (msh->av->token == OPERATOR && (ft_strlen(msh->av->data) > 2
 			|| ft_same_char(msh->av->data) == 1))
-		return (status = 2, err_syntax(ft_err_op(msh->av->data, 1))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	if (msh->av->next->data && (msh->av->token == OPERATOR || msh->av->token == PIPE)
 		&& (msh->av->next->token == OPERATOR || msh->av->next->token == PIPE))
-		return (status = 2, err_syntax(ft_err_op(msh->av->next->data, 0))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(ft_err_op(msh->av->next->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	return (0);
 }
 
@@ -140,20 +140,20 @@ int	ft_handle_chev(t_msh *msh, t_split *prev, t_split **head)
 	t_split	*tmp;
 	
 	if (msh->ac == 1)
-		return (status = 2, err_syntax(err_chev(msh->av->data, 1))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(err_chev(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	else if (ft_check_chev(msh) == 1)
 		return (1);
 	else if (prev == NULL)
 	{
 		tmp = msh->av->next;
-		ft_lstdelone_split(msh->av, del_two);
+		ft_lstdelone_split(msh, msh->av, del_two);
 		msh->av = tmp;
 		*head = msh->av;
 	}
 	else
 	{
 		prev->next = msh->av->next;
-		ft_lstdelone_split(msh->av, del_two);
+		ft_lstdelone_split(msh, msh->av, del_two);
 		msh->av = prev->next;
 	}
 	return (0);
@@ -173,7 +173,7 @@ int	ft_parse_ter(t_msh *msh)
 	// if (msh->av->token == CHEVRON && msh->ac == 1)
 	// 	return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
 	if (msh->av->token == OPERATOR || msh->av->token == PIPE)
-		return (status = 2, err_syntax(ft_err_op(msh->av->data, 0))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	while (msh->av->next)
 	{
 		// printf("msh->av->token %d msh->av->data %s\n", msh->av->token, msh->av->data);
@@ -198,9 +198,9 @@ int	ft_parse_ter(t_msh *msh)
 	// 	return (err_syntax(ft_err_op(msh->av[msh->ac - 1].data, 0), 2, 1));
 	// printf("msh->av->token %d msh->av->data %s\n", msh->av->token, msh->av->data);
 	if (msh->av->token == CHEVRON)
-		return (status = 2, err_syntax(err_chev(msh->av->data, 1))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(err_chev(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	if (msh->av->token == OPERATOR || msh->av->token == PIPE) // avoir si on decide de considerer en dernier un operator comme erreur ou non
-		return (status = 2, err_syntax(ft_err_op(msh->av->data, 0))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	msh->av = head;
 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
 	// {

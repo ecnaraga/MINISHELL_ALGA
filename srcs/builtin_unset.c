@@ -3,81 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/18 13:46:19 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/21 10:22:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	del_node(t_env *node, t_env **env)
+void	del_node(t_env *node, t_env **env, t_msh *msh)
 {
 	t_env	*tmp;
 	
 	tmp = *env;
 	if (tmp == node)
 	{
-		ft_magic_malloc(FREE, 0, tmp->name, ENV);
-		ft_magic_malloc(FREE, 0, tmp->content, ENV);
+		mlcgic(mlcp(tmp->name, 0), FREE, ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp->name, ENV);
+		mlcgic(mlcp(tmp->content, 0), FREE, ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp->content, ENV);
 		*env = tmp->next;
-		ft_magic_malloc(FREE, 0, tmp, ENV);
+		mlcgic(mlcp(tmp, 0), FREE, ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp, ENV);
 		return ;
 	}
 	while(tmp)
 	{
 		if(tmp->next == node)
 		{
-			ft_magic_malloc(FREE, 0, tmp->next->name, ENV);
-			ft_magic_malloc(FREE, 0, tmp->next->content, ENV);
+			mlcgic(mlcp(tmp->next->name, 0), FREE, ENV, msh);
+			// ft_magic_malloc(FREE, 0, tmp->next->name, ENV);
+			mlcgic(mlcp(tmp->next->content, 0), FREE, ENV, msh);
+			// ft_magic_malloc(FREE, 0, tmp->next->content, ENV);
 			tmp->next = tmp->next->next;
-			ft_magic_malloc(FREE, 0, node, ENV);
+			mlcgic(mlcp(node, 0), FREE, ENV, msh);
+			// ft_magic_malloc(FREE, 0, node, ENV);
 			break ;
 		}
 		tmp = tmp->next;
 	}	
 }
 
-void	del_env(char *cmd, t_msh *minish)
+void	del_env(char *cmd, t_msh *msh)
 {
 	t_env	*tmp;
 	int		i;
 
 	i = 0;
-	tmp = *(minish->env);
+	tmp = *(msh->env);
 	while(tmp)
 	{
 		if(!strcmp(cmd, tmp->name))
 		{
-			del_node(tmp, minish->env);
+			del_node(tmp, msh->env, msh);
 			break;
 		}
 		tmp = tmp->next;
 	}
-	tmp = *(minish->export_env);
+	tmp = *(msh->export_env);
 	while(tmp)
 	{
 		if(!strcmp(cmd, tmp->name))
 		{
-			del_node(tmp, minish->export_env);
+			del_node(tmp, msh->export_env, msh);
 			break;
 		}
 		tmp = tmp->next;
 	}
 }
 
-void	builtin_unset(t_msh *minish)
+void	builtin_unset(t_msh *msh)
 {
 	int i;
 
 	i = 0;
 	printf("BUILTIN\n");
-	if (minish->p.cmd_opt[++i])
+	if (msh->p.cmd_opt[++i])
 	{
-		while (minish->p.cmd_opt[i])
+		while (msh->p.cmd_opt[i])
 		{
-			del_env(minish->p.cmd_opt[i], minish);
+			del_env(msh->p.cmd_opt[i], msh);
 			i++;
 		}
 	}

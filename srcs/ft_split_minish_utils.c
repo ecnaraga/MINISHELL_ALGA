@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/12/14 10:29:31 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 11:46:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,17 @@ Dynamically allocates a structure array of the size of the number of potential
 	environment variables (dollar) present in the word, which will be used to
 	specify whether or not expand the potential variable
 */
-void	ft_alloc_type(t_split *new)
+void	ft_alloc_type(t_split *new, t_msh *msh)
 // int	ft_alloc_type(t_split *new)
 {
 	int	d;
 
 	if (new->dollar > 0)
 	{
-		new->type = ft_magic_malloc(MALLOC, sizeof(t_dollar)
-				* new->dollar, NULL, NO_ENV);
+		new->type = mlcgic(mlcp(NULL, sizeof(t_dollar) * new->dollar), MALLOC, NO_ENV, msh);
+		// new->type = ft_magic_malloc(MALLOC, sizeof(t_dollar) * new->dollar, NULL, NO_ENV);
 		if (new->type == NULL)
-			ft_exit(-1, -1, -1); // SI MALLOC KO ON QUITTE
+			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
 			// return (1);
 		d = -1;
 		while (++d < new->dollar)

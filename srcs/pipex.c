@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 18:59:33 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,14 @@ static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 	int	j;
 
 	j = -1;
-	p->fd_p = ft_magic_malloc(MALLOC, sizeof(int *) * (size + 1), NULL, PIP);
+	p->fd_p = mlcgic(mlcp(NULL, sizeof(int *) * (size + 1)), MALLOC, PIP, msh);
+	// p->fd_p = ft_magic_malloc(MALLOC, sizeof(int *) * (size + 1), NULL, PIP);
 	if (!p->fd_p)
 		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	while (++j < size)
 	{
-		p->fd_p[j] = ft_magic_malloc(MALLOC, sizeof(int) * 2, NULL, PIP);
+		p->fd_p[j] = mlcgic(mlcp(NULL, sizeof(int *) * 2), MALLOC, PIP, msh);
+		// p->fd_p[j] = ft_magic_malloc(MALLOC, sizeof(int) * 2, NULL, PIP);
 		if (!p->fd_p)
 			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	}
@@ -65,7 +67,7 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 		if (pipe(msh->p.fd_p[index.j]) == -1) // IF PIPE FAIL ON RETURN DANS PIPEX MULTI
 		{
 			perror("pipe");
-			status = 255;
+			msh->status = 255;
 			if (index.j > 0)
 				close(msh->p.fd_p[index.j - 1][0]);
 			return ;
@@ -74,13 +76,8 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 			ft_first_pipe(msh, pid_l);
 		else if (index.i >= 1)
 			ft_middle_pipe(msh, index.j, pid_l);
-		if (status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
-		{
-			(close(msh->p.fd_p[index.j][0]), close(msh->p.fd_p[index.j][1]));
-			if (index.j > 0)
-				close(msh->p.fd_p[index.j - 1][0]);
+		if (msh->status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
 			return ;
-		}
 		index.j++;
 	}
 	ft_last_pipe(msh, index.j, pid_l);
@@ -92,6 +89,7 @@ int	pipex_multi(t_msh *msh, int sub)
 	t_split *head;
 	t_index	index;
 	t_lpid	*pid_l;
+	int free;
 	int tmp;
 	
 	pid_l = NULL;
@@ -99,35 +97,43 @@ int	pipex_multi(t_msh *msh, int sub)
 	head = msh->av;
 	nb_pipe = ft_count_pipe(msh, head);
 	ft_create_fd_p(msh, sub, nb_pipe, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	// ft_signal_handler_msh_bis();
 	index.i = -1;
 	index.j = 0;
 	ft_pipex(msh, nb_pipe, index, &pid_l);
+	free = msh->status; // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
 	tmp = 0;
 	while (pid_l)
 	{
-		waitpid(pid_l->pid, &status, WUNTRACED);
-		// dprintf(2, "child status %d\n", WEXITSTATUS(status));
-		if (WIFSIGNALED(status))
-			status += 128;
-		if (status == 130 && tmp == 0)
+		waitpid(pid_l->pid, &msh->status, WUNTRACED);
+		if (WIFSIGNALED(msh->status) && tmp == 0)
 		{
-			write(1, "\n", 1);
-			tmp = 1;
+			msh->status = WTERMSIG(msh->status) + 128;
+			if (msh->status == 131)
+			{
+				write(2, "Quit (core dumped)\n", 20);
+				tmp = 2;
+			}
+			if (msh->status == 130 && tmp == 0)
+			{
+				write(2, "\n", 1);
+				tmp = 1;
+			}
 		}
 		pid_l = pid_l->next;
 	}
-	// while (wait(&status) > 0) // passer en waitpid
-	// 	;
-
-	if (status == 255) // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
+	if (free == 255) // IF PIPE KO OR FORK KO DANS F_PIPEX ON QUITTE LE PROCESS ACTUEL
+	{
+		msh->status = 255;
 		ft_exit_bis(msh, sub, -1, -1);
-	if (WIFEXITED(status))
-		status = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		status += 128;
+	}
+	if (WIFEXITED(msh->status))
+		msh->status = WEXITSTATUS(msh->status);
+	else if (WIFSIGNALED(msh->status))
+		msh->status = WTERMSIG(msh->status) + 128;
 	ft_signal_handler_msh();
-	dprintf(2, "status %d\n", status);
-	ft_magic_malloc(FLUSH, 0, NULL, PIP);
+	dprintf(2, "status %d\n", msh->status);
+	sign = 0;
+	mlcgic(NULL, FLUSH, PIP, msh);
+	// ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }

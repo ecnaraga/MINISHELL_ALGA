@@ -16,7 +16,6 @@ SRCS = main.c \
 	   ft_parse_ter.c \
 	   ft_parse_utils.c \
 	   ft_error_message_syntax.c \
-	   ft_free_split_minish.c \
 	   ft_split_minish_utils.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
@@ -29,7 +28,6 @@ SRCS = main.c \
 	   signal.c \
 	   heredoc.c \
 	   heredoc_utils.c \
-	   get_next_line_magic.c \
 	   exec.c \
 	   exec_error.c \
 	   exec_utils.c \

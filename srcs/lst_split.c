@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/12/14 10:28:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 14:16:45 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,15 @@ void	ft_lstadd_back_split(t_split **lst, t_split *new)
 	}
 }
 
-t_split	*ft_lstnew_split(void)
+t_split	*ft_lstnew_split(t_msh *msh)
 {
 	t_split	*temp;
 
 	temp = NULL;
-	temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV); // SI MALLOC KO ON QUITTE
+	temp = mlcgic(mlcp(NULL, sizeof(t_split)), MALLOC, NO_ENV, msh);
+	// temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV); // SI MALLOC KO ON QUITTE
 	if (temp == NULL)
-		ft_exit(-1, -1, -1);
+		ft_exit(-1, -1, -1, msh);
 		// return (NULL);
 	temp->dollar = 0;
 	temp->type = NULL;
@@ -66,36 +67,42 @@ int	ft_lstsize_split(t_split *lst)
 	return (count);
 }
 
-void    del_two(t_split *lst)
+void    del_two(t_msh *msh, t_split *lst)
 {
-    lst->data = ft_magic_malloc(FREE, 0, lst->data, NO_ENV);
+	lst->data = mlcgic(mlcp(lst->data, 0), FREE, NO_ENV, msh);
+    // lst->data = ft_magic_malloc(FREE, 0, lst->data, NO_ENV);
     if (lst->type)
-        lst->type = ft_magic_malloc(FREE, 0, lst->type, NO_ENV);
+		lst->type = mlcgic(mlcp(lst->type, 0), FREE, NO_ENV, msh);
+        // lst->type = ft_magic_malloc(FREE, 0, lst->type, NO_ENV);
 }
 
-void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *))
+void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_split *))
 {
 	if (!lst || !del)
 		return ;
-	del_two(lst);
-	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
+	del_two(msh, lst);
+	lst = mlcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
+	// lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 }
 
-void    del_three(t_env *lst)
-{
-    lst->name = ft_magic_malloc(FREE, 0, lst->name, NO_ENV);
-    lst->content = ft_magic_malloc(FREE, 0, lst->content, NO_ENV);
-}
+// void    del_three(t_env *lst)
+// {
+// 	lst->name = mlcgic(mlcp(lst->name, 0), FREE, NO_ENV, msh);
+//     // lst->name = ft_magic_malloc(FREE, 0, lst->name, NO_ENV);
+// 	lst->content = mlcgic(mlcp(lst->content, 0), FREE, NO_ENV, msh);
+//     // lst->content = ft_magic_malloc(FREE, 0, lst->content, NO_ENV);
+// }
 
-void	ft_lstdelone_magic(t_env*lst, void (*del)(t_env*))
-{
-	if (!lst || !del)
-		return ;
-	del_three(lst);
-	lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
-}
+// void	ft_lstdelone_magic(t_env*lst, void (*del)(t_env*))
+// {
+// 	if (!lst || !del)
+// 		return ;
+// 	del_three(lst);
+// 	lst = mlcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
+// 	// lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
+// }
 
-t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head)
+t_split	*ft_lstdel_and_relink_split(t_msh *msh, t_split *av, t_split *prev, t_split **head)
 {
 	t_split	*tmp;
 	
@@ -106,21 +113,21 @@ t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head)
 	else
 		*head = av->next;
 	tmp = av->next;
-	ft_lstdelone_split(av, del_two);
+	ft_lstdelone_split(msh, av, del_two);
 	return (tmp);
 }
 
-t_env	*ft_lstdel_and_relink(t_env *lst, t_env *prev, t_env **head)
-{
-	t_env	*tmp;
+// t_env	*ft_lstdel_and_relink(t_msh *msh, t_env *lst, t_env *prev, t_env **head)
+// {
+// 	t_env	*tmp;
 	
-	if (!lst)
-		return (NULL);
-	if (prev != NULL)
-		prev->next = lst->next;
-	else
-		*head = lst->next;
-	tmp = lst->next;
-	ft_lstdelone_magic(lst, del_three);
-	return (tmp);
-}
+// 	if (!lst)
+// 		return (NULL);
+// 	if (prev != NULL)
+// 		prev->next = lst->next;
+// 	else
+// 		*head = lst->next;
+// 	tmp = lst->next;
+// 	ft_lstdelone_magic(msh, lst, del_three);
+// 	return (tmp);
+// }

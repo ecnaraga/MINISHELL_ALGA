@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 10:37:46 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/19 12:27:07 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:33:35 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static int	is_nbr(char *str)
 	return (1);
 }
 
-static int	args_handler(char **args)
+static int	args_handler(t_msh *msh, char **args)
 {
 	char	*tmp;
 	char	*tmp2;
@@ -94,41 +94,46 @@ static int	args_handler(char **args)
 	if (args[2])
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		return (status = 2, 2);
+		return (msh->status = 2, 2);
 	}
 	if (!is_nbr(args[1]))
 	{
 		printf("exit\n");
-		tmp = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: exit: ", args[1]), NO_ENV);
-		if (status == 255)
+		tmp = mlcgic(mlcp(ft_strjoin("minishell: exit: ", args[1]), 1), ADD, NO_ENV, msh);
+		// tmp = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: exit: ", args[1]), NO_ENV);
+		if (msh->status == 255)
 			return (255);
-		tmp2 = ft_magic_malloc(ADD, 0, ft_strjoin(tmp, ": numeric argument required\n"), NO_ENV);
-		if (status == 255)
+		
+		tmp2 = mlcgic(mlcp(ft_strjoin(tmp, ": numeric argument required\n"), 1), ADD, NO_ENV, msh);
+		// tmp2 = ft_magic_malloc(ADD, 0, ft_strjoin(tmp, ": numeric argument required\n"), NO_ENV);
+		if (msh->status == 255)
 			return (255);
-		ft_magic_malloc(FREE, 0, tmp, NO_ENV);
+		mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 		ft_putstr_fd(tmp2, 2);
-		ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-		return (status = 2, 1);
+		mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
+		return (msh->status = 2, 1);
 	}
 	else
 	{
 		printf("exit\n");
-		return(status = ft_atol(args[1], NULL) % 256, 1);
+		return(msh->status = ft_atol(args[1], NULL) % 256, 1);
 	}
 		
 }
 
-int	builtin_exit(t_msh *minish)
+int	builtin_exit(t_msh *msh)
 {
 	int	statut;
 
 	statut = 0;
-	if(minish->p.cmd_opt[1])
-		return(args_handler(minish->p.cmd_opt));
+	if(msh->p.cmd_opt[1])
+		return(args_handler(msh, msh->p.cmd_opt));
 	else
 	{
 		printf("exit\n");
-		return(status = 0, 1);
+		return(msh->status = 0, 1);
 		
 	}
 }

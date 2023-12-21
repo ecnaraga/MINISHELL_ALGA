@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/12/14 11:42:18 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 11:46:49 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ Tableau de structure strs->type : strs[i]->type[d]
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
 */
-static void	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
+static void	ft_split_strs(const char *s, t_split **strs, int wd, t_msh *msh)
 // static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
 {
 	int			j;
@@ -158,13 +158,14 @@ static void	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strs
 	j = -1;
 	while (s[i] && ++j < wd)
 	{
-		new = ft_lstnew_split(); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
+		new = ft_lstnew_split(msh); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
 		l = ft_count_letter(s, &q, &i, &new->dollar);
-		new->data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
+		new->data = mlcgic(mlcp(NULL, sizeof(char) * (l.lt + 1)), MALLOC, NO_ENV, msh);
+		// new->data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
 		if (new->data == NULL)
-			ft_exit(-1, -1, -1); // SI MALLOC KO => ON QUITTE MINISHELL
+			ft_exit(-1, -1, -1, msh); // SI MALLOC KO => ON QUITTE MINISHELL
 		new->token = TO_DEFINE;
-		ft_alloc_type(new);  // SI MALLOC KO ON QUITTE DANS FT_ALLOC_TYPE
+		ft_alloc_type(new, msh);  // SI MALLOC KO ON QUITTE DANS FT_ALLOC_TYPE
 		// if (ft_alloc_type(new) == 1)
 			// return (1);
 		if (l.lt >= 0)
@@ -189,7 +190,7 @@ type = Voir explication de ft_split_strs (ci-dessus)
 Separateurs = Isspaces si PAS entre double ou single quote(d_q ou s_q)
 Renvoie NULL en cas d'erreur de malloc
 */
-t_split	*ft_split_msh(char const *s)
+t_split	*ft_split_msh(char const *s, t_msh *msh)
 {
 	int		wd;
 	t_split	*strs;
@@ -198,7 +199,7 @@ t_split	*ft_split_msh(char const *s)
 		return (NULL);
 	wd = ft_countwords(s);
 	strs = NULL;
-	ft_split_strs(s, &strs, wd); // SI MALLOC KO ON QUITTE A L INTERIEUR
+	ft_split_strs(s, &strs, wd, msh); // SI MALLOC KO ON QUITTE A L INTERIEUR
 	// if (ft_split_strs(s, &strs, wd) == 1)
 	// 	return (NULL);
 	return (strs);

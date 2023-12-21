@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/18 14:28:30 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	get_name_size(char *str)
 	return (i);
 }
 
-static int	fill_export_env(t_env **export_env, char **str)
+static int	fill_export_env(t_msh *msh, t_env **export_env, char **str)
 {
 	int		i;
 	int		name_size;
@@ -64,10 +64,11 @@ static int	fill_export_env(t_env **export_env, char **str)
 	{
 		name_size = get_name_size(str[i]);
 		content_size = ft_strlen(str[i] + (name_size + 1));
-		new = ft_lst_new_malloc(name_size + 1, content_size + 2 + 1);
+		new = ft_lst_new_malloc(msh, name_size + 1, content_size + 2 + 1);
 		if (!new)
 		{
-			ft_magic_malloc(FLUSH, 0, NULL, ENV);
+			mlcgic(NULL, FLUSH, ENV, msh);
+			// ft_magic_malloc(FLUSH, 0, NULL, ENV);
 			return (1);
 		}
 		ft_strlcpy(new->name, str[i], name_size + 1);
@@ -102,15 +103,16 @@ void	order_export_env(t_env **export_env)
 	}	
 }
 
-t_env	**get_export_env(char **str)
+t_env	**get_export_env(t_msh *msh, char **str)
 {
 	t_env	**export_env;
 
-	export_env = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
+	export_env = mlcgic(mlcp(NULL, sizeof(t_env)), MALLOC, ENV, msh);
+	// export_env = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
 	if (!export_env)
 		return (NULL);
 	*export_env = NULL;
-	if (fill_export_env(export_env, str) == 1)
+	if (fill_export_env(msh, export_env, str) == 1)
 		return (NULL);
 	order_export_env(export_env);
 	return (export_env);
