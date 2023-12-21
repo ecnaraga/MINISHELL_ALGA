@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:41:27 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, /* t_split **head,  */int sub
 	
 	sub_msh->line = ft_strtrim_msh(msh, &msh->line, sub); // SI MALLOC KO, ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
 	sub_msh->env = msh->env;
+	sub_msh->status = msh->status;
 	sub_msh->export_env = msh->export_env;
 	pid = fork();
 	if (pid == -1)

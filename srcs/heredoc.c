@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:47:28 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:37:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ static int	ft_recover_prompt(t_msh *msh, int fd_temp, char *lim)
 		if (open("/dev/stdout", O_RDONLY) == -1)
 			(close(fd_temp), msh->status = 1, ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR OPEN , status == 1 + ON QUITTE
 		mlcgic(NULL, FLUSH, NO_ENV, msh);
-		if (msh->p.hdoc)
-			ft_unlink_heredoc(msh->p.hdoc);
+		// if (msh->p.hdoc)
+		// 	ft_unlink_heredoc(msh->p.hdoc);
 		return (close(fd_temp), 130); // SI CTRL + C OK GERE
 	}
 	if (msh->status == 255)
@@ -142,11 +142,6 @@ int	ft_prompt(t_msh *msh, t_split *av, t_env **hdoc)
 	// lim = ft_magic_malloc(ADD, 0, ft_strjoin(av->data, "\n"), NO_ENV);
 	if (!lim)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // IF MALLOC KO ON QUITTE
-	// {
-	// 	(close(fd_temp), write(2, "ft_strjoin: error\n", 18));
-	// 	unlink((*hdoc)->content)/* ,free(p->name_hdoc)*/;
-	// 	exit(EXIT_FAILURE);  //PENSER A FREE 
-	// }
 	while (1)
 	{
 		int err ;

@@ -3,7 +3,7 @@
 echo & USER
 */
 
-
+<< L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
 
 
 /* 1. PARENTHESE */
