@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 15:59:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:07:36 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	change_env(char	*old_pwd, t_msh *msh, int statut)
 	}
 	else
 	{
-		new_env_node("OLDPWD=", 2, msh->env, 2);
-		new_env_node("OLDPWD=", 2, msh->export_env, 1);
+		new_env_node_env(msh, "OLDPWD=", 2, msh->env);
+		new_env_node_export(msh, "OLDPWD=", 2, msh->export_env);
 	}
 	tmp = getcwd(NULL, 0);
 	if (!tmp)
@@ -124,7 +124,8 @@ int	builtin_cd(t_msh *msh)
 	if (statut == 1 && !old_pwd)
 	{
 		tmp = getcwd(NULL, 0);
-		old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
+		old_pwd = mlcgic(mlcp(ft_strjoin("OLDPWD=", tmp), 1), ADD, NO_ENV, msh);
+		// old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
 		free(tmp);
 	}
 	if (!old_pwd)
