@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/19 11:01:40 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static void	ft_dup_pipe(t_msh *msh, int rule, int j)
 		{
 			perror("dup2");  // EXIT STATUS ?
 			if (rule == MID)
-				ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
+				ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1, msh);
 			else
-				ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
+				ft_exit(msh->p.fd_p[j - 1][0], -1, -1, msh);
 		}
 	}
 }
@@ -36,11 +36,11 @@ static int	ft_open_infile(t_msh *msh, int *fd_infile, t_head *save)
 		close(*fd_infile);
 	if (msh->av->type)
 		msh->av->data = ft_expand(msh, msh->av->data, INFILE); //IF ERROR MALLOC, EXPAND RETURN (NULL)
-	if (status == 255) // IF ERREUR MALLOC RETURN (255)
+	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
 	*fd_infile = open(msh->av->data, O_RDONLY); // IF ERREUR OPEN > GERE DANS REDEF_STDIN
 	if (*fd_infile > -1)
-		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);
+		msh->av = ft_lstdel_and_relink_split(msh, msh->av, save->prev, &save->head);
 	return (0);
 }
 
@@ -53,7 +53,10 @@ static void ft_open_heredoc(t_msh *msh, int *fd_infile, t_head *save)
 		close(*fd_infile);
 	save->head_hd = msh->p.hdoc;
 	while (msh->p.hdoc && msh->av && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))//
+	{	
+		dprintf(2, "msh->av->data |%s| msh->p.hdoc->name |%s| msh->p.hdoc->content |%s| msh->p.hdoc->read %d\n", msh->av->data, msh->p.hdoc->name, msh->p.hdoc->content, msh->p.hdoc->read);
 		msh->p.hdoc = msh->p.hdoc->next;
+	}	
 	*fd_infile = open(msh->p.hdoc->content, O_RDONLY);  // IF ERREUR OPEN > GERE DANS REDEF_STDIN
 	msh->p.hdoc->read = 1;
 	msh->p.hdoc = save->head_hd;
@@ -65,22 +68,24 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 	char *str;
 	
 	dprintf(2, "INVALID\n");
-	str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
+	str = mlcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
+	// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
 	if (str)
 	{
 		perror(str);
-		status = 1;
-		msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);
-		ft_magic_malloc(FREE, 0, str, PIP);
+		msh->status = 1;
+		msh->av = ft_lstdel_and_relink_split(msh, msh->av, save->prev, &save->head);
+		mlcgic(mlcp(str, 0), FREE, PIP, msh);
+		// ft_magic_malloc(FREE, 0, str, PIP);
 	}
-	if (rule == CMD_ALONE && status == 255) // IF ERROR MALLOC
-		ft_exit(-1, -1, -1);
+	if (rule == CMD_ALONE && msh->status == 255) // IF ERROR MALLOC
+		ft_exit(-1, -1, -1, msh);
 	if (rule == FIRST)
-		ft_exit(msh->p.fd_p[0][1], -1, -1);
+		ft_exit(msh->p.fd_p[0][1], -1, -1, msh);
 	if (rule == MID)
-		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
+		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1, msh);
 	if (rule == LAST)
-		ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
+		ft_exit(msh->p.fd_p[j - 1][0], -1, -1, msh);
 	return (-1); // donc if (rule == CMD_ALONE + pas d erreur de malloc return -1)
 }
 
@@ -88,47 +93,57 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 static int	ft_error_duptwo(t_msh *msh, int rule, t_fd fd, int j)
 {
 	perror("dup2");
-	status = 1;
+	msh->status = 1;
 	if (rule == CMD_ALONE)
 	{
 		close(fd.file);
 		close(fd.old_std);
 		return (-1);
 	}
+	if (rule == PAR_OPEN)
+		ft_exit(fd.file, -1, -1, msh);
 	if (rule == FIRST)
-		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
+		ft_exit(msh->p.fd_p[0][1], fd.file, -1, msh);
 	if (rule == MID)
-		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd.file);
+		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd.file, msh);
 	else
-		ft_exit(msh->p.fd_p[j - 1][0], fd.file, -1);
+		ft_exit(msh->p.fd_p[j - 1][0], fd.file, -1, msh);
 	return (-1);
 }
 
-static int	ft_error_dup(t_msh *msh, int rule, t_fd fd, int j)
-{
-	perror("dup");
-	status = 1;
-	if (rule == CMD_ALONE)
-	{
-		close(fd.file);
-		return (-1);
-	}
-	if (rule == FIRST)
-		ft_exit(msh->p.fd_p[0][1], fd.file, -1);
-	if (rule == MID)
-		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd.file);
-	else
-		ft_exit(msh->p.fd_p[j - 1][0], fd.file, -1);
-	return (-1);
-}
+// static int	ft_error_dup(t_msh *msh, int rule, t_fd fd, int j)
+// {
+// 	perror("dup");
+// 	status = 1;
+// 	if (rule == CMD_ALONE)
+// 	{
+// 		close(fd.file);
+// 		return (-1);
+// 	}
+// 	// if (rule == FIRST)
+// 	// 	ft_exit(msh->p.fd_p[0][1], fd.file, -1);
+// 	// if (rule == MID)
+// 	// 	ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], fd.file);
+// 	// else
+// 	// 	ft_exit(msh->p.fd_p[j - 1][0], fd.file, -1);
+// 	return (-1);
+// }
 
 int	ft_dup_stdin(t_msh *msh, t_fd *fd, int rule, int j)
 {
 	fd->old_std = -2;
 	if (rule == CMD_ALONE)
+	{
 		fd->old_std = dup(STDIN_FILENO);
-	if (fd->old_std == -1)
-		return (ft_error_dup(msh, rule, *fd, j)); // IF ERREUR DUP QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1
+		if (fd->old_std == -1)
+		{
+			perror("dup"); // IF ERREUR DUP RETOURNE -1
+			msh->status = 1;
+			close(fd->file);
+			return (-1);
+		}
+			// return (ft_error_dup(msh, rule, *fd, j)); 
+	}
 	if (fd->file != -2 && dup2(fd->file, STDIN_FILENO) == -1)
 		return (ft_error_duptwo(msh, rule, *fd, j)); // IF ERREUR DUP2 QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1
 	if (fd->file != -2)
@@ -140,14 +155,14 @@ void	ft_exit_stdin_error_malloc(t_msh *msh, int rule, int j, int sub)
 {
 	if (sub == 0)
 		ft_unlink_heredoc(msh->p.hdoc);
-	if (rule == CMD_ALONE)
-		ft_exit(-1, -1, -1);
+	if (rule == CMD_ALONE || rule == PAR_OPEN)
+		ft_exit(-1, -1, -1, msh);
 	if (rule == FIRST)
-		ft_exit(msh->p.fd_p[0][1], -1, -1);
+		ft_exit(msh->p.fd_p[0][1], -1, -1, msh);
 	if (rule == MID)
-		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1);
+		ft_exit(msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1], -1, msh);
 	else
-		ft_exit(msh->p.fd_p[j - 1][0], -1, -1);
+		ft_exit(msh->p.fd_p[j - 1][0], -1, -1, msh);
 }
 
 /*
@@ -161,6 +176,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 	t_fd	fd;
 	t_head	save;
 
+	// printf("REDEF STDIN msh->p.hdoc->read %d\n", msh->p.hdoc->read);
 	save.head = msh->av;
 	save.prev = NULL;
 	fd.file = -2;

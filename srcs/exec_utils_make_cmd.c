@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 10:57:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:12:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,15 @@ int		ft_count_cmd(t_msh *msh)
 // 	return (c_wd);
 // }
 
-char **ft_realloc_cmd(char **cmd_opt, int *cmd_nb, int *i)
+char **ft_realloc_cmd(char **cmd_opt, int *cmd_nb, int *i, t_msh *msh)
 {
 	char 	**cmd;
 	char 	**tmp;
 	int		j;
 	int		k;
 
-	cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (*cmd_nb + 1), NULL, PIP);
+	cmd = mlcgic(mlcp(NULL, sizeof(char *) * (*cmd_nb + 1)), MALLOC, PIP, msh);
+	// cmd = ft_magic_malloc(MALLOC, sizeof(char *) * (*cmd_nb + 1), NULL, PIP);
 	if (!cmd)
 		return (NULL); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	j = 0;
@@ -73,7 +74,7 @@ char **ft_realloc_cmd(char **cmd_opt, int *cmd_nb, int *i)
 		cmd[j] = cmd_opt[j];
 		j++;
 	}
-	tmp = ft_split_isspace_magic_malloc(cmd_opt[j]);
+	tmp = ft_split_isspace_magic_malloc(msh, cmd_opt[j]);
 	if (!tmp)
 		return (NULL); // IF ERREUR MALLOC DANS FT_SPLIT_ISSPACE_MAGIC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	k = 0;
@@ -81,8 +82,10 @@ char **ft_realloc_cmd(char **cmd_opt, int *cmd_nb, int *i)
 		cmd[j++] = tmp[k++];
 	cmd[j] = NULL; // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	*i = j - 1;
-	ft_magic_malloc(FREE, 0, cmd_opt, PIP);
-	ft_magic_malloc(FREE, 0, tmp, PIP);
+	mlcgic(mlcp(cmd_opt, 0), FREE, PIP, msh);
+	// ft_magic_malloc(FREE, 0, cmd_opt, PIP);
+	mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
+	// ft_magic_malloc(FREE, 0, tmp, PIP);
 	return (cmd);
 }
 
@@ -96,7 +99,7 @@ int ft_copy_cmd(t_msh *msh, t_head *save, int *i, int *cmd_nb)
 			msh->p.cmd_opt[*i] = ft_expand(msh, msh->p.cmd_opt[*i], CMD); // IF ERROR MALLOC, EXPAND RETURN (NULL)
 		else
 			msh->p.cmd_opt[*i] = ft_expand(msh, msh->p.cmd_opt[*i], OTHER); // IF ERROR MALLOC, EXPAND RETURN (NULL)
-		if (status == 255)
+		if (msh->status == 255)
 			return (255); // IF ERREUR MALLOC DANS EXPAND ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 		if (msh->av->quote && !msh->p.cmd_opt[0][0])
 			write(2, "minishell: : command not found\n", 32);
@@ -104,19 +107,20 @@ int ft_copy_cmd(t_msh *msh, t_head *save, int *i, int *cmd_nb)
 		if (c_wd > 1)
 		{
 			*cmd_nb = *cmd_nb + c_wd;
-			msh->p.cmd_opt = ft_realloc_cmd(msh->p.cmd_opt, cmd_nb, i);
+			msh->p.cmd_opt = ft_realloc_cmd(msh->p.cmd_opt, cmd_nb, i, msh);
 			if (!msh->p.cmd_opt)
 				return (255); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 		}
 	}
 	else
 	{
-		msh->p.cmd_opt[*i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
+		msh->p.cmd_opt[*i] = mlcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP, msh);
+		// msh->p.cmd_opt[*i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
 		if (!msh->p.cmd_opt[*i])
 			return (255); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	}
 	(*i)++;
-	msh->av = ft_lstdel_and_relink_split(msh->av, save->prev, &save->head);
+	msh->av = ft_lstdel_and_relink_split(msh, msh->av, save->prev, &save->head);
 	return (0);
 }
 
@@ -158,7 +162,8 @@ char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 			write(2, "minishell: : command not found\n", 32);
 		return (NULL); // OK GERE DANS LE PARENT
 	}
-	msh->p.cmd_opt = ft_magic_malloc(MALLOC, sizeof(char *) * (cmd_nb + 1), NULL, PIP);
+	msh->p.cmd_opt = mlcgic(mlcp(NULL, sizeof(char *) * (cmd_nb + 1)), MALLOC, PIP, msh);
+	// msh->p.cmd_opt = ft_magic_malloc(MALLOC, sizeof(char *) * (cmd_nb + 1), NULL, PIP);
 	if (!msh->p.cmd_opt)
 		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
 	if (ft_build_cmd(msh, &save, &cmd_nb) == 255)

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/14 11:08:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 14:16:27 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 # define PARSING_H
 
 int		ft_structtablen(t_split *tab);
-void	*ft_free_split_msh(t_split *strs);
+// void	*ft_free_split_msh(t_split *strs);
 
 /*
 ft_parse.c
 */
 int		ft_parse_line(t_msh *minish);
-char	*add_spaces(char *str);
+char	*add_spaces(t_msh *msh, char *str);
 int	is_operator(char c);
 
 //char	*ft_parse_bis_bis(char *str);
@@ -61,12 +61,12 @@ void	ft_inc_quote(char c, int *d_q, int *s_q);
 ft_error_message_syntax.c
 */
 int 	err_syntax(char *str);
-char	*ft_error_message(char *str);
+char	*ft_error_message(char *str, t_msh *msh);
 
 /*
 ft_split_minish.c
 */
-t_split	*ft_split_msh(char const *s); //MALLOC
+t_split	*ft_split_msh(char const *s, t_msh *msh); //MALLOC
 
 /*
 ft_split_minish_utils.c
@@ -74,7 +74,7 @@ ft_split_minish_utils.c
 // void	*ft_free_strs(t_split *strs, int j);
 int		ft_test(char c, const char *c1, const char *cm1, t_quote *q);
 int		ft_test_bis(char c, int d_q, int s_q);
-void	ft_alloc_type(t_split *new);
+void	ft_alloc_type(t_split *new, t_msh *msh);
 
 /*
 ft_strlcpy_minish.c
@@ -92,12 +92,12 @@ lst_split.c
 */
 t_split	*ft_lstlast_split(t_split *lst);
 void	ft_lstadd_back_split(t_split **lst, t_split *new);
-t_split	*ft_lstnew_split(void);
+t_split	*ft_lstnew_split(t_msh *msh);
 int	ft_lstsize_split(t_split *lst);
-void    del_two(t_split *lst);
-void	ft_lstdelone_split(t_split *lst, void (*del)(t_split *));
-t_split	*ft_lstdel_and_relink_split(t_split *av, t_split *prev, t_split **head);
-t_env	*ft_lstdel_and_relink(t_env *lst, t_env *prev, t_env **head);
+void    del_two(t_msh *msh, t_split *lst);
+void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_split *));
+t_split	*ft_lstdel_and_relink_split(t_msh *msh, t_split *av, t_split *prev, t_split **head);
+// t_env	*ft_lstdel_and_relink(t_msh *msh, t_env *lst, t_env *prev, t_env **head);
 
 
 /*

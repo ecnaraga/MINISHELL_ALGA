@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:01:13 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:41:55 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 		close(fd2);
 	if (sub == 0 && msh->p.hdoc)
 		ft_unlink_heredoc(msh->p.hdoc);
-	rl_clear_history(); // RAJOUT A TESTER
-	ft_magic_malloc(QUIT, 0, NULL, 0);
-	exit(status);
+	rl_clear_history();
+	mlcgic(NULL, QUIT, 0, msh);
+	// ft_magic_malloc(QUIT, 0, NULL, 0);
+	exit(msh->status);
 }
 
-void	ft_exit(int fd_1, int fd_2, int fd_3)
+void	ft_exit(int fd_1, int fd_2, int fd_3, t_msh *msh)
 {
 	if (fd_1 > -1)
 		close(fd_1);
@@ -49,11 +50,10 @@ void	ft_exit(int fd_1, int fd_2, int fd_3)
 		close(fd_2);
 	if (fd_3 > -1)
 		close(fd_3);
-	rl_clear_history(); // RAJOUT A TESTER
-	ft_magic_malloc(QUIT, 0, NULL, 0);
-	// if (rule == CMD_ALONE)
-	// 	return (status);
-	exit(status);
+	rl_clear_history();
+	mlcgic(NULL, QUIT, 0, msh);
+	// ft_magic_malloc(QUIT, 0, NULL, 0);
+	exit(msh->status);
 }
 
 static int	ft_check_cmd(char *cmd)
@@ -81,7 +81,7 @@ static int	ft_check_cmd(char *cmd)
 	return (0);
 }
 
-static int	ft_message_directory(char *cmd)
+static int	ft_message_directory(t_msh *msh, char *cmd)
 {
 	char	*str;
 	int		ck;
@@ -89,51 +89,52 @@ static int	ft_message_directory(char *cmd)
 	ck = ft_check_cmd(cmd);
 	if (ck == 1 || ck == 3)
 	{
-		str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
+		str = mlcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
+		// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
 		if (!str) // OK PROTEGE
 			return (255);
-		str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": Is a directory\n"), PIP);
+		str = mlcgic(mlcp(ft_strjoin(str, ": Is a directory\n"), 1), ADD, PIP, msh);
+		// str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": Is a directory\n"), PIP);
 		if (!str) // OK PROTEGE
 			return (255);
 		write(2, str, ft_strlen(str));
-		return (status = 126);
+		return (msh->status = 126);
 	}
 	return (0);
 }
 
-int	ft_perr(int err, char *cmd)
+int	ft_perr(t_msh *msh, int err, char *cmd)
 {
 	char	*str;
 	int		ck;
 
 	if (err == E_NO_CMD)
 	{
-		ck = ft_message_directory(cmd);
+		ck = ft_message_directory(msh, cmd);
 		if (ck != 0)
 			return (ck);
 		if (ck_char(cmd, '/') > 0)
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
+			str = mlcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
+			// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
 			if (!str) // OK PROTEGE
 				return (255);
 			perror(str);
-			status = 127;
+			msh->status = 127;
 		}
 		else
 		{
-			str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
+			str = mlcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
+			// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", cmd), PIP);
 			if (!str) // OK PROTEGE
 				return (255);
-			str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": command not found\n"), PIP);
+			str = mlcgic(mlcp(ft_strjoin(str, ": command not found\n"), 1), ADD, PIP, msh);
+			// str = ft_magic_malloc(ADD, 0, ft_strjoin(str, ": command not found\n"), PIP);
 			if (!str) // OK PROTEGE
 				return (255);
-			status = 127;
+			msh->status = 127;
 			write(2, str, ft_strlen(str));
 		}
 	}
-	// else if (err == E_STRJOIN)
-	// 	write(2, "ft_strjoin: error malloc\n", 26);
-	// else if (err == E_STRDUP)
-	// 	write(2, "ft_strdup: error malloc\n", 25);
-	return (status);
+	return (msh->status);
 }

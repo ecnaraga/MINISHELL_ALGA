@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:59:09 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 	int		built;
 
 	built = ft_search_builtin(msh);
-	if (status == 255 || built == 2)
+	if (msh->status == 255 || built == 2)
 		ft_exit_bis(msh, sub, old_stdout, old_stdin); // SI ERREUR DE MALLOC DANS UN BUILTIN ON QUITTE LE PROCESS ACTUEL
 	if (built == 0)
 	{
@@ -26,7 +26,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 		if (pid == -1)
 		{
 			perror("fork");
-			status = 255;
+			msh->status = 255;
 			ft_exit_bis(msh, sub, old_stdout, old_stdin); // SI ERREUR DE FORK ON QUITTE LE PROCESS ACTUEL
 			return;
 		}
@@ -34,6 +34,9 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 		{
 			close(old_stdout);
 			close(old_stdin);
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
+			signal(SIGQUIT, &ft_free);
 			ft_child_exec(msh);
 		}
 	}
@@ -42,13 +45,13 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 		if (dup2(old_stdout, 1) == -1)
 		{
 			write(2, "dup2 : critical error : failed to open old_stdout", 50);
-			status = 255;
+			msh->status = 255;
 			ft_exit_bis(msh, sub, old_stdin, old_stdout);
 		}
 		if (dup2(old_stdin, 0) == -1)
 		{
 			write(2, "dup2 : critical error : failed to open old_stdin", 49);
-			status = 255;
+			msh->status = 255;
 			ft_exit_bis(msh, sub, old_stdin, old_stdout);
 		}
 		ft_parent(msh, old_stdout, old_stdin, CMD_ALONE);
@@ -62,7 +65,7 @@ int ft_return_error(t_msh *msh, int old_std[2], int rule, int sub)
 		if (dup2(old_std[I], 0) == -1)
 		{
 			write(2, "dup2 : critical error : failed to open old_stdin", 49);
-			status = 255;
+			msh->status = 255;
 			ft_exit_bis(msh, sub, old_std[I], old_std[O]);
 		}
 	}
@@ -71,12 +74,12 @@ int ft_return_error(t_msh *msh, int old_std[2], int rule, int sub)
 		if (dup2(old_std[O], 1) == -1)
 		{
 			write(2, "dup2 : critical error : failed to open old_stdout", 50);
-			status = 255;
+			msh->status = 255;
 			ft_exit_bis(msh, sub, old_std[I], old_std[O]);
 		}
 	}
 	ft_parent(msh, old_std[I], old_std[O], rule);
-	return (status);
+	return (msh->status);
 }
 
 int	ft_exec_cmd(t_msh *msh, int sub)
@@ -96,26 +99,35 @@ int	ft_exec_cmd(t_msh *msh, int sub)
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	if (!msh->p.cmd_opt[0]) // OK PROTEGE
 	{
-		if (ft_perr(E_NO_CMD, msh->av->data) == 255)
+		if (ft_perr(msh, E_NO_CMD, msh->av->data) == 255)
 			ft_exit_bis(msh, sub, old_std[I], old_std[O]); //IF ERREUR DE MALLOC ON QUITTE LE PROCESS ACTUEL
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	}
 	// if (!msh->p.cmd_opt[0][0]) // OK PROTEGE EN COMMENTAIRE CAR JE NE VOIS PAS DANS QUEL CAS
 	// 	return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	ft_exec_cmd_bis(msh, old_std[O], old_std[I], sub);
-	return (status);
+	return (msh->status);
 }
 
 int	ft_cmd_alone(t_msh *msh, int sub)
 {
 	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	ft_signal_handler_msh_bis();
 	ft_exec_cmd(msh, sub); // OK PROTEGER
-	while (wait(&status) > 0)
+	while (wait(&msh->status) > 0)
 		;
-	if (WIFEXITED(status))
-		status = WEXITSTATUS(status);
-	dprintf(2, "status %d\n", status);
-	ft_magic_malloc(FLUSH, 0, NULL, PIP);
+	if (WIFSIGNALED(msh->status))
+	{
+		msh->status = WTERMSIG(msh->status) + 128;
+		if (msh->status == 131)
+			write(2, "Quit (core dumped)\n", 20);
+		else if (msh->status == 130)
+			(write(2, "c est pas moi\n", 15), write(2, "\n", 1));
+	}
+	else if (WIFEXITED(msh->status))
+		msh->status = WEXITSTATUS(msh->status);
+	dprintf(2, "status %d\n", msh->status);
+	sign = 0;
+	mlcgic(NULL, FLUSH, PIP, msh);
+	// ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }

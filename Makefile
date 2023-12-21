@@ -16,7 +16,6 @@ SRCS = main.c \
 	   ft_parse_ter.c \
 	   ft_parse_utils.c \
 	   ft_error_message_syntax.c \
-	   ft_free_split_minish.c \
 	   ft_split_minish_utils.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
@@ -39,6 +38,7 @@ SRCS = main.c \
 	   exec_cmd.c \
 	   pipex.c \
 	   pipex_handle_pipe.c \
+	   lpid_utils.c \
 	   ft_expand.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \

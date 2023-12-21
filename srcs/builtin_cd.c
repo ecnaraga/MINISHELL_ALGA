@@ -6,34 +6,34 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 11:59:17 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/21 17:13:12 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static char	*get_old_pwd(t_env **env)
+static char	*get_old_pwd(t_env **env, t_msh *msh)
 {
-	char	*old_pwd;
+	char	*old;
 	t_env	*tmp;
 
-	old_pwd = NULL;
+	old = NULL;
 	tmp = *env;
 	while (tmp)
 	{
 		if (!ft_strcmp(tmp->name, "PWD"))
 		{
-			old_pwd = tmp->content;
+			old = tmp->content;
 			break ;
 		}
 		tmp = tmp->next;
 	}
-	if (!old_pwd)
+	if (!old)
 		return (NULL);
 	else
 	{
-		old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", old_pwd), NO_ENV);
-		return (old_pwd);
+		old = mlcgic(mlcp(ft_strjoin("OLDPWD=", old), 1), ADD, NO_ENV, msh); // protege?
+		return (old);
 	}
 }
 
@@ -55,34 +55,35 @@ static char	*get_path(char	**str)
 	return (path);
 }
 
-void	change_env(char	*old_pwd, t_msh *minish, int statut)
+void	change_env(char	*old_pwd, t_msh *msh, int statut)
 {
 	char	*tmp;
 	char	*newpath;
 	
 	if(old_pwd)
 	{
-		new_env_node(old_pwd, 2, minish->env, 2);
-		new_env_node(old_pwd, 2, minish->export_env, 1);
-		ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
+		new_env_node_env(msh, old_pwd, 2, msh->env);
+		new_env_node_export(msh, old_pwd, 2, msh->export_env);
+		mlcgic(mlcp(old_pwd, 0), FREE, NO_ENV, msh);
+		// ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
 	}
 	else
 	{
-		new_env_node("OLDPWD=", 2, minish->env, 2);
-		new_env_node("OLDPWD=", 2, minish->export_env, 1);
+		new_env_node_env(msh, "OLDPWD=", 2, msh->env);
+		new_env_node_export(msh, "OLDPWD=", 2, msh->export_env);
 	}
 	tmp = getcwd(NULL, 0);
 	if (!tmp)
 	{
-		del_env("OLDPWD", minish);
-		free(tmp);
-		return ;
+		del_env("OLDPWD", msh);
+	 	return ;
 	}
 	else if (statut == 0)
 	{
-		newpath = ft_magic_malloc(ADD, 0, ft_strjoin("PWD=", tmp), NO_ENV);
-		new_env_node(newpath, 2, minish->env, 2);
-		new_env_node(newpath, 2, minish->export_env, 1);
+		newpath = mlcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh); // protege?
+		// newpath = ft_magic_malloc(ADD, 0, ft_strjoin("PWD=", tmp), NO_ENV);
+		new_env_node_env(msh, newpath, 2, msh->env);
+		new_env_node_export(msh, newpath, 2, msh->export_env);
 	}
 	free(tmp);
 }
@@ -105,40 +106,42 @@ int	pwd_exist(t_env **env)
 	return (0);
 }
 
-int	builtin_cd(t_msh *minish)
+int	builtin_cd(t_msh *msh)
 {
 	char	*path;
 	char	*old_pwd;
 	char	*tmp;
 	static int	statut = 0;
 
-	if(minish->p.cmd_opt[2])
+	if(msh->p.cmd_opt[2])
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
-		return (status = 1, 0);
+		return (msh->status = 1, 0);
 	}
-	old_pwd = get_old_pwd(minish->env);
-	if (status == 255)
+	old_pwd = get_old_pwd(msh->env, msh);
+	if (msh->status == 255)
 		return (255);
 	if (statut == 1 && !old_pwd)
 	{
 		tmp = getcwd(NULL, 0);
-		old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
+		old_pwd = mlcgic(mlcp(ft_strjoin("OLDPWD=", tmp), 1), ADD, NO_ENV, msh);
+		// old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
 		free(tmp);
 	}
 	if (!old_pwd)
 		statut = 1;
-	else if (old_pwd && pwd_exist(minish->env))
+	else if (old_pwd && pwd_exist(msh->env))
 		statut = 0;
-	path = get_path(minish->p.cmd_opt);
+	path = get_path(msh->p.cmd_opt);
 	if (!path)
 	{
 		if (old_pwd)
-			ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
-		return (status = 1, 0);
+			mlcgic(mlcp(old_pwd, 0), FREE, NO_ENV, msh);
+			// ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
+		return (msh->status = 1, 0);
 	}
 	if (chdir(path) == 0)
-		change_env(old_pwd, minish, statut);
+		change_env(old_pwd, msh, statut);
 	else
 		perror("minishell");
 	return (0);

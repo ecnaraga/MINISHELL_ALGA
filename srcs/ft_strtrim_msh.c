@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/15 13:15:26 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,18 +201,21 @@ char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub)
 			len2 = 1;
 		else
 			len2 = ft_count_end(*s1) + 1;
-		s2 = ft_magic_malloc(MALLOC, sizeof(char) * len2, NULL, NO_ENV);
+		s2 = mlcgic(mlcp(NULL, sizeof(char) * len2), MALLOC, NO_ENV, msh);
+		// s2 = ft_magic_malloc(MALLOC, sizeof(char) * len2, NULL, NO_ENV);
 		if (!s2)
 			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
 		ft_strlcpy(s2, *s1 + count , len2 - 1);
 		tmp = *s1;
 		// printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
-		*s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
+		*s1 = mlcgic(mlcp(ft_strdup(*s1 + ft_begin_new_s1(*s1)), 1), ADD, NO_ENV, msh);
+		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
 		if (!(*s1))
 			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
 		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + count + len2 - 1), NO_ENV);
 		// printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
-		ft_magic_malloc(FREE, 0, tmp, NO_ENV);
+		mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 	}
 	return (s2);
 }
