@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:58:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 14:11:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int		ft_search_builtin_bis(t_msh *msh)
 	else if (ft_strcmp(msh->p.cmd_opt[0], "env") == 0)
 	{
 		builtin_env(msh);
-		if (status == 255)
+		if (msh->status == 255)
 			return (255);
 		return (1);
 	}
@@ -49,7 +49,7 @@ int		ft_search_builtin(t_msh *msh)
 	else if (ft_strcmp(msh->p.cmd_opt[0], "cd") == 0)
 	{
 		builtin_cd(msh);
-		if (status == 255)
+		if (msh->status == 255)
 			return (255);
 		return (1);
 	}
@@ -58,7 +58,7 @@ int		ft_search_builtin(t_msh *msh)
 	else if (ft_strcmp(msh->p.cmd_opt[0], "export") == 0)
 	{
 		builtin_export(msh);
-		if (status == 255)
+		if (msh->status == 255)
 			return (255);
 		return (1);
 	}
@@ -71,16 +71,16 @@ void	ft_child_exec(t_msh *msh)
 	char **env;
 	(void) env;
 
-	err = ft_access_cmd(msh->p.path, msh->p.cmd_opt[0], &msh->p.good_path);
-	if (status == 255)// OK PROTEGER
-		ft_exit(-1, -1, -1);
+	err = ft_access_cmd(msh, &msh->p.good_path);
+	if (msh->status == 255)// OK PROTEGER
+		ft_exit(-1, -1, -1, msh);
 	if (err > 0) // OK PROTEGER
-		(ft_perr(err, msh->p.cmd_opt[0]), ft_exit(-1, -1, -1));
-	env = ft_transcript_env(msh->env, msh->p.good_path);
-	if (status == 255) // OK PROTEGER
-		ft_exit(-1, -1, -1);
+		(ft_perr(msh, err, msh->p.cmd_opt[0]), ft_exit(-1, -1, -1, msh));
+	env = ft_transcript_env(msh->env, msh->p.good_path, msh);
+	if (msh->status == 255) // OK PROTEGER
+		ft_exit(-1, -1, -1, msh);
 	execve(msh->p.good_path, msh->p.cmd_opt, env);
-	(perror("execve"), ft_exit(-1, -1, -1));
+	(perror("execve"), ft_exit(-1, -1, -1, msh));
 }
 
 static void	update_hdoc_list(t_msh *msh, t_env *head, t_env *prev)
@@ -106,6 +106,7 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 	t_env *head_hd;
 	t_env *prev_hd;
 	
+	signal(SIGINT, SIG_IGN);
 	if (fd_1 > -1)
 		close(fd_1);
 	if (fd_2 > -1)
@@ -117,8 +118,8 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 	{
 		if (msh->av->token == HDOC && rule != CMD_ALONE)
 			update_hdoc_list(msh, head_hd, prev_hd);
-		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
+		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, &head);
 	}
 	if (msh->av && (msh->av->token == PIPE || msh->av->token == PAR_CLOSE))
-		msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
+		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, &head);
 }

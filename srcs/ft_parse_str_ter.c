@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str_ter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2023/11/29 12:32:59 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/21 11:31:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	get_final_str(size_t *i, size_t *j, char *fstr, char *str)
 	}
 }
 
-char	*ft_parse_bis_bis(char *str)
+char	*ft_parse_bis_bis(t_msh *msh, char *str)
 {
 	char	*fstr;
 	size_t	i;
@@ -75,8 +75,8 @@ char	*ft_parse_bis_bis(char *str)
 	int		flag;
 
 	get_final_size(&i, &count, &flag, str);
-	fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1),
-			NULL, NO_ENV);
+	fstr = mlcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MALLOC, NO_ENV, msh);
+	// fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL, NO_ENV);
 	if (!fstr)
 		return (NULL);
 	i = -1;
@@ -91,6 +91,7 @@ char	*ft_parse_bis_bis(char *str)
 		j++;
 	}
 	fstr[j] = '\0';
-	ft_magic_malloc(FREE, 0, str, NO_ENV);
+	mlcgic(mlcp(str, 0), FREE, NO_ENV, msh);
+	// ft_magic_malloc(FREE, 0, str, NO_ENV);
 	return (fstr);
 }

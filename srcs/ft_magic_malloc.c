@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/02 09:34:40 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/21 15:39:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_list_remove(t_list **begin_list, t_list **lst, t_list **prev)
 	}
 }
 
-void	ft_list_remove_if(t_list **begin_list, void *addr, int (*cmp)())
+void	ft_list_remove_if(t_list **begin_list, t_magic *p/* , void *addr */, int (*cmp)())
 {
 	t_list	*prev;
 	t_list	*lst;
@@ -46,28 +46,32 @@ void	ft_list_remove_if(t_list **begin_list, void *addr, int (*cmp)())
 	prev = NULL;
 	while (lst)
 	{
-		if (cmp(lst->content, addr))
+		if (cmp(lst->content, p->addr))
+		{
 			ft_list_remove(begin_list, &lst, &prev);
+			break ;
+		}
 		else
 		{
 			prev = lst;
 			lst = lst->next;
 		}
 	}
+	free(p);
 }
 
-void	*ft_magic_add_malloc(t_list **mlc, int rule, size_t size, void *addr)
+static void	*ft_magic_add_malloc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 {
 	t_list	*head;
 	t_list	*tmp;
 
 	head = *mlc;
 	if (rule == MALLOC)
-		tmp = ft_lstnew_malloc(size);
+		tmp = ft_lstnew_malloc(p->size);
 	else
-		tmp = ft_lstnew_add(addr);
+		tmp = ft_lstnew_add(p->addr);
 	if (!tmp)
-		return (write(2, "minishell: Cannot allocate memory\n", 35), status = 255, NULL);
+		return (write(2, "minishell: Cannot allocate memory\n", 35), msh->status = 255, NULL);
 	if (*mlc)
 	{
 		while ((*mlc)->next)
@@ -77,7 +81,26 @@ void	*ft_magic_add_malloc(t_list **mlc, int rule, size_t size, void *addr)
 	}
 	else
 		*mlc = tmp;
+	free(p);
 	return (tmp->content);
+}
+/* size == -1 => signifie regle ADD select*/
+t_magic	*mlcp(void *addr, size_t size)
+{
+	t_magic	*param;
+	
+	if (!addr && size == 0)
+		return (NULL);
+	param = malloc(sizeof(t_magic));
+	if (!param)
+	{
+		if (size == 1 && addr)
+			free(addr);
+		return (NULL);
+	}
+	param->addr = addr;
+	param->size = size;
+	return (param);
 }
 /*
 Garbagge collector : Store in a linked list all the address malloc
@@ -93,31 +116,36 @@ Garbagge collector : Store in a linked list all the address malloc
 rule : choice of the rule
 size : if the rule asked is malloc, size of the element to malloc
 addr : if the rule is add or free, address of the elemnt sent
-nb : if the rule is add or malloc, linked list concerning
+lst : if the rule is add or malloc, linked list concerning
 */
-void	*ft_magic_malloc(int rule, size_t size, void *addr, int nb)
+void	*mlcgic(t_magic *p, int rule, int lst, t_msh *msh)
+// void	*ft_magic_malloc(int rule, size_t size, void *addr, int lst)
 {
 	static t_list	*mlc;
 	static t_list	*mlc_pip;
 	static t_list	*mlc_env;
 
-	if ((rule == MALLOC || rule == ADD) && nb == NO_ENV)
-		return (ft_magic_add_malloc(&mlc, rule, size, addr));
-	else if ((rule == MALLOC || rule == ADD) && nb == ENV)
-		return (ft_magic_add_malloc(&mlc_env, rule, size, addr));
-	else if ((rule == MALLOC || rule == ADD) && nb == PIP)
-		return (ft_magic_add_malloc(&mlc_pip, rule, size, addr));
-	else if (rule == FREE && nb == NO_ENV)
-		ft_list_remove_if(&mlc, addr, ft_check);
-	else if (rule == FREE && nb == ENV)
-		ft_list_remove_if(&mlc_env, addr, ft_check);
-	else if (rule == FREE && nb == PIP)
-		ft_list_remove_if(&mlc_pip, addr, ft_check);
-	else if (rule == FLUSH && nb == NO_ENV)
+	if (!p && (rule == MALLOC || rule == ADD))
+		return (msh->status = 255, NULL);
+	if (!p && rule == FREE)
+		return (NULL);
+	if ((rule == MALLOC || rule == ADD) && lst == NO_ENV)
+		return (ft_magic_add_malloc(msh, &mlc, rule, p));
+	else if ((rule == MALLOC || rule == ADD) && lst == ENV)
+		return (ft_magic_add_malloc(msh, &mlc_env, rule, p));
+	else if ((rule == MALLOC || rule == ADD) && lst == PIP)
+		return (ft_magic_add_malloc(msh, &mlc_pip, rule, p));
+	else if (rule == FREE && lst == NO_ENV)
+		ft_list_remove_if(&mlc, p, ft_check);
+	else if (rule == FREE && lst == ENV)
+		ft_list_remove_if(&mlc_env, p, ft_check);
+	else if (rule == FREE && lst == PIP)
+		ft_list_remove_if(&mlc_pip, p, ft_check);
+	else if (rule == FLUSH && lst == NO_ENV)
 		ft_lstclear(&mlc, del);
-	else if (rule == FLUSH && nb == ENV)
+	else if (rule == FLUSH && lst == ENV)
 		ft_lstclear(&mlc_env, del);
-	else if (rule == FLUSH && nb == PIP)
+	else if (rule == FLUSH && lst == PIP)
 		ft_lstclear(&mlc_pip, del);
 	else //QUIT
 	{

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/19 11:07:01 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:24:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 # define I 0
 # define O 1
 
-extern int	status;
+// extern int	status;
+extern int	sign;
 
 typedef struct s_dollar
 {
@@ -65,6 +66,7 @@ typedef	struct s_msh
 	int		ac;
 	t_split *av;
 	t_pipex	p;
+	int		status;
 	int		previous_status;
 }		t_msh;
 
@@ -111,6 +113,24 @@ typedef struct s_fd
 	int file;
 	int	old_std;
 }		t_fd;
+
+typedef struct s_lpid
+{
+	pid_t pid;
+	struct s_lpid *next;
+}		t_lpid;
+
+typedef struct s_magic
+{
+	void *addr;
+	size_t	size;
+}		t_magic;
+
+typedef	struct s_intel
+{
+	int statut;
+	int name_size;
+}		t_intel;
 
 typedef int (*t_storage)(t_msh *msh, t_par *p, int *i);
 

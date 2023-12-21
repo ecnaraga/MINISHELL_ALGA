@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/18 14:28:25 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	get_sizes(int *size_name, int *size_content, int *i, char **str)
 	*size_content = ft_strlen(str[*i] + (*size_name + 1));
 }
 
-int	fill_env(t_env **env, char **str)
+static int	fill_env(t_msh *msh, t_env **env, char **str)
 {
 	int		i;
 	int		size_name;
@@ -32,10 +32,11 @@ int	fill_env(t_env **env, char **str)
 	while (str[++i])
 	{
 		get_sizes(&size_name, &size_content, &i, str);
-		new = ft_lst_new_malloc(size_name + 1, size_content + 1);
+		new = ft_lst_new_malloc(msh, size_name + 1, size_content + 1);
 		if (!new)
 		{
-			ft_magic_malloc(FLUSH, 0, NULL, ENV);
+			mlcgic(NULL, FLUSH, ENV, msh);
+			// ft_magic_malloc(FLUSH, 0, NULL, ENV);
 			return (1);
 		}
 		ft_strlcpy(new->name, str[i], size_name + 1);
@@ -45,15 +46,16 @@ int	fill_env(t_env **env, char **str)
 	return (0);
 }
 
-t_env	**get_env(char **str)
+t_env	**get_env(char **str, t_msh *msh)
 {
 	t_env	**env;
 
-	env = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
+	env = mlcgic(mlcp(NULL, sizeof(t_env)), MALLOC, ENV, msh);
+	// env = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
 	if (!env)
-		return (ft_exit(-1, -1, -1), NULL);
+		return (ft_exit(-1, -1, -1, msh), NULL);
 	*env = NULL;
-	if (fill_env(env, str) == 1)
+	if (fill_env(msh, env, str) == 1)
 		return (NULL);
 	return (env);
 }
