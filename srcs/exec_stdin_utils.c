@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 12:51:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void ft_open_heredoc(t_msh *msh, int *fd_infile, t_head *save)
 	save->head_hd = msh->p.hdoc;
 	while (msh->p.hdoc && msh->av && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))//
 	{	
-		dprintf(2, "msh->av->data |%s| msh->p.hdoc->name |%s| msh->p.hdoc->content |%s| msh->p.hdoc->read %d\n", msh->av->data, msh->p.hdoc->name, msh->p.hdoc->content, msh->p.hdoc->read);
+		// dprintf(2, "msh->av->data |%s| msh->p.hdoc->name |%s| msh->p.hdoc->content |%s| msh->p.hdoc->read %d\n", msh->av->data, msh->p.hdoc->name, msh->p.hdoc->content, msh->p.hdoc->read);
 		msh->p.hdoc = msh->p.hdoc->next;
 	}	
 	*fd_infile = open(msh->p.hdoc->content, O_RDONLY);  // IF ERREUR OPEN > GERE DANS REDEF_STDIN
@@ -67,7 +67,7 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 {
 	char *str;
 	
-	dprintf(2, "INVALID\n");
+	// dprintf(2, "INVALID\n");
 	str = mlcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
 	// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
 	if (str)

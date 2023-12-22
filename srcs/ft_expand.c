@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 17:21:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,32 @@ int	ft_first_valid_char(char c)
 	if (ft_isalpha(c) != 0 || c == '_' || c == '?')
 		return (0);
 	return (1);
+}
+/*
+bash-5.1$ echo $ga8ga
+
+bash-5.1$ echo $ga8+ga
++ga
+bash-5.1$ 
+
+*/
+int	valide_expand(char *key) // va nous dire si les char sont ok // A IMPLEMENTER
+{
+	int	i;
+
+	i = 1;
+	if (ft_isalpha(key[0]) || key[0] == '_')
+	{
+		while(key[i] && key[i] != '=')
+		{
+			if (ft_isalnum(key[i]) || key[i] == '_' )
+				i++;
+			else
+				return (0);	
+		}
+		return (1);
+	}
+	return (0);
 }
 
 char *get_value(t_msh *msh, t_env **env, char *str, int rule)

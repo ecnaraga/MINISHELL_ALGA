@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:08:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,11 @@ static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 
 	j = -1;
 	p->fd_p = mlcgic(mlcp(NULL, sizeof(int *) * (size + 1)), MALLOC, PIP, msh);
-	// p->fd_p = ft_magic_malloc(MALLOC, sizeof(int *) * (size + 1), NULL, PIP);
 	if (!p->fd_p)
 		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	while (++j < size)
 	{
 		p->fd_p[j] = mlcgic(mlcp(NULL, sizeof(int *) * 2), MALLOC, PIP, msh);
-		// p->fd_p[j] = ft_magic_malloc(MALLOC, sizeof(int) * 2, NULL, PIP);
 		if (!p->fd_p)
 			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	}
@@ -131,9 +129,7 @@ int	pipex_multi(t_msh *msh, int sub)
 	else if (WIFSIGNALED(msh->status))
 		msh->status = WTERMSIG(msh->status) + 128;
 	ft_signal_handler_msh();
-	dprintf(2, "status %d\n", msh->status);
 	sign = 0;
 	mlcgic(NULL, FLUSH, PIP, msh);
-	// ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }

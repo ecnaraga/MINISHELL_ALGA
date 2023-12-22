@@ -6,11 +6,34 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 12:49:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+pid_t	ft_exec_cmd_fork(t_msh *msh, int old_stdout, int old_stdin, int sub)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		msh->status = 255;
+		ft_exit_bis(msh, sub, old_stdout, old_stdin); // SI ERREUR DE FORK ON QUITTE LE PROCESS ACTUEL
+	}
+	if (pid == 0)
+	{
+		close(old_stdout);
+		close(old_stdin);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGQUIT, &ft_free);
+		ft_child_exec(msh);
+	}
+	return (pid);
+}
 
 void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 {
@@ -21,25 +44,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 	if (msh->status == 255 || built == 2)
 		ft_exit_bis(msh, sub, old_stdout, old_stdin); // SI ERREUR DE MALLOC DANS UN BUILTIN ON QUITTE LE PROCESS ACTUEL
 	if (built == 0)
-	{
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			msh->status = 255;
-			ft_exit_bis(msh, sub, old_stdout, old_stdin); // SI ERREUR DE FORK ON QUITTE LE PROCESS ACTUEL
-			return;
-		}
-		if (pid == 0)
-		{
-			close(old_stdout);
-			close(old_stdin);
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			signal(SIGQUIT, &ft_free);
-			ft_child_exec(msh);
-		}
-	}
+		pid = ft_exec_cmd_fork(msh, old_stdout, old_stdin, sub);
 	if (built != 0 || (built == 0 && pid != 0))
 	{
 		if (dup2(old_stdout, 1) == -1)
@@ -125,9 +130,8 @@ int	ft_cmd_alone(t_msh *msh, int sub)
 	}
 	else if (WIFEXITED(msh->status))
 		msh->status = WEXITSTATUS(msh->status);
-	dprintf(2, "status %d\n", msh->status);
+	// dprintf(2, "status %d\n", msh->status);
 	sign = 0;
 	mlcgic(NULL, FLUSH, PIP, msh);
-	// ft_magic_malloc(FLUSH, 0, NULL, PIP);
 	return (0);
 }
