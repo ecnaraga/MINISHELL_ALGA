@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 17:13:12 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:18:24 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static char	*get_old_pwd(t_env **env, t_msh *msh)
 		return (NULL);
 	else
 	{
-		old = mlcgic(mlcp(ft_strjoin("OLDPWD=", old), 1), ADD, NO_ENV, msh); // protege?
+		old = mlcgic(mlcp(ft_strjoin("OLDPWD=", old), 1),
+				ADD, NO_ENV, msh);
 		return (old);
 	}
 }
@@ -55,7 +56,7 @@ static char	*get_path(char	**str)
 	return (path);
 }
 
-void	change_env(char	*old_pwd, t_msh *msh, int statut)
+int	change_env(char	*old_pwd, t_msh *msh, int statut)
 {
 	char	*tmp;
 	char	*newpath;
@@ -64,8 +65,7 @@ void	change_env(char	*old_pwd, t_msh *msh, int statut)
 	{
 		new_env_node_env(msh, old_pwd, 2, msh->env);
 		new_env_node_export(msh, old_pwd, 2, msh->export_env);
-		mlcgic(mlcp(old_pwd, 0), FREE, NO_ENV, msh);
-		// ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
+		mlcgic(mlcp(old_pwd, 0), FREE, NO_ENV, msh); // ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
 	}
 	else
 	{
@@ -76,16 +76,18 @@ void	change_env(char	*old_pwd, t_msh *msh, int statut)
 	if (!tmp)
 	{
 		del_env("OLDPWD", msh);
-	 	return ;
+		return (0);
 	}
 	else if (statut == 0)
 	{
-		newpath = mlcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh); // protege?
-		// newpath = ft_magic_malloc(ADD, 0, ft_strjoin("PWD=", tmp), NO_ENV);
+		newpath = mlcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh); // newpath = ft_magic_malloc(ADD, 0, ft_strjoin("PWD=", tmp), NO_ENV);
+		if (msh->status == 255)
+			return (255);
 		new_env_node_env(msh, newpath, 2, msh->env);
 		new_env_node_export(msh, newpath, 2, msh->export_env);
 	}
 	free(tmp);
+	return (0);
 }
 
 int	pwd_exist(t_env **env)
@@ -124,8 +126,9 @@ int	builtin_cd(t_msh *msh)
 	if (statut == 1 && !old_pwd)
 	{
 		tmp = getcwd(NULL, 0);
-		old_pwd = mlcgic(mlcp(ft_strjoin("OLDPWD=", tmp), 1), ADD, NO_ENV, msh);
-		// old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
+		old_pwd = mlcgic(mlcp(ft_strjoin("OLDPWD=", tmp), 1), ADD, NO_ENV, msh); // old_pwd = ft_magic_malloc(ADD, 0, ft_strjoin("OLDPWD=", tmp), NO_ENV);
+		if (msh->status == 255)
+			return (255);
 		free(tmp);
 	}
 	if (!old_pwd)
@@ -136,8 +139,7 @@ int	builtin_cd(t_msh *msh)
 	if (!path)
 	{
 		if (old_pwd)
-			mlcgic(mlcp(old_pwd, 0), FREE, NO_ENV, msh);
-			// ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
+			mlcgic(mlcp(old_pwd, 0), FREE, NO_ENV, msh); // ft_magic_malloc(FREE, 0, old_pwd, NO_ENV);
 		return (msh->status = 1, 0);
 	}
 	if (chdir(path) == 0)
