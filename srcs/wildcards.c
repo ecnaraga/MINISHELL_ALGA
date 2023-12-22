@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 17:14:52 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:52:32 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,34 +39,57 @@ char	*ft_strjoin3(char *s1, char *s2)
 		ft_strcat(s, s1);
 	if (s2)
 		ft_strcat(s, s2);
-	s[len++] = ' ';
+	s[len++] = '\t';
 	s[len] = '\0';
 	free(s1);
 	return (s);
 }
 
-int	matchWildcard(char *str, char *pattern) 
+int	matchWildcard(char *str, char *pattern, int *tab) 
 {
-	if ((*str == '\0' && *pattern == '\0') || (*pattern == '*' && *(pattern + 1) == '\0'))
+	if ((*str == '\0' && *pattern == '\0') || (*pattern == '*' && *tab == 0 && *(pattern + 1) == '\0'))
 		return (1);
 		
 	if (*pattern == '\0' || *str == '\0')
 		return (0);
 		
-	if (*pattern == '*')
+	if (*pattern == '*' && *tab == 0)
 	{
-		while(*(pattern + 1) == '*')
+		while(*(pattern + 1) == '*' && *(tab + 1) == 0)
+		{
 			pattern++;
-		if (!matchWildcard(str, pattern + 1))
-			return (matchWildcard(str + 1, pattern));
+			tab++;
+		}
+		if (!matchWildcard(str, pattern + 1, tab + 1))
+			return (matchWildcard(str + 1, pattern, tab));
 		else
 			return (1);
 	}
 		
 	if (*str == *pattern)
-		return matchWildcard(str + 1, pattern + 1);
+		return matchWildcard(str + 1, pattern + 1, tab + 1);
 		
 	return (0);
+}
+
+int	ft_strcmp_cas(char *s1, char *s2)
+{
+	size_t	i;
+	char	a;
+	char 	b;
+
+	i = 0;
+	if (!s1[0] || !s2[0])
+		return (1);
+	while (s1[i] != '\0' || s2[i] != '\0')
+	{
+		a = ft_tolower(s1[i]);
+		b = ft_tolower(s2[i]);
+		if (a != b)
+			return (a - b);
+		i++;
+	}
+	return (ft_tolower(s1[i]) - ft_tolower(s2[i]));
 }
 
 char	**make_in_order(char **str)
@@ -77,7 +100,7 @@ char	**make_in_order(char **str)
 	i = 0;
 	while(str[i])
 	{
-		if (str[i + 1] && ft_strcmp(str[i], str[i + 1]) > 0)
+		if (str[i + 1] && ft_strcmp_cas(str[i], str[i + 1]) > 0)
 		{
 			tmp = str[i];
 			str[i] = str[i + 1];
@@ -90,13 +113,12 @@ char	**make_in_order(char **str)
 	return (str);
 }
 
-char	**wildcards(char *str, t_msh *minish)
+char	**wildcards(char *str, t_msh *msh, char *cmd_0)
 {
 	DIR				*dir;
 	struct dirent	*read;
 	char	*str2;
 	char	**str3;
-	(void)minish;
 
 	str2 = NULL;
 	dir = opendir(".");
@@ -113,19 +135,38 @@ char	**wildcards(char *str, t_msh *minish)
 	}
 	while (read != NULL)
 	{
-		if (matchWildcard(read->d_name, str) == 1)
-			str2 = ft_strjoin3(str2, read->d_name);
+		if (matchWildcard(read->d_name, str, msh->av->wild) == 1)
+		{
+			if((ft_strcmp("echo", cmd_0) == 0 && !(read->d_name[0] == '.')) || ft_strcmp("echo", cmd_0) != 0)
+			{
+				str2 = ft_strjoin3(str2, read->d_name);
+				if (msh && msh->status == 255)
+					return (NULL);
+			}
+		}
 		read = readdir(dir);
 	}
+	// if(!str2)
+	// 	return (NULL);
 	closedir(dir);
-	str3 = ft_split(str2, ' ');
+	str3 = ft_split(str2, '\t');
+	if (!str3)
+		return (NULL);
 	free(str2);
-	str3 = make_in_order(str3);	
+	if(str3[1])
+		str3 = make_in_order(str3);
 	return (str3);
 }
 
 // int	main(int ac, char **av)
-// {
-// 	wildcards(av[1], NULL);
+// {	
+// 	char **oui;
+// 	oui = wildcards(av[1], NULL);
+// 	if (oui)
+// 	{
+// 		for (size_t i = 0; oui[i]; i++)
+// 			printf("%s\n", oui[i]);
+// 	}
+	
 // 	return (0);
 // }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:34:22 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 17:09:06 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:30:54 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,4 +182,7 @@ int						ft_isascii(int c);
 int						ft_isprint(int c);
 int						ft_toupper(int c);
 int						ft_tolower(int c);
+int	ft_islower(int c);
+int	ft_isupp(int c);
+
 #endif

@@ -3,11 +3,14 @@
 echo & USER
 */
 
-( cat | cat ) << L && cat | cat << L
-( cat | cat << L ) << L && cat | cat << L
+// ( cat | cat ) << L && cat | cat << L
+// ( cat | cat << L ) << L && cat | cat << L
 
-<< L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
+// << L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
 valide key dans expand
+ft_expand dans heredoc 
+wildcard potentiellement dans heredoc
+conditional jump avec wildcard
 
 Minishell$ ^C
 Minishell$ ^C

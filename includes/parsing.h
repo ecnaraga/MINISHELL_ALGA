@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 14:16:27 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:01:31 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ ft_split_minish_utils.c
 // void	*ft_free_strs(t_split *strs, int j);
 int		ft_test(char c, const char *c1, const char *cm1, t_quote *q);
 int		ft_test_bis(char c, int d_q, int s_q);
-void	ft_alloc_type(t_split *new, t_msh *msh);
+void	ft_alloc_type(t_split *new, t_msh *msh, int l);
 
 /*
 ft_strlcpy_minish.c

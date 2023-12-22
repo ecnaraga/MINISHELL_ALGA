@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 11:46:49 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:12:41 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_init_var(int *n1, int *n2, int *n3, int *n4)
+static void	ft_init_var(int *n1, int *n2, t_quote *q)
+{
+	*n1 = 0;
+	*n2 = 0;
+	q->d = 0;
+	q->s = 0;
+	q->wildcard = 0;
+	// *n3 = 0;
+	// *n4 = 0;
+}
+
+static void	ft_init_var_bis(int *n1, int *n2, int *n3, int *n4)
 {
 	*n1 = 0;
 	*n2 = 0;
@@ -31,7 +42,7 @@ static int	ft_countwords(const char *s)
 	int	d_q;
 	int	s_q;
 
-	ft_init_var(&wd, &i, &d_q, &s_q);
+	ft_init_var_bis(&wd, &i, &d_q, &s_q);
 	while (s[i])
 	{
 		while (s[i] && d_q % 2 == 0 && s_q % 2 == 0 && ft_isspace(s[i]) == 0)
@@ -55,7 +66,7 @@ Compte le nb de char a copies et le renvoie + compte le nb de potentielles
 lt = nb de char a copies
 k = nb de char qui seront copiees + nb de quote(double et single) qui ne seront
 	pas copies car non suivies/ou precedees selon si fermant/ou ouvrant d'un
-	issspace
+	issspace // incrementation a faire pour passer au mot suivant
 dollar = nb de potentielles variables d environnement (qui commencent par un $)
 	ps : une suite de dollar est comptee comme un seul dollar
 */
@@ -63,13 +74,15 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 {
 	t_letter	l;
 
-	ft_init_var(&l.lt, &l.k, &q->d, &q->s);
+	ft_init_var(&l.lt, &l.k, q);
 	while (s[*i] && q->d % 2 == 0 && q->s % 2 == 0
 		&& (s[*i] == '"' || s[*i] == 39 || ft_isspace(s[*i]) == 0))
 		ft_inc_quote(s[(*i)++], &q->d, &q->s);
 	if (i == 0 && s[*i] && ft_test(s[*i], &s[*i + 1], NULL, q) == 0)
 	{
 		ft_inc_quote(s[*i], &q->d, &q->s);
+		if (q->wildcard == 0 && s[*i] == '*')
+			q->wildcard += 1;
 		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
 			*dollar += 1;
 		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
@@ -79,6 +92,8 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 	while (s[*i] && ft_test(s[*i], &s[*i + 1], &s[*i - 1], q) == 0)
 	{
 		ft_inc_quote(s[*i], &q->d, &q->s);
+		if (q->wildcard == 0 && s[*i] == '*')
+			q->wildcard += 1;
 		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
 			*dollar += 1;
 		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
@@ -151,7 +166,7 @@ static void	ft_split_strs(const char *s, t_split **strs, int wd, t_msh *msh)
 	int			j;
 	t_letter	l;
 	t_quote		q;
-	int			i;
+	int	 i;
 	t_split		*new;
 
 	i = 0;
@@ -160,27 +175,20 @@ static void	ft_split_strs(const char *s, t_split **strs, int wd, t_msh *msh)
 	{
 		new = ft_lstnew_split(msh); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
 		l = ft_count_letter(s, &q, &i, &new->dollar);
+		new->wildcard = q.wildcard;
 		new->data = mlcgic(mlcp(NULL, sizeof(char) * (l.lt + 1)), MALLOC, NO_ENV, msh);
-		// new->data = ft_magic_malloc(MALLOC, sizeof(char) * (l.lt + 1), NULL, NO_ENV);
 		if (new->data == NULL)
 			ft_exit(-1, -1, -1, msh); // SI MALLOC KO => ON QUITTE MINISHELL
 		new->token = TO_DEFINE;
-		ft_alloc_type(new, msh);  // SI MALLOC KO ON QUITTE DANS FT_ALLOC_TYPE
+		ft_alloc_type(new, msh, l.lt);  // SI MALLOC KO ON QUITTE DANS FT_ALLOC_TYPE
 		// if (ft_alloc_type(new) == 1)
 			// return (1);
 		if (l.lt >= 0)
-		{
-			// printf("i - l.k - 1 % d\n", i - l.k - 1);
-			// if (i - l.k - 1)
-			// 	ft_strlcpy_msh(new, s/*  + i - l.k - 1 */, l.lt + 1, i - l.k - 1);
-			// else
-				ft_strlcpy_msh(new, s + i - l.k - 1, l.lt + 1, i - l.k - 1);
-		}
+			ft_strlcpy_msh(new, s + i - l.k - 1, l.lt + 1, i - l.k - 1);
 		else
 			new->data[0] = '\0';
 		ft_lstadd_back_split(strs, new);
 	}
-	// return (0);
 }
 
 /*
@@ -200,8 +208,21 @@ t_split	*ft_split_msh(char const *s, t_msh *msh)
 	wd = ft_countwords(s);
 	strs = NULL;
 	ft_split_strs(s, &strs, wd, msh); // SI MALLOC KO ON QUITTE A L INTERIEUR
-	// if (ft_split_strs(s, &strs, wd) == 1)
-	// 	return (NULL);
+	
+	// int j = -1;
+	t_split *head = strs;
+	while (strs)
+	{
+		int i = -1;
+		printf("strs->data %s\n", strs->data);
+		if (strs->wild)
+		{
+			while (strs->data[++i])
+				printf("msh->av->data[%d] = |%c| msh->av->wild[%d] = %d\n", i, strs->data[i], i, strs->wild[i]);
+		}
+		strs = strs->next;
+	}
+	strs = head;
 	return (strs);
 }
 

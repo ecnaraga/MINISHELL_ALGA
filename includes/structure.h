@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:24:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:59:52 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ typedef struct s_dollar
 typedef	struct s_split
 {
 	char		*data;
-	int			quote;
-	int			token;
-	int			dollar;
+	int		wildcard;
+	int		*wild;
+	int		quote;
+	int		token;
+	int		dollar;
 	t_dollar	*type;
 	struct s_split		*next;
 }		t_split;
@@ -66,6 +68,7 @@ typedef	struct s_msh
 	int		ac;
 	t_split *av;
 	t_pipex	p;
+	int ambiguous;
 	int		status;
 	int		previous_status;
 }		t_msh;
@@ -74,6 +77,7 @@ typedef	struct s_quote
 {
 	int d;
 	int s;
+	int wildcard;
 }		t_quote;
 
 typedef struct s_letter

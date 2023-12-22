@@ -40,6 +40,8 @@ SRCS = main.c \
 	   pipex_handle_pipe.c \
 	   lpid_utils.c \
 	   ft_expand.c \
+	   ft_expand_wildcard.c \
+	   wildcards.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \
 	   ft_strtrim_msh.c \

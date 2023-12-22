@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_make_cmd.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:12:41 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:11:00 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,12 @@ int ft_copy_cmd(t_msh *msh, t_head *save, int *i, int *cmd_nb)
 			if (!msh->p.cmd_opt)
 				return (255); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 		}
+	}
+	else if (ck_char(msh->av->data, '*'))
+	{
+		msh->p.cmd_opt = ft_expand_wildcard(msh, cmd_nb, i);
+		if (msh->status == 255)
+			return (255);
 	}
 	else
 	{

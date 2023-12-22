@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 13:12:59 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:52:43 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,7 @@ void	ft_minishell(t_msh *msh, int sub);
 char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub);
 void ft_exec_par(t_msh *msh, t_split **head, int sub);
 char	*ft_expand(t_msh *msh, char *cmd, int rule);
+char **ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i);
+char	**wildcards(char *str, t_msh *msh, char *cmd_0);
 
 #endif

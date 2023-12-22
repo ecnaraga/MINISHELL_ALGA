@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 11:46:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:01:24 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,24 @@ Dynamically allocates a structure array of the size of the number of potential
 	environment variables (dollar) present in the word, which will be used to
 	specify whether or not expand the potential variable
 */
-void	ft_alloc_type(t_split *new, t_msh *msh)
-// int	ft_alloc_type(t_split *new)
+void	ft_alloc_type(t_split *new, t_msh *msh, int l)
 {
 	int	d;
 
 	if (new->dollar > 0)
 	{
 		new->type = mlcgic(mlcp(NULL, sizeof(t_dollar) * new->dollar), MALLOC, NO_ENV, msh);
-		// new->type = ft_magic_malloc(MALLOC, sizeof(t_dollar) * new->dollar, NULL, NO_ENV);
 		if (new->type == NULL)
 			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
-			// return (1);
 		d = -1;
 		while (++d < new->dollar)
 			new->type[d].expnd = TO_DEFINE;
 	}
-	// return (0);
+	new->wild = NULL;
+	if (new->wildcard > 0)
+	{
+		new->wild = mlcgic(mlcp(NULL, sizeof(int) * l), MALLOC, NO_ENV, msh);
+		if (new->wild == NULL)
+			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
+	}
 }

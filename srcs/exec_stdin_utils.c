@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdin_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/22 12:51:19 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:21:05 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ fail open gere dans ft_invalid_infile
 */
 static int	ft_open_infile(t_msh *msh, int *fd_infile, t_head *save)
 {
+	if (msh->av->data[0] == '*')
+		return (msh->ambiguous = -3, 0);
 	if (*fd_infile != -2)
 		close(*fd_infile);
-	if (msh->av->type)
+	if (msh->av->type )
 		msh->av->data = ft_expand(msh, msh->av->data, INFILE); //IF ERROR MALLOC, EXPAND RETURN (NULL)
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
@@ -70,7 +72,16 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 	// dprintf(2, "INVALID\n");
 	str = mlcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
 	// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
-	if (str)
+	if (str && msh->ambiguous == -3)
+	{
+		msh->status = 1;
+		str = mlcgic(mlcp(ft_strjoin(str, ": ambiguous redirect\n"), 1), ADD, PIP, msh);
+		if (str)
+			write(2, str, ft_strlen(str));
+		msh->av = ft_lstdel_and_relink_split(msh, msh->av, save->prev, &save->head);
+		mlcgic(mlcp(str, 0), FREE, PIP, msh);
+	}
+	else if (str)
 	{
 		perror(str);
 		msh->status = 1;
@@ -181,6 +192,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 	save.prev = NULL;
 	fd.file = -2;
 	ft_dup_pipe(msh, rule, j); // A CHECKER QUAND CHECK PIPEX MULTI
+	msh->ambiguous = 0;
 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_CLOSE)
 	{
 		if (msh->av->token == INFILE)
@@ -199,7 +211,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 			save.prev = msh->av;
 			msh->av = msh->av->next;
 		}
-		if (fd.file == -1) // IF ERREUR OPEN DE FT_OPEN_INFILE OU FT_OPEN_HEREDOC > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
+		if (fd.file == -1 || msh->ambiguous == -3) // IF ERREUR OPEN DE FT_OPEN_INFILE OU FT_OPEN_HEREDOC > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
 			return (ft_invalid_infile(msh, rule, j, &save));
 	}
 	msh->av = save.head;

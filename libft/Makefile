@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: galambey <galambey@student.42.fr>          +#+  +:+       +#+         #
+#    By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/02 14:09:36 by galambey          #+#    #+#              #
-#    Updated: 2023/12/11 17:09:35 by galambey         ###   ########.fr        #
+#    Updated: 2023/12/22 17:30:18 by athiebau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,6 +79,8 @@ SRC = src/print/ft_putchar_fd.c \
       src/test/ft_isalnum.c \
       src/test/ft_isascii.c \
       src/test/ft_isprint.c \
+      src/test/ft_isupp.c \
+      src/test/ft_islower.c \
       \
       src/memmory/ft_memset.c \
       src/memmory/ft_memchr.c \

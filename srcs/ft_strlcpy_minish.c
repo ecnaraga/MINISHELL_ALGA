@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy_minish.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2023/12/12 14:20:44 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 15:00:12 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ Copie dans dst size - 1 char de src. Saute les quotes non compris entre quotes
 		normalement le $ et les char qui suivent
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
+begin == -1 > cas de figure : "" ou ''
 */
 void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 {
@@ -105,7 +106,17 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 			if (ft_test_four(strs, src, &x, q) == 0)
 				strs->type[x.d].len_variable += 1;
 			if (ft_test_bis(src[x.i], q.d, q.s) == 0)
-				strs->data[x.j++] = src[x.i++];
+			{
+				strs->data[x.j] = src[x.i++];
+				if (strs->wildcard > 0)
+				{
+					if (q.s % 2 == 1 || q.d % 2 == 1 || strs->data[x.j] != '*')
+						strs->wild[x.j] = 1;
+					else
+						strs->wild[x.j] = 0;
+				}
+				x.j++;
+			}
 			else
 				x.i++;
 		}

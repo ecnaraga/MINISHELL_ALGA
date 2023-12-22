@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 17:42:24 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,8 +289,8 @@ void	builtin_export(t_msh *msh)
 					new_env_node_export(msh, msh->p.cmd_opt[i], 4, msh->export_env);
 					new_env_node_env(msh, msh->p.cmd_opt[i], 4, msh->env);
 				}
-			i++;
 			}
+			i++;
 		}
 	}
 	// if (!msh->p.cmd_opt[i])

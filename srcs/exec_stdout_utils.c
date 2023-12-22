@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdout_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 16:21:58 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ fail open gere dans ft_invalid_infile
 */
 static int	ft_open_outfile_tr(t_msh *msh, int *fd_outfile, t_head *save/*  t_split *prev, t_split **head */)
 {
+	if (msh->av->data[0] == '*')
+		return (msh->ambiguous = -3, 0);
 	if (*fd_outfile != -2)
 		close(*fd_outfile);
 	if (msh->av->type)
@@ -46,6 +48,8 @@ fail open gere dans ft_invalid_infile
 */
 static int	ft_open_outfile_notr(t_msh *msh, int *fd_outfile, t_head *save/*  t_split *prev, t_split **head */)
 {
+	if (msh->av->data[0] == '*')
+		return (msh->ambiguous = -3, 0);
 	if (*fd_outfile != -2)
 		close(*fd_outfile);
 	if (msh->av->type)
@@ -64,7 +68,14 @@ int	ft_invalid_outfile(t_msh *msh, int rule, int j, t_head *save)
 	
 	str = mlcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
 	// str = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: ", msh->av->data), PIP);
-	if (str)
+	if (str && msh->ambiguous == -3)
+	{
+		msh->status = 1;
+		str = mlcgic(mlcp(ft_strjoin(str, ": ambiguous redirect\n"), 1), ADD, PIP, msh);
+		if (str)
+			write(2, str, ft_strlen(str));
+	}
+	else if (str)
 	{
 		perror(str);
 		msh->status = 1;
@@ -165,6 +176,7 @@ int	redef_stdout(t_msh *msh, int rule, int j, int sub)
 	save.prev = NULL;
 	fd.file = -2;
 	ft_dup_pipe(msh, rule, j); // A CHECK AVEC LES PIPES
+	msh->ambiguous = 0;
 	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR /* && msh->av->token != PAR_CLOSE */) //voir si PAR CLOSE OU PAS CAR DANS STDIN PARCLOSE ET PAS LA
 	{
 		if (msh->av->token == OUTFILE_TRUNC)
@@ -182,7 +194,7 @@ int	redef_stdout(t_msh *msh, int rule, int j, int sub)
 			save.prev = msh->av;
 			msh->av = msh->av->next;
 		}
-		if (fd.file == -1)
+		if (fd.file == -1 || msh->ambiguous == -3)
 			return (ft_invalid_outfile(msh, rule, j, &save)); // IF ERREUR OPEN OUTFILETR OU OUTFILENOTR > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
 	}
 	msh->av = save.head;
