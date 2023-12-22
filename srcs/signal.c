@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:09:41 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/21 17:09:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ void	ft_free(int sig)
 {
 	if (sig == SIGINT)
 	{
-		// printf("NORMAL\n");
-		// ft_magic_malloc(FLUSH, 0, NULL, 0); // a mettre avec update status
-		// status = 130;
 		if (sign == 0 || sign == 2)
 		{
 			write(2, "\n", 1);
@@ -60,14 +57,10 @@ void	ft_free_bis(int signal)
 {
 	if (signal == SIGINT)
 	{
-		// ft_magic_malloc(FLUSH, 0, NULL, 0); // a mettre avec update status
 		sign = 3;
-		// status = 130;
 		write(2, "\n", 1);
-		// exit(130);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		// rl_redisplay();
 	}
 }
 
@@ -97,16 +90,9 @@ void	ft_free_ter(int signal)
 {
 	if (signal == SIGINT)
 	{
-		// printf("WTF\n");
-		// status = 130;
-		// ft_magic_malloc(FLUSH, 0, NULL, 0); // a mettre avec update status
 		close(STDIN_FILENO);
 		printf("\n");
-		// signal(SIGINT, SIG_DFL);
 		sign = 1;
-		// rl_on_new_line();
-		// rl_replace_line("", 0);
-		// rl_redisplay();
 	}
 }
 

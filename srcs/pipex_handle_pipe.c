@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 15:13:52 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 13:13:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	ft_child_pipe_exec(t_msh *msh)
 	head = msh->av;
 	if (msh->av->token == PAR_OPEN)
 	{
-		ft_exec_par(msh, &head, CMD_ALONE, 1); // OK PROTEGER
+		ft_exec_par(msh, &head, 1); // OK PROTEGER
 		ft_exit(-1, -1, -1, msh);
 	}
 	else
