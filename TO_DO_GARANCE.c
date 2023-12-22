@@ -3,8 +3,31 @@
 echo & USER
 */
 
-<< L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
+( cat | cat ) << L && cat | cat << L
+( cat | cat << L ) << L && cat | cat << L
 
+<< L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
+valide key dans expand
+
+Minishell$ ^C
+Minishell$ ^C
+Minishell$ ^C
+Minishell$ ^C
+Minishell$ ( cat | cat << L ) << L && cat | cat << L
+Sortie ft_parse_line : _( cat | cat << L ) << L && cat | cat << L_
+PARSE_TER
+FT_EXEC
+> ^C
+Minishell$ ^C
+Minishell$ ^C
+Minishell$ ^C
+Minishell$ ^C
+Minishell$ ( cat | cat << L ) << L && cat | cat << L
+Sortie ft_parse_line : _( cat | cat << L ) << L && cat | cat << L_
+PARSE_TER
+FT_EXEC
+> a
+Minishell$
 
 /* 1. PARENTHESE */
 /*

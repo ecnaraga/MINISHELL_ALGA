@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:41:55 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/22 11:07:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,17 @@ static int ft_parsing(t_msh *msh, int sub)
 {
 	if (sub == 0 && ft_parse_line(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
-		// return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
-	// printf("PASSAGE ALIX TO GAGA\n");
 	if (sub == 0 && ft_parse_bis(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
-		// return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	msh->av = ft_split_msh(msh->line, msh); // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 	if (!msh->av)
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
-		// return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	msh->ac = ft_lstsize_split(msh->av);
 	if (msh->ac == 0)
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
-		// return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	ft_token(msh);
 	if (sub == 0 && ft_parse_ter(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
-		// return (ft_magic_malloc(FLUSH, 0, NULL, 0), 1);
 	return (0);
 }
 
@@ -64,7 +58,6 @@ static void	ft_handle_eof(t_msh *msh)
 	ft_putstr_fd("exit\n", 2);
 	rl_clear_history();
 	mlcgic(NULL, QUIT, 0, msh);
-	// ft_magic_malloc(QUIT, 0, NULL, 0);
 }
 
 static int	ft_readline(t_msh *msh)
@@ -78,16 +71,18 @@ static int	ft_readline(t_msh *msh)
 		sign = 0;
 	}
 	if (sign == 1)
+	{
 		msh->status = 130;
+		sign = 3;
+	}
 	msh->previous_status = msh->status;
 	msh->status = 0;
 	if (!msh->line) // EOF
-		(ft_handle_eof(msh), exit(msh->previous_status)); // RENVOYER LE DERNIER CODE ERREUR STOCKE AVANT LE CTRL D
+		(ft_handle_eof(msh), exit(msh->previous_status));
 	if (!mlcgic(mlcp(msh->line, 1), ADD, NO_ENV, msh))
-	// if (!ft_magic_malloc(ADD, 0, msh->line, NO_ENV))
-		(mlcgic(NULL, QUIT, 0, msh)/* ft_magic_malloc(QUIT, 0, NULL, 0) */, exit(msh->status)); // SI MALLOC KO ON QUITTE
+		(mlcgic(NULL, QUIT, 0, msh), exit(msh->status)); // SI MALLOC KO ON QUITTE
 	if (!msh->line[0])
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh)/* ft_magic_malloc(FLUSH, 0, NULL, 0) */, -1);	
+		return (mlcgic(NULL, FLUSH, NO_ENV, msh), -1);	
 	return (0);
 }
 
@@ -117,6 +112,5 @@ int main(int ac, char **av, char **env)
 		add_history(msh.line);
 		ft_minishell(&msh, 0);
 		mlcgic(NULL, FLUSH, NO_ENV, &msh);
-		// ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	}
 }
