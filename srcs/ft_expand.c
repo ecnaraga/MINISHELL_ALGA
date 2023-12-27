@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 17:21:51 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:35:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,19 @@ int	valide_expand(char *key) // va nous dire si les char sont ok // A IMPLEMENTE
 {
 	int	i;
 
-	i = 1;
+	i = 0;
 	if (ft_isalpha(key[0]) || key[0] == '_')
 	{
-		while(key[i] && key[i] != '=')
+		while(key[i])
 		{
 			if (ft_isalnum(key[i]) || key[i] == '_' )
 				i++;
 			else
-				return (0);	
+				return (i);	
 		}
-		return (1);
+		return (0);
 	}
-	return (0);
+	return (-1);
 }
 
 char *get_value(t_msh *msh, t_env **env, char *str, int rule)
@@ -87,6 +87,77 @@ char *get_value(t_msh *msh, t_env **env, char *str, int rule)
 	// return (ft_magic_malloc(ADD, 0, ft_strdup(""), NO_ENV));
 }
 
+char	*ft_multi_dollar(t_msh *msh, char *cmd, int *i, int *j)
+{
+	char *tmp;
+
+	tmp = cmd;
+	cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[*i]), 1), ADD, NO_ENV, msh);
+	if (msh->status == 255) // IF MALLOC KO return NULL
+		return (NULL);
+	if (tmp)
+		mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+	while (msh->av->data[*i] && msh->av->data[*i] == '$')
+		(*i)++;
+	(*j)++;
+	return (cmd);
+}
+
+char	*ft_add_char(t_msh *msh, char *cmd, int *i, int *j)
+{
+	char *tmp;
+
+	tmp = cmd;
+	cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[*i]), 1), ADD, NO_ENV, msh);
+	if (msh->status == 255) // IF MALLOC KO return NULL
+		return (NULL);
+		// ft_exit(-1, -1, -1);
+	if (tmp)
+		mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+		// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
+	(*i)++;
+	if (j)
+		(*j)++;
+	return (cmd);
+}
+
+char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
+{
+	char *tmp2;
+	
+	tmp = get_value(msh, msh->env, tmp, rule);
+	if (msh->status == 255)// IF MALLOC KO return NULL
+		return (NULL);
+	tmp2 = cmd;
+	cmd = mlcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
+	if (msh->status == 255) // IF MALLOC KO return NULL
+		return (NULL);
+	if (tmp2)
+		mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+	return (cmd);
+}
+
+char	*ft_expand_exitcode(t_msh *msh, char *cmd, int *i, int *j)
+{
+	char *tmp;
+	char *tmp2;
+	
+	tmp = mlcgic(mlcp(ft_itoa(msh->previous_status), 1), ADD, NO_ENV, msh);
+	if (msh->status == 255)// IF MALLOC KO return NULL
+		return (NULL);
+	tmp2 = cmd;
+	cmd = mlcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
+	if (msh->status == 255)// IF MALLOC KO return NULL
+		return (NULL);
+	if (tmp2)
+		mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+	(*i) += 2;
+	(*j)++;
+	return (cmd);
+}
+
 /*
 Pour savoir s'il comment traiter le dollar, se referer aux instructions dans le
 	tableau de structure strs.type (plus de precisions dans ft_strlcpy_msh)
@@ -113,6 +184,7 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 	char *tmp2;
 	int i;
 	int j;
+	size_t len;
 	
 	i = 0;
 	j = 0;
@@ -122,109 +194,48 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 		if (msh->av->data[i] == '$')
 		{
 			if (msh->av->type[j].expnd == 3)
-			{
-				tmp2 = cmd;
-				cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[i]), 1), ADD, NO_ENV, msh);
-				// cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
-				if (msh->status == 255) // IF MALLOC KO return NULL
-					return (NULL);
-					// ft_exit(-1, -1, -1);
-				if (tmp2)
-					mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-					// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-				while (msh->av->data[i] && msh->av->data[i] == '$')
-					i++;
-				j++;
-			}
+				cmd = ft_multi_dollar(msh, cmd, &i, &j); // PROTEGER APRES LES IF ELSE IF
 			else if ((msh->av->type[j].expnd == 1 && (msh->av->type[j].len_variable == 1 || ft_first_valid_char(msh->av->data[i + 1]) == 1)) || msh->av->type[j].expnd == 2)
-			{
-				tmp2 = cmd;
-				cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[i]), 1), ADD, NO_ENV, msh);
-				// cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
-				if (msh->status == 255) // IF MALLOC KO return NULL
-					return (NULL);
-					// ft_exit(-1, -1, -1);
-				if (tmp2)
-					mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-					// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-				i++;
-				j++;
-			}
-			// else if (msh->av->type[j].expnd == 2)
-			// {
-			// 	tmp2 = cmd;
-			// 	cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
-			// 	if (status == 255) // a checker si en cas de add malloc qui foire status mis a 255
-			// 		ft_exit(-1, -1, -1);
-			// 	if (tmp2)
-			// 		ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-			// 	i++;
-			// 	j++;
-			// }
+				cmd = ft_add_char(msh, cmd, &i, &j); // PROTEGER APRES LES IF ELSE IF
 			else if (msh->av->type[j].expnd == 1 && msh->av->type[j].len_variable > 1)
 			{
 				if (msh->av->data[i + 1] == '?')
-				{
-					tmp = mlcgic(mlcp(ft_itoa(msh->previous_status), 1), ADD, NO_ENV, msh);
-					// tmp = ft_magic_malloc(ADD, 0, ft_itoa(msh->previous_status), NO_ENV);
-					if (msh->status == 255)// IF MALLOC KO return NULL
-						return (NULL);
-						// ft_exit(-1, -1, -1);
-					tmp2 = cmd;
-					cmd = mlcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
-					// cmd = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, tmp), NO_ENV);
-					if (msh->status == 255)// IF MALLOC KO return NULL
-						return (NULL);
-						// ft_exit(-1, -1, -1);
-					if (tmp2)
-						mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-						// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-					mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
-					// ft_magic_malloc(FREE, 0, tmp, NO_ENV);
-					i += 2;
-					j++;
-				}
+					cmd = ft_expand_exitcode(msh, cmd, &i, &j); // PROTEGER APRES LES IF ELSE IF
 				else
 				{
 					tmp = mlcgic(mlcp(ft_substr(msh->av->data, i + 1, msh->av->type[j].len_variable - 1), 1), ADD, NO_ENV, msh);
-					// tmp = ft_magic_malloc(ADD, 0, ft_substr(msh->av->data, i + 1, msh->av->type[j].len_variable - 1), NO_ENV);
 					if (msh->status == 255) // IF MALLOC KO return NULL
 						return (NULL);
-						// ft_exit(-1, -1, -1);
-					tmp = get_value(msh, msh->env, tmp, rule);
-					if (msh->status == 255)// IF MALLOC KO return NULL
-						return (NULL);
-						// ft_exit(-1, -1, -1);
-					tmp2 = cmd;
-					cmd = mlcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
-					// cmd = ft_magic_malloc(ADD, 0, ft_strjoin(cmd, tmp), NO_ENV);
-					if (msh->status == 255) // IF MALLOC KO return NULL
-						return (NULL);
-						// ft_exit(-1, -1, -1);
-					if (tmp2)
+					len = valide_expand(tmp);
+					if (len == 0)
+					{
+						cmd = ft_do_expand(msh, tmp, cmd, rule);
+						if (msh->status == 255)// IF MALLOC KO return NULL
+							return (NULL);
+						i += msh->av->type[j].len_variable;
+						j++;
+					}
+					else
+					{
+						tmp2 = tmp;
+						tmp = mlcgic(mlcp(ft_substr(tmp, 0, len), 1), ADD, NO_ENV, msh);
+						if (msh->status == 255) // IF MALLOC KO return NULL
+							return (NULL);
 						mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-						// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-					mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
-					// ft_magic_malloc(FREE, 0, tmp, NO_ENV);
-					i += msh->av->type[j].len_variable;
-					j++;
+						cmd = ft_do_expand(msh, tmp, cmd, rule);
+						if (msh->status == 255)// IF MALLOC KO return NULL
+							return (NULL);
+						i += (len + 1);
+						j++;
+					}
 				}
 			}
 			
 		}
 		else
-		{
-			tmp2 = cmd;
-			cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[i]), 1), ADD, NO_ENV, msh);
-			// cmd = ft_magic_malloc(ADD, 0, ft_strjoin_char(cmd, msh->av->data[i]), NO_ENV);
-			if (msh->status == 255) // IF MALLOC KO return NULL
+			cmd = ft_add_char(msh, cmd, &i, NULL); // PROTEGER APRES LES IF ELSE IF
+		if (msh->status == 255) // IF MALLOC KO return NULL
 				return (NULL);
-				// ft_exit(-1, -1, -1);
-			if (tmp2)
-				mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-				// ft_magic_malloc(FREE, 0, tmp2, NO_ENV);
-			i++;
-		}
 	}
 	return (cmd);
 }

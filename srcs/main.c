@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 11:07:31 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:07:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,12 @@ static int	ft_readline(t_msh *msh)
 int main(int ac, char **av, char **env)
 {
 	t_msh msh;
+	int fd;
 	
 	(void)av;
 	if (isatty(0) == 1)
 	{
-		int fd = open("/dev/stdin", O_RDWR);
+		fd = open("/dev/stdin", O_RDWR);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
@@ -103,10 +104,11 @@ int main(int ac, char **av, char **env)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
 	msh.env = get_env(env, &msh);
 	msh.export_env = get_export_env(&msh, env);
+	msh.status = 0;
+	msh.previous_status = 0;
 	while (1)
 	{
 		ft_signal_handler_msh();
-		
 		if (ft_readline(&msh) == -1)
 			continue;
 		add_history(msh.line);

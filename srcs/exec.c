@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/24 17:02:22 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/27 11:10:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_search_pipe(t_msh *msh)
 
 
 void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub)
-// int	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, /* t_split **head,  */int sub)
+// void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh,  t_split **head,  int sub)
 {
 	pid_t	pid;
 	
@@ -131,7 +131,7 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 	while (msh->av && msh->av->token == PAR_CLOSE) // et pourquoi pas if a la place
 		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);
 	ft_create_sub_msh(&sub_msh, msh, sub); // OK TOUT EST PROTEGE A L INTERIEUR
-	while (msh->av->token != OPERATOR)
+	while (msh->av && msh->av->token != OPERATOR)
 	{
 		if (msh->av->token == HDOC)
 		{
