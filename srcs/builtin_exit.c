@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 10:37:46 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 16:00:57 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:04:22 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,9 @@ static int	args_handler(t_msh *msh, char **args)
 
 int	builtin_exit(t_msh *msh)
 {
-	int	statut;
+	// int	statut;
 
-	statut = 0;
+	// statut = 0;
 	if(msh->p.cmd_opt[1])
 		return(args_handler(msh, msh->p.cmd_opt));
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 10:22:22 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:03:27 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void	del_node(t_env *node, t_env **env, t_msh *msh)
 void	del_env(char *cmd, t_msh *msh)
 {
 	t_env	*tmp;
-	int		i;
+	// int		i;
 
-	i = 0;
+	// i = 0;
 	tmp = *(msh->env);
 	while(tmp)
 	{

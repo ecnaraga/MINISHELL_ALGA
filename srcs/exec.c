@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 13:11:55 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:02:22 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 	t_msh	sub_msh;
 	int		par;
 	t_env *head_hd;
-	t_env *prev_hd;
+	// t_env *prev_hd;
 
 	par = 0;
 	sub_msh.p.hdoc = ft_copy_heredoc(msh, msh->p.hdoc, sub); // SI MALLOC KO ON QUITTE DANS 
@@ -116,10 +116,10 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 		if (msh->av->token == HDOC)
 		{
 			head_hd = msh->p.hdoc;
-			prev_hd = NULL;
+			// prev_hd = NULL;
 			while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))
 			{
-				prev_hd = msh->p.hdoc;
+				// prev_hd = msh->p.hdoc;
 				msh->p.hdoc = msh->p.hdoc->next;
 			}
 			if (msh->p.hdoc)
@@ -136,10 +136,10 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 		if (msh->av->token == HDOC)
 		{
 			head_hd = msh->p.hdoc;
-			prev_hd = NULL;
+			// prev_hd = NULL;
 			while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0 || (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0 && msh->p.hdoc->read == 1)))
 			{
-				prev_hd = msh->p.hdoc;
+				// prev_hd = msh->p.hdoc;
 				msh->p.hdoc = msh->p.hdoc->next;
 			}
 			if (msh->p.hdoc)

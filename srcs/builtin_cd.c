@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/22 13:18:24 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/24 17:03:57 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ int	change_env(char	*old_pwd, t_msh *msh, int statut)
 
 int	pwd_exist(t_env **env)
 {
-	int	i;
+	// int	i;
 	t_env	*tmp;
 
-	i = 0;
+	// i = 0;
 	tmp = *env;
 	while (tmp)
 	{

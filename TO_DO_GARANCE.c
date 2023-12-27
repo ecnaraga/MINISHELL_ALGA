@@ -3,6 +3,8 @@
 echo & USER
 */
 
+<< L cat && << L cat | cat && ( cat | cat | cat ) << L && ( echo bravo && (echo bravo && export alix=love && echo $alix) && echo $alix)
+
 // ( cat | cat ) << L && cat | cat << L
 // ( cat | cat << L ) << L && cat | cat << L
 
