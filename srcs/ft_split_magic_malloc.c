@@ -6,13 +6,13 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 12:14:56 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:19:36 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/29 16:28:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	ft_countwords(const char *s)
+static int	ft_countwords(const char *s, char c)
 {
 	int	c_wd;
 	int	i;
@@ -21,14 +21,14 @@ static int	ft_countwords(const char *s)
 	i = 0;
 	while (s[i])
 	{
-		while (s[i] && s[i] == ':')
+		while (s[i] && s[i] == c)
 			i++;
-		if (s[i] && s[i] != ':')
+		if (s[i] && s[i] != c)
 		{
 			c_wd++;
 			i++;
 		}
-		while (s[i] && s[i] != ':')
+		while (s[i] && s[i] != c)
 			i++;
 	}
 	return (c_wd);
@@ -48,53 +48,54 @@ static int	ft_countwords(const char *s)
 // 	return (NULL);
 // }
 
-static char	**ft_split_strs(t_msh *msh, const char *s, char **strs, int c_wd)
+static char	**ft_split_strs(t_msh *msh, const char *s, t_spl *st, char c)
 {
 	int	j;
 	int	c_lt;
 
 	j = -1;
-	while (*s && ++j < c_wd)
+	while (*s && ++j < st->c_wd)
 	{
 		c_lt = 0;
-		while (*s && *s == ':')
+		while (*s && *s == c)
 			s++;
-		while (*s && *s != ':')
+		while (*s && *s != c)
 		{
 			c_lt++;
 			s++;
 		}
 		if (c_lt > 0)
 		{
-			strs[j] = mlcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MALLOC, PIP, msh);
+			st->strs[j] = mlcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MALLOC, PIP, msh);
 			// strs[j] = ft_magic_malloc(MALLOC, sizeof(char) * (c_lt + 1), NULL, PIP);
-			if (strs[j] == NULL)
+			if (st->strs[j] == NULL)
 				return (NULL); // TOUT SERA FREE DANS LE GARBAGGE COLLECTOR
 				// return (ft_free_strs(strs, j));
-			ft_strlcpy (strs[j], s - c_lt, c_lt + 1);
+			ft_strlcpy (st->strs[j], s - c_lt, c_lt + 1);
 		}
 	}
-	return (strs);
+	return (st->strs);
 }
 
-char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s)
+char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s, char c)
 {
-	int		c_wd;
-	char	**strs;
+	t_spl	st;
+	// int		st->;
+	// char	**strs;
 
 	if (!s)
 		return (NULL);
 	if (s[0] == '\0')
 	// if (!c && s[0] == '\0')
-			c_wd = 0;
+			st.c_wd = 0;
 	else
-		c_wd = ft_countwords(s);
-	strs = mlcgic(mlcp(NULL, sizeof(char *) * (c_wd + 1)), MALLOC, PIP, msh);
-	// strs = ft_magic_malloc(MALLOC, sizeof(char *) * (c_wd + 1), NULL, PIP);
-	if (strs == NULL)
+		st.c_wd = ft_countwords(s, c);
+	st.strs = mlcgic(mlcp(NULL, sizeof(char *) * (st.c_wd + 1)), MALLOC, PIP, msh);
+	// st.strs = ft_magic_malloc(MALLOC, sizeof(char *) * (st.c_wd + 1), NULL, PIP);
+	if (st.strs == NULL)
 		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
-	if (ft_split_strs(msh, s, strs, c_wd) == NULL)
-		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO  DAN FT_SPLIT_STRS ON QUITTE LE PROCESS ACTUEL
-	strs[c_wd] = NULL;
-	return (strs);
+	if (ft_split_strs(msh, s, &st, c) == NULL)
+		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO  DAN FT_SPLIT_st.STRS ON QUITTE LE PROCESS ACTUEL
+	st.strs[st.c_wd] = NULL;
+	return (st.strs);
 }

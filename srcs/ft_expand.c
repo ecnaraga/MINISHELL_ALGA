@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/28 09:59:18 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/29 14:47:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char *get_value(t_msh *msh, t_env **env, char *str, int rule)
 				return (mlcgic(mlcp(ft_strtrim(node->content, " \b\t\n\v\f\r"), 1), ADD, NO_ENV, msh));
 			if (rule == OTHER)
 				return (mlcgic(mlcp(ft_strtrim_except_tips(node->content, " \b\t\n\v\f\r"), 1), ADD, NO_ENV, msh));
-			if (rule == INFILE || rule == OUTFILE_NO_TRUNC || rule == OUTFILE_TRUNC)
+			if (rule == INFILE || rule == OUTFILE_NO_TRUNC || rule == OUTFILE_TRUNC || rule == HDOC)
 				return (mlcgic(mlcp(ft_strdup(node->content), 1), ADD, NO_ENV, msh));
 		}
 		else
@@ -70,8 +70,8 @@ char	*ft_multi_dollar(t_msh *msh, char *cmd, t_expand *e)
 		return (NULL);
 	if (e->tmp)
 		mlcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
-	while (msh->av->data[e->i] && msh->av->data[e->i] == '$')
-		(e->i)++;
+	// while (msh->av->data[e->i] && msh->av->data[e->i] == '$')
+	(e->i)++;
 	(e->j)++;
 	return (cmd);
 }
@@ -93,7 +93,6 @@ char	*ft_add_char(t_msh *msh, char *cmd, t_expand *e, int *j)
 char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 {
 	char *tmp2;
-	3..
 	
 	tmp = get_value(msh, msh->env, tmp, rule);
 	if (msh->status == 255)// IF MALLOC KO return NULL
@@ -196,10 +195,15 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 	{
 		if (msh->av->data[e.i] == '$')
 		{
-			if (msh->av->type[e.j].expnd == 3)
-				cmd = ft_multi_dollar(msh, cmd, &e); // PROTEGER APRES LES IF ELSE IF
+			if (msh->av->type[e.j].expnd == MULTI_DOLLAR)
+				cmd = ft_add_char(msh, cmd, &e, &e.j); // PROTEGER APRES LES IF ELSE IF
 			else if ((msh->av->type[e.j].expnd == 1 && msh->av->type[e.j].len_variable == 1) || msh->av->type[e.j].expnd == 2)
 				cmd = ft_add_char(msh, cmd, &e, &e.j); // PROTEGER APRES LES IF ELSE IF
+			else if(msh->av->type[e.j].expnd == 1 && msh->av->type[e.j].len_variable == 0)
+			{
+				e.i += 1;
+				e.j += 1;
+			}
 			else if (msh->av->type[e.j].expnd == 1 && msh->av->type[e.j].len_variable > 1)
 				cmd = ft_expand_var(msh, cmd, rule, &e); // PROTEGER APRES LES IF ELSE IF
 		}

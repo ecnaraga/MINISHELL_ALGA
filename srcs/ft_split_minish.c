@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/12/22 15:12:41 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/29 11:11:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ k = nb de char qui seront copiees + nb de quote(double et single) qui ne seront
 dollar = nb de potentielles variables d environnement (qui commencent par un $)
 	ps : une suite de dollar est comptee comme un seul dollar
 */
-static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
+static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar, int *mod_dollar)
 {
 	t_letter	l;
 
@@ -83,23 +83,45 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		if (q->wildcard == 0 && s[*i] == '*')
 			q->wildcard += 1;
-		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
-			*dollar += 1;
+		if (s[*i] == '$')
+		{
+			if (*i == 0 || s[*i - 1] != '$' || (*mod_dollar % 2 == 0 && s[*i - 1] == '$'))
+			{
+				printf("i %d\n", *i);
+				*dollar += 1;
+			}
+			*mod_dollar += 1;
+		}
+		// if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
+		// {
+		// 	*mod_dollar += 1;
+		// 	*dollar += 1;
+		// }
 		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
 			l.lt++;
 		l.k += 1;
 	}
 	while (s[*i] && ft_test(s[*i], &s[*i + 1], &s[*i - 1], q) == 0)
 	{
+		if (s[*i] != '$')
+			*mod_dollar = 0;
 		ft_inc_quote(s[*i], &q->d, &q->s);
 		if (q->wildcard == 0 && s[*i] == '*')
 			q->wildcard += 1;
-		if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
-			*dollar += 1;
+		if (s[*i] == '$')
+		{
+			if (*i == 0 || s[*i - 1] != '$' || (*mod_dollar % 2 == 0 && s[*i - 1] == '$'))
+			{
+				printf("i %d\n", *i);
+				*dollar += 1;
+			}
+			*mod_dollar += 1;
+		}
 		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
 			l.lt++;
 		l.k += 1;
 	}
+	printf("dollar %d mod_dollar %d\n", *dollar, *mod_dollar);
 	return (l);
 }
 
@@ -168,13 +190,15 @@ static void	ft_split_strs(const char *s, t_split **strs, int wd, t_msh *msh)
 	t_quote		q;
 	int	 i;
 	t_split		*new;
+	int			mod_dollar;
 
 	i = 0;
 	j = -1;
 	while (s[i] && ++j < wd)
 	{
 		new = ft_lstnew_split(msh); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
-		l = ft_count_letter(s, &q, &i, &new->dollar);
+		mod_dollar = 0;
+		l = ft_count_letter(s, &q, &i, &new->dollar, &mod_dollar);
 		new->wildcard = q.wildcard;
 		new->data = mlcgic(mlcp(NULL, sizeof(char) * (l.lt + 1)), MALLOC, NO_ENV, msh);
 		if (new->data == NULL)

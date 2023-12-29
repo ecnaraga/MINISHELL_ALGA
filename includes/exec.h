@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 17:52:43 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/29 16:26:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ char	*get_next_line_magic(int fd);
 t_env	*ft_lst_new_heredoc(t_msh *msh, char *lim, int sub);
 
 /*split_magic_malloc.c*/
-char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s);
+// char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s);
+char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s, char c);
 
 /*split_magic_malloc_isspace*/
 int	ft_countword(const char *s);
@@ -77,5 +78,7 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub);
 char	*ft_expand(t_msh *msh, char *cmd, int rule);
 char **ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i);
 char	**wildcards(char *str, t_msh *msh, char *cmd_0);
+int	valide_expand(char *key);
+char *get_value(t_msh *msh, t_env **env, char *str, int rule);
 
 #endif

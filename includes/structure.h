@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/28 09:46:42 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/29 16:28:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef	struct s_index
 	size_t	i;
 	size_t	j;
 	int	d;
+	int mod_dollar;
 }		t_index;
 
 typedef	struct s_expand
@@ -145,6 +146,12 @@ typedef	struct s_intel
 	int statut;
 	int name_size;
 }		t_intel;
+
+typedef struct s_spl
+{
+	int		c_wd;
+	char	**strs;
+}		t_spl;
 
 typedef int (*t_storage)(t_msh *msh, t_par *p, int *i);
 

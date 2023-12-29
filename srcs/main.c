@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/27 17:07:09 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/29 14:19:36 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,26 @@ static int ft_parsing(t_msh *msh, int sub)
 	msh->av = ft_split_msh(msh->line, msh); // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 	if (!msh->av)
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
+
+	// int i = 0;
+	// t_split *head;
+	// head = msh->av;
+	// while (msh->av)
+	// {
+	// 	printf("%d msh->av->data = |%s|\n", i, msh->av->data);
+	// 	if (msh->av->type)
+	// 	{
+	// 		int d = -1;
+	// 		while (++d < msh->av->dollar)
+	// 			printf("msh->av->type[%d].expnd = %d msh->av->type[%d].len_variable = %d\n", d,
+	// 				msh->av->type[d].expnd, d,
+	// 				msh->av->type[d].len_variable);
+	// 	}
+	// 	msh->av = msh->av->next;
+	// 	i++;
+	// }
+	// msh->av = head;
+			
 	msh->ac = ft_lstsize_split(msh->av);
 	if (msh->ac == 0)
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);

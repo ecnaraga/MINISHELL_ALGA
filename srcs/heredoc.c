@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 13:08:09 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/29 15:39:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,65 @@ void	create_here_doc(t_msh *msh, t_split *av, t_env **hdoc)
 	ft_lstadd_back_env(hdoc, new);
 }
 
+void	ft_write_hdoc(t_msh *msh, char *line, int fd)
+{
+	int i;
+	int len;
+	char *str;
+	char *var;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] != '$')
+		{
+			ft_putchar_fd(line[i], fd);
+			i++;
+		}
+		else
+		{
+			if (!line[i + 1])
+			{
+				ft_putchar_fd(line[i], fd);
+				i += 1 ;
+			}
+			else if (line[i + 1] == '$')
+			{
+				ft_putchar_fd(line[i], fd);
+				i += 2 ;
+			}
+			else if (ft_isalpha(line[i + 1]) == 0)
+			{
+				ft_putchar_fd(line[i], fd);
+				i++;
+			}
+			else
+			{
+				len = valide_expand(line + i + 1);
+				printf("line + i + 1 %s len %d\n", line + i + 1, len);
+				if (len == 0)
+					var = mlcgic(mlcp(ft_strdup(line + i + 1), 0), ADD, NO_ENV, msh);
+				else
+					var = mlcgic(mlcp(ft_substr(line, i + 1, (size_t)len), 0), ADD, NO_ENV, msh);
+				printf("var = %s\n", var);
+				str = get_value(msh, msh->env, var, HDOC);
+				if (ft_strcmp(str, " ") != 0)
+				{
+					ft_putstr_fd(str, fd);
+					// i += len;
+					printf("line[%d] = %c\n", i, line[i]);
+				}
+				if (len == 0)
+					break;
+				i += (len + 1);
+			}
+		}
+	}
+	write(fd, "\n", 1);
+	mlcgic(mlcp(line, 0), FREE, NO_ENV, msh);
+	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mlcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
+}
+
 /*
 Function called in a loop in the parent function
 Copy into the file create for an heredoc, the stdin line entered by the user. 
@@ -103,7 +162,8 @@ static int	ft_recover_prompt(t_msh *msh, int fd_temp, char *lim)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI MALLOC KO ON QUITTE
 	if (ft_strcmp(msh->av->data, line) == 0)
 		return (mlcgic(mlcp(line, 0), FREE, NO_ENV, msh), 1);
-	(write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mlcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
+	ft_write_hdoc(msh, line, fd_temp);
+	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mlcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/22 17:52:32 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/29 16:40:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <dirent.h>
 #include <stdio.h>
 
-char	*ft_strjoin3(char *s1, char *s2)
+char	*ft_strjoin3(t_msh *msh, char *s1, char *s2)
 {
 	int			len;
 	char		*s;
@@ -24,14 +24,15 @@ char	*ft_strjoin3(char *s1, char *s2)
 		return (NULL);
 	if (!s1)
 	{
-		s1 = ft_calloc(1, 1);
+		s1 = mlcgic(mlcp(NULL, sizeof(char)), MALLOC, PIP, msh);
+		s1[0] = '\0';
 		len = ft_strlen(s2);
 	}
 	else if (!s2)
 		len = ft_strlen(s1);
 	else
 		len = ft_strlen(s1) + ft_strlen(s2);
-	s = (char *)malloc(sizeof(char) * (len + 2));
+	s = mlcgic(mlcp(NULL, sizeof(char) * (len + 2)), MALLOC, PIP, msh);
 	if (!s)
 		return (NULL);
 	s[0] = '\0';
@@ -41,7 +42,7 @@ char	*ft_strjoin3(char *s1, char *s2)
 		ft_strcat(s, s2);
 	s[len++] = '\t';
 	s[len] = '\0';
-	free(s1);
+	mlcgic(mlcp(s1, 0), FREE, PIP, msh);
 	return (s);
 }
 
@@ -139,7 +140,7 @@ char	**wildcards(char *str, t_msh *msh, char *cmd_0)
 		{
 			if((ft_strcmp("echo", cmd_0) == 0 && !(read->d_name[0] == '.')) || ft_strcmp("echo", cmd_0) != 0)
 			{
-				str2 = ft_strjoin3(str2, read->d_name);
+				str2 = ft_strjoin3(msh, str2, read->d_name);
 				if (msh && msh->status == 255)
 					return (NULL);
 			}
@@ -149,10 +150,10 @@ char	**wildcards(char *str, t_msh *msh, char *cmd_0)
 	// if(!str2)
 	// 	return (NULL);
 	closedir(dir);
-	str3 = ft_split(str2, '\t');
+	str3 = ft_split_magic_malloc(msh, 1, str2, '\t');
 	if (!str3)
 		return (NULL);
-	free(str2);
+	mlcgic(mlcp(str2, 0), FREE, PIP, msh);
 	if(str3[1])
 		str3 = make_in_order(str3);
 	return (str3);

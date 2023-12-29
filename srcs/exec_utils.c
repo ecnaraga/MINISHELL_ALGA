@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 15:16:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/29 16:27:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	**ft_research_path(t_msh *msh, t_env **env, int sub)
 	while (node)
 	{
 		if (ft_strncmp(node->name, "PATH", 4) == 0)
-			return (ft_split_magic_malloc(msh, sub, node->content)); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
+			return (ft_split_magic_malloc(msh, sub, node->content, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
 			// return (ft_split_magic_malloc(msh, sub, node->content + 1, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
 		node = node->next;
 	}

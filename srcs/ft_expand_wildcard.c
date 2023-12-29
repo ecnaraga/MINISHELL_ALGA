@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand_wildcard.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 16:40:39 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/22 17:56:05 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/29 15:46:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	**ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i)
 	int j;
 	int k;
 
+	printf("hello\n");
 	if (msh->p.cmd_opt[0])
 		tmp = wildcards(msh->av->data, msh, msh->p.cmd_opt[0]);
 	else

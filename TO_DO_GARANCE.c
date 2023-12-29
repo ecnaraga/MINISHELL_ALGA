@@ -10,7 +10,7 @@ echo & USER
 
 // << L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
 // valide key dans expand
-ft_expand dans heredoc 
+// ft_expand dans heredoc 
 wildcard potentiellement dans heredoc
 conditional jump avec wildcard
 

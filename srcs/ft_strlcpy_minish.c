@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy_minish.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2023/12/22 15:00:12 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/29 13:57:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void	ft_init_var(t_index *x, t_quote *q)
 	// 	x->i = 0;
 	x->j = 0;
 	x->d = 0;
+	x->mod_dollar = 0;
 	q->d = 0;
 	q->s = 0;
 }
@@ -33,6 +34,7 @@ static int	ft_test_ter(char c, t_quote q)
 		return (0);
 	if (c != '"' && c != 39 && ft_isspace(c) == 1)
 		return (0);
+	
 	return (1);
 }
 
@@ -52,6 +54,8 @@ static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
 		return (1);
 	if (strs->type[x->d].expnd != EXPAND)
 		return (1);
+	// if (strs->type[x->d].expnd == EXPAND && src[x->i] == '$' && !src[x->i + 1])
+	// 	return (1);
 	if (src[x->i] != '$')
 		return (0);
 	else if (q.d % 2 == 1)
@@ -88,6 +92,7 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 	t_quote	q;
 
 	ft_init_var(&x, &q);
+	// x.mod_dollar = 0;
 	strs->quote = 0;
 	if (begin > -1)
 	{
@@ -99,13 +104,18 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 		strs->quote = 1;
 	while (size > 0 && src[x.i] && x.j < (size - 1))
 	{
+		if (src[x.i] != '$')
+			x.mod_dollar = 0;
 		ft_inc_quote(src[x.i], &q.d, &q.s);
 		ft_dollar(strs, src, &x, q);
+		// ft_dollar(strs, src, &x, q, &x.mod_dollar);
 		if (ft_test_ter(src[x.i], q) == 0)
 		{
 			if (ft_test_four(strs, src, &x, q) == 0)
 				strs->type[x.d].len_variable += 1;
-			if (ft_test_bis(src[x.i], q.d, q.s) == 0)
+			if (src[x.i] == '$' && strs->type && strs->type[x.d].expnd == MULTI_DOLLAR)
+				x.i++;
+			else if (ft_test_bis(src[x.i], q.d, q.s) == 0)
 			{
 				strs->data[x.j] = src[x.i++];
 				if (strs->wildcard > 0)

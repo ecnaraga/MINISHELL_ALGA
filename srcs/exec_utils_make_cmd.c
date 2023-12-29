@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_make_cmd.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 17:11:00 by athiebau         ###   ########.fr       */
+/*   Updated: 2023/12/29 16:32:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 	// msh->p.cmd_opt = ft_magic_malloc(MALLOC, sizeof(char *) * (cmd_nb + 1), NULL, PIP);
 	if (!msh->p.cmd_opt)
 		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
+	msh->p.cmd_opt[0] = NULL;
 	if (ft_build_cmd(msh, &save, &cmd_nb) == 255)
 		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO DANS FT_COPY_CMD ON QUITTE LE PROCESS ACTUEL
 	msh->p.cmd_opt[cmd_nb] = NULL;
