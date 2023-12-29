@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/27 17:28:14 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/28 09:46:42 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,14 @@ typedef	struct s_index
 	int	d;
 }		t_index;
 
-typedef	struct s_index_bis
+typedef	struct s_expand
 {
 	int	i;
 	int	j;
-}		t_index_bis;
+	int len;
+	char *tmp;
+	char *tmp2;
+}		t_expand;
 
 
 typedef struct s_par
