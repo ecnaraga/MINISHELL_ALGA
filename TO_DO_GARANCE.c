@@ -12,7 +12,7 @@ echo & USER
 // valide key dans expand
 // ft_expand dans heredoc 
 wildcard potentiellement dans heredoc
-conditional jump avec wildcard
+// conditional jump avec wildcard
 
 Minishell$ ^C
 Minishell$ ^C
