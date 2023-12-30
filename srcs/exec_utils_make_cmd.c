@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_make_cmd.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 16:32:12 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/30 11:18:42 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int ft_copy_cmd(t_msh *msh, t_head *save, int *i, int *cmd_nb)
 		if (msh->av->quote && !msh->p.cmd_opt[0][0])
 			write(2, "minishell: : command not found\n", 32);
 		c_wd = ft_countword(msh->p.cmd_opt[*i]);
-		if (c_wd > 1)
+		if ((c_wd > 1 && !msh->p.cmd_opt[0]) || (c_wd > 1 && ft_strcmp(msh->p.cmd_opt[0], "export")))
 		{
 			*cmd_nb = *cmd_nb + c_wd;
 			msh->p.cmd_opt = ft_realloc_cmd(msh->p.cmd_opt, cmd_nb, i, msh);
@@ -177,6 +177,11 @@ char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO DANS FT_COPY_CMD ON QUITTE LE PROCESS ACTUEL
 	msh->p.cmd_opt[cmd_nb] = NULL;
 	msh->av = save.head;
+
+	int	i = -1;
+	while (msh->p.cmd_opt[++i])
+		printf("msh->p.cmd_opt[%d] = |%s|\n", i, msh->p.cmd_opt[i]);
+	
 	return (msh->p.cmd_opt);
 }
 

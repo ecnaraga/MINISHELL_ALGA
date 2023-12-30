@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/30 10:43:19 by garance          ###   ########.fr       */
+/*   Updated: 2023/12/30 11:07:12 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,22 @@ char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 	char *tmp2;
 	
 	tmp = get_value(msh, msh->env, tmp, rule);
+	printf("tmp = %s\n", tmp);
+	// if (msh->p.cmd_opt[0] && ft_strcmp(msh->p.cmd_opt[0], "export") == 0)
+	// {
+	// 	tmp2 = tmp;
+	// 	tmp = mlcgic(mlcp(ft_strjoin("\"", tmp), 1), ADD, NO_ENV, msh);
+	// 	mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	// 	tmp2 = tmp;
+	// 	tmp = mlcgic(mlcp(ft_strjoin(tmp, "\""), 1), ADD, NO_ENV, msh);
+	// 	mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	// }
+	printf("tmp = %s\n", tmp);
 	if (msh->status == 255)// IF MALLOC KO return NULL
 		return (NULL);
 	tmp2 = cmd;
 	cmd = mlcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
+	printf("cmd = %s\n", cmd);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	if (tmp2)
