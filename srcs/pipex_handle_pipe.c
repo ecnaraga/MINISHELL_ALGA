@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_handle_pipe.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/22 13:13:47 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/30 10:40:46 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static void	ft_child_pipe_exec(t_msh *msh)
 			ft_exit(-1, -1, -1, msh);
 		if (!msh->p.cmd_opt[0]) // OK PROTEGER
 			(ft_perr(msh, E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1, msh));
+		if (!msh->p.cmd_opt[0][0]) // OK PROTEGER
+			ft_exit(-1, -1, -1, msh);
 		if (ft_search_builtin(msh) != 0) // OK PROTEGER
 			ft_exit(-1, -1, -1, msh);
 		ft_child_exec(msh); // OK PROTEGER

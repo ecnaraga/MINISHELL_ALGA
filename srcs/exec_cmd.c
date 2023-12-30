@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 12:49:16 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/30 10:43:02 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ int	ft_exec_cmd(t_msh *msh, int sub)
 			ft_exit_bis(msh, sub, old_std[I], old_std[O]); //IF ERREUR DE MALLOC ON QUITTE LE PROCESS ACTUEL
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	}
-	// if (!msh->p.cmd_opt[0][0]) // OK PROTEGE EN COMMENTAIRE CAR JE NE VOIS PAS DANS QUEL CAS
-	// 	return (ft_return_error(msh, old_std, CMD_ALONE, sub));
+	if (!msh->p.cmd_opt[0][0]) // OK NECESSAIRE cas : $use par exemple
+		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	ft_exec_cmd_bis(msh, old_std[O], old_std[I], sub);
 	return (msh->status);
 }
