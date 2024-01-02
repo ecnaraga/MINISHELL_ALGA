@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/27 11:10:04 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 12:12:05 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,6 @@ int	ft_search_pipe(t_msh *msh)
 	msh->av = head;
 	return (0);
 }
-
-
-
-
 
 void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub)
 // void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh,  t_split **head,  int sub)
@@ -86,7 +82,7 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub)
 	// 	while (msh->av && msh->av->token != OPERATOR)
 	// 	{
 	// 		dprintf(2, "test\n");
-	// 		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);  
+	// 		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);  
 	// 	}
 	// }
 	// return (0);
@@ -126,10 +122,10 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 				msh->p.hdoc->read = 1;
 			msh->p.hdoc = head_hd;
 		}
-		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 	}
 	while (msh->av && msh->av->token == PAR_CLOSE) // et pourquoi pas if a la place
-		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 	ft_create_sub_msh(&sub_msh, msh, sub); // OK TOUT EST PROTEGE A L INTERIEUR
 	while (msh->av && msh->av->token != OPERATOR)
 	{
@@ -146,7 +142,7 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 				msh->p.hdoc->read = 1;
 			msh->p.hdoc = head_hd;
 		}
-		msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 	}
 	while (wait(&msh->status) > 0)
 	;
@@ -190,7 +186,7 @@ int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 			else
 			{
 				while (msh->av)
-					msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);
+					msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 				continue;
 			}
 		}
@@ -208,7 +204,7 @@ int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 			else
 			{
 				while (msh->av)
-					msh->av = ft_lstdel_and_relink_split(msh, msh->av, NULL, head);
+					msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 			}
 		}
 		else
@@ -272,7 +268,7 @@ int	ft_exec(t_msh *msh, int sub)
 // 			else
 // 			{
 // 				while (msh->av)
-// 					msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
+// 					msh->av = lstdel_relink_split(msh->av, NULL, &head);
 // 				continue;
 // 			}
 // 		}
@@ -293,7 +289,7 @@ int	ft_exec(t_msh *msh, int sub)
 // 			else
 // 			{
 // 				while (msh->av)
-// 					msh->av = ft_lstdel_and_relink_split(msh->av, NULL, &head);
+// 					msh->av = lstdel_relink_split(msh->av, NULL, &head);
 // 			}
 // 		}
 // 		else

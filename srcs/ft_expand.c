@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/30 11:07:12 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 	
 	tmp = get_value(msh, msh->env, tmp, rule);
 	printf("tmp = %s\n", tmp);
-	// if (msh->p.cmd_opt[0] && ft_strcmp(msh->p.cmd_opt[0], "export") == 0)
+	// if (msh->p.cmd_t[0] && ft_strcmp(msh->p.cmd_t[0], "export") == 0)
 	// {
 	// 	tmp2 = tmp;
 	// 	tmp = mlcgic(mlcp(ft_strjoin("\"", tmp), 1), ADD, NO_ENV, msh);

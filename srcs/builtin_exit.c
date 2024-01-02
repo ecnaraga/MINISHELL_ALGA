@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 10:37:46 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/24 17:04:22 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ int	builtin_exit(t_msh *msh)
 	// int	statut;
 
 	// statut = 0;
-	if(msh->p.cmd_opt[1])
-		return(args_handler(msh, msh->p.cmd_opt));
+	if(msh->p.cmd_t[1])
+		return(args_handler(msh, msh->p.cmd_t));
 	else
 	{
 		printf("exit\n");

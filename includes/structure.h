@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 16:28:19 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_pipex
 	int			**fd_p;
 	char		**path;
 	char		*good_path;
-	char		**cmd_opt;
+	char		**cmd_t;
 	t_env		*hdoc; // limiter > nom cree > limiter > nom cree
 	short int	re_split;
 }				t_pipex;

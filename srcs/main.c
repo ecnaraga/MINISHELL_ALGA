@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 14:19:36 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 11:52:13 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ int main(int ac, char **av, char **env)
 		exit (0);
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
+	msh.status = 0;
 	msh.env = get_env(env, &msh);
 	msh.export_env = get_export_env(&msh, env);
 	msh.status = 0;

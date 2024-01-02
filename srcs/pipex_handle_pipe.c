@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2023/12/30 10:40:46 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ static void	ft_child_pipe_exec(t_msh *msh)
 	}
 	else
 	{
-		msh->p.cmd_opt = ft_make_cmd(msh, 1, -1, -1);
-		if (!msh->p.cmd_opt) // OK PROTEGER
+		msh->p.cmd_t = ft_make_cmd(msh, 1, -1, -1);
+		if (!msh->p.cmd_t) // OK PROTEGER
 			ft_exit(-1, -1, -1, msh);
-		if (!msh->p.cmd_opt[0]) // OK PROTEGER
+		if (!msh->p.cmd_t[0]) // OK PROTEGER
 			(ft_perr(msh, E_NO_CMD, msh->av->data), ft_exit(-1, -1, -1, msh));
-		if (!msh->p.cmd_opt[0][0]) // OK PROTEGER
+		if (!msh->p.cmd_t[0][0]) // OK PROTEGER
 			ft_exit(-1, -1, -1, msh);
 		if (ft_search_builtin(msh) != 0) // OK PROTEGER
 			ft_exit(-1, -1, -1, msh);

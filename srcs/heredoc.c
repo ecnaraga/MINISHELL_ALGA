@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 15:39:46 by galambey         ###   ########.fr       */
+/*   Updated: 2023/12/30 11:33:32 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void	ft_write_hdoc(t_msh *msh, char *line, int fd)
 					ft_putstr_fd(str, fd);
 					// i += len;
 					printf("line[%d] = %c\n", i, line[i]);
+					printf("str = %s\n", str);
 				}
 				if (len == 0)
 					break;

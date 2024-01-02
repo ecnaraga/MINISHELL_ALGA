@@ -11,8 +11,15 @@ echo & USER
 // << L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
 // valide key dans expand
 // ft_expand dans heredoc 
-wildcard potentiellement dans heredoc
+// wildcard potentiellement dans heredoc // PAS DE WILDCARD DANS HDOC
 // conditional jump avec wildcard
+
+// bash-5.2$ < innnn
+// bash: innnn: No such file or directory
+// bash-5.2$ echo $?
+// 1
+// bash-5.2$ 
+
 
 Minishell$ ^C
 Minishell$ ^C

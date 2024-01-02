@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 16:26:51 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 11:45:51 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ void	ft_parse(t_msh *msh, int sub);
 char	**ft_research_path(t_msh *msh, t_env **env, int sub);
 int	ft_access_cmd(t_msh *msh, char **ok_path);
 // int	ft_access_cmd(t_msh *msh, char **path, char *cmd, char **good_path);
-char **ft_transcript_env(t_env **env, char *str, t_msh *msh);
+char **ft_transcript_env(t_env **env,/*  char *str, */ t_msh *msh);
 int redef_stdin(t_msh *msh, int rule, int j, int sub);
+void ft_next(t_msh *msh, t_head *save);
+void	ft_init_var_std(t_head *save, t_fd	*fd, t_msh *msh);
 int	redef_stdout(t_msh *msh, int rule, int j, int sub);
 char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2);
 

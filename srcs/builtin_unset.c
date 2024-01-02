@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/24 17:03:27 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,11 @@ void	builtin_unset(t_msh *msh)
 
 	i = 0;
 	printf("BUILTIN\n");
-	if (msh->p.cmd_opt[++i])
+	if (msh->p.cmd_t[++i])
 	{
-		while (msh->p.cmd_opt[i])
+		while (msh->p.cmd_t[i])
 		{
-			del_env(msh->p.cmd_opt[i], msh);
+			del_env(msh->p.cmd_t[i], msh);
 			i++;
 		}
 	}

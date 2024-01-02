@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/30 10:43:02 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,16 +99,16 @@ int	ft_exec_cmd(t_msh *msh, int sub)
 	old_std[O] = redef_stdout(msh, CMD_ALONE, 0, sub);
 	if (old_std[O] == -1) // OK PROTEGE
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
-	msh->p.cmd_opt = ft_make_cmd(msh, sub, old_std[O], old_std[I]); //SI ERREUR DE MALLOC ON QUITTE A L INTERIEUR
-	if (!msh->p.cmd_opt) // par exemple dans le cas ou la cmd est envoye est : ""
+	msh->p.cmd_t = ft_make_cmd(msh, sub, old_std[O], old_std[I]); //SI ERREUR DE MALLOC ON QUITTE A L INTERIEUR
+	if (!msh->p.cmd_t) // par exemple dans le cas ou la cmd est envoye est : ""
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
-	if (!msh->p.cmd_opt[0]) // OK PROTEGE
+	if (!msh->p.cmd_t[0]) // OK PROTEGE
 	{
 		if (ft_perr(msh, E_NO_CMD, msh->av->data) == 255)
 			ft_exit_bis(msh, sub, old_std[I], old_std[O]); //IF ERREUR DE MALLOC ON QUITTE LE PROCESS ACTUEL
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	}
-	if (!msh->p.cmd_opt[0][0]) // OK NECESSAIRE cas : $use par exemple
+	if (!msh->p.cmd_t[0][0]) // OK NECESSAIRE cas : $use par exemple
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
 	ft_exec_cmd_bis(msh, old_std[O], old_std[I], sub);
 	return (msh->status);
@@ -119,18 +119,19 @@ int	ft_cmd_alone(t_msh *msh, int sub)
 	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
 	ft_exec_cmd(msh, sub); // OK PROTEGER
 	while (wait(&msh->status) > 0)
-		;
-	if (WIFSIGNALED(msh->status))
 	{
-		msh->status = WTERMSIG(msh->status) + 128;
-		if (msh->status == 131)
-			write(2, "Quit (core dumped)\n", 20);
-		else if (msh->status == 130)
-			(write(2, "c est pas moi\n", 15), write(2, "\n", 1));
+		if (WIFEXITED(msh->status))
+			msh->status = WEXITSTATUS(msh->status);
+		else if (WIFSIGNALED(msh->status))
+		{
+			msh->status = WTERMSIG(msh->status) + 128;
+			if (msh->status == 131)
+				write(2, "Quit (core dumped)\n", 20);
+			else if (msh->status == 130)
+				(write(2, "c est pas moi\n", 15), write(2, "\n", 1));
+		}
 	}
-	else if (WIFEXITED(msh->status))
-		msh->status = WEXITSTATUS(msh->status);
-	// dprintf(2, "status %d\n", msh->status);
+	dprintf(2, "status %d\n", msh->status);
 	sign = 0;
 	mlcgic(NULL, FLUSH, PIP, msh);
 	return (0);

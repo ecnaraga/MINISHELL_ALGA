@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/24 17:03:57 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	builtin_cd(t_msh *msh)
 	char	*tmp;
 	static int	statut = 0;
 
-	if(msh->p.cmd_opt[2])
+	if(msh->p.cmd_t[2])
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		return (msh->status = 1, 0);
@@ -135,7 +135,7 @@ int	builtin_cd(t_msh *msh)
 		statut = 1;
 	else if (old_pwd && pwd_exist(msh->env))
 		statut = 0;
-	path = get_path(msh->p.cmd_opt);
+	path = get_path(msh->p.cmd_t);
 	if (!path)
 	{
 		if (old_pwd)

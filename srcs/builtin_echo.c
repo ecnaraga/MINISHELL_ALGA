@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:15:29 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/12 11:54:19 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,20 +80,20 @@ void	builtin_echo(t_msh *msh/* , t_split *av, int nb_arg */) //Il faudra envoyer
 	i = 1;
 	new_line = 0;
 	printf("BUILTIN\n");
-	while (msh->p.cmd_opt[i] && ft_option_echo(msh->p.cmd_opt[i]) == 0) // implementer expand dans boucle
+	while (msh->p.cmd_t[i] && ft_option_echo(msh->p.cmd_t[i]) == 0) // implementer expand dans boucle
 	{
 		new_line = 1;
 		i++;
 	}
 	// while (i < nb_arg) // implementer expand dans boucle
-	while (msh->p.cmd_opt[i]) // implementer expand dans boucle
+	while (msh->p.cmd_t[i]) // implementer expand dans boucle
 	{
 		// if (av[i].type != ARG && ft_is_char(av[i].data, '$')) //ARG x l instant car que ce type de defini dans le split x noter qu'il n'y avait pas de quote
 		// 	ft_expand(av, av[i].data); // devra remplacer $suivi de la chaine de char (ex $USER) par la valeur de la variable d environnement a chercher dans env
-		ft_putstr_fd(msh->p.cmd_opt[i], 1);
+		ft_putstr_fd(msh->p.cmd_t[i], 1);
 		i++;
 		// if (i < nb_arg)
-		if (msh->p.cmd_opt[i])
+		if (msh->p.cmd_t[i])
 			write(1, " ", 1);
 	}
 	if (new_line != 1)

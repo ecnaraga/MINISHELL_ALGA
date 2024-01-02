@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 13:31:48 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 10:10:55 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_split	*ft_lstnew_split(t_msh *msh);
 int	ft_lstsize_split(t_split *lst);
 void    del_two(t_msh *msh, t_split *lst);
 void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_split *));
-t_split	*ft_lstdel_and_relink_split(t_msh *msh, t_split *av, t_split *prev, t_split **head);
+t_split	*lstdel_relink_split(t_msh *msh, t_split *av, t_split *prev, t_split **head);
 // t_env	*ft_lstdel_and_relink(t_msh *msh, t_env *lst, t_env *prev, t_env **head);
 
 

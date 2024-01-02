@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand_wildcard.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 16:40:39 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/29 15:46:52 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,19 @@ char	**ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i)
 	int k;
 
 	printf("hello\n");
-	if (msh->p.cmd_opt[0])
-		tmp = wildcards(msh->av->data, msh, msh->p.cmd_opt[0]);
+	if (msh->p.cmd_t[0])
+		tmp = wildcards(msh->av->data, msh, msh->p.cmd_t[0]);
 	else
 		tmp = wildcards(msh->av->data, msh, msh->av->data);
 	if (msh->status == 255)
 		return (NULL);
 	if (!tmp)
 	{
-		msh->p.cmd_opt[*i] = mlcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP, msh);
-		// msh->p.cmd_opt[*i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
-		if (!msh->p.cmd_opt[*i])
+		msh->p.cmd_t[*i] = mlcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP, msh);
+		// msh->p.cmd_t[*i] = ft_magic_malloc(ADD, 0, ft_strdup(msh->av->data), PIP);
+		if (!msh->p.cmd_t[*i])
 			return (NULL); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
-		return (msh->p.cmd_opt);
+		return (msh->p.cmd_t);
 	}
 	*cmd_nb += ft_sizetab(tmp);
 	cmd = mlcgic(mlcp(NULL, sizeof(char *) * (*cmd_nb + 1)), MALLOC, PIP, msh);
@@ -53,7 +53,7 @@ char	**ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i)
 	j = 0;
 	while (j < *i)
 	{
-		cmd[j] = msh->p.cmd_opt[j];
+		cmd[j] = msh->p.cmd_t[j];
 		j++;
 	}
 	k = 0;
@@ -61,7 +61,7 @@ char	**ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i)
 		cmd[j++] = tmp[k++];
 	cmd[j] = NULL; // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	*i = j - 1;
-	mlcgic(mlcp(msh->p.cmd_opt, 0), FREE, PIP, msh);
+	mlcgic(mlcp(msh->p.cmd_t, 0), FREE, PIP, msh);
 	mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
 	return (cmd);
 }

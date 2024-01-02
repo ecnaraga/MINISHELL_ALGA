@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 14:16:45 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 10:10:55 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_spli
 // 	// lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 // }
 
-t_split	*ft_lstdel_and_relink_split(t_msh *msh, t_split *av, t_split *prev, t_split **head)
+t_split	*lstdel_relink_split(t_msh *msh, t_split *av, t_split *prev, t_split **head)
 {
 	t_split	*tmp;
 	

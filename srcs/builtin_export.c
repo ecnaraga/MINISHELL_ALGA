@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/22 17:42:24 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,37 +267,37 @@ void	builtin_export(t_msh *msh)
 	int	i;
 
 	i = 1;
-	if (!msh->p.cmd_opt[i])
+	if (!msh->p.cmd_t[i])
 		ft_print_export(msh);
 	else
 	{
-		while (msh->p.cmd_opt[i])
+		while (msh->p.cmd_t[i])
 		{
-			if (!valide_key(msh->p.cmd_opt[i]))
-				(msh->status = 1, error_export(msh, msh->p.cmd_opt[i]));
+			if (!valide_key(msh->p.cmd_t[i]))
+				(msh->status = 1, error_export(msh, msh->p.cmd_t[i]));
 			else
 			{
-				if (get_statut(msh->p.cmd_opt[i]) == 1)
-					new_env_node_export(msh, msh->p.cmd_opt[i], 1, msh->export_env);
-				else if (get_statut(msh->p.cmd_opt[i]) == 2)
+				if (get_statut(msh->p.cmd_t[i]) == 1)
+					new_env_node_export(msh, msh->p.cmd_t[i], 1, msh->export_env);
+				else if (get_statut(msh->p.cmd_t[i]) == 2)
 				{
-					new_env_node_export(msh, msh->p.cmd_opt[i], 2, msh->export_env);
-					new_env_node_env(msh, msh->p.cmd_opt[i], 2, msh->env);
+					new_env_node_export(msh, msh->p.cmd_t[i], 2, msh->export_env);
+					new_env_node_env(msh, msh->p.cmd_t[i], 2, msh->env);
 				}
-				else if (get_statut(msh->p.cmd_opt[i]) == 4)
+				else if (get_statut(msh->p.cmd_t[i]) == 4)
 				{
-					new_env_node_export(msh, msh->p.cmd_opt[i], 4, msh->export_env);
-					new_env_node_env(msh, msh->p.cmd_opt[i], 4, msh->env);
+					new_env_node_export(msh, msh->p.cmd_t[i], 4, msh->export_env);
+					new_env_node_env(msh, msh->p.cmd_t[i], 4, msh->env);
 				}
 			}
 			i++;
 		}
 	}
-	// if (!msh->p.cmd_opt[i])
-	// 	for (size_t j = 0; msh->p.cmd_opt[j]; j++)
+	// if (!msh->p.cmd_t[i])
+	// 	for (size_t j = 0; msh->p.cmd_t[j]; j++)
 	// 	{
-	// 		printf("oui : %s\n", msh->p.cmd_opt[j]);
+	// 		printf("oui : %s\n", msh->p.cmd_t[j]);
 	// 	}
-	// if(!msh->p.cmd_opt[i])
+	// if(!msh->p.cmd_t[i])
 	// 	ft_print_export(msh);
 }

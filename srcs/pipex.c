@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/22 13:08:28 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/02 10:07:27 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,15 +103,17 @@ int	pipex_multi(t_msh *msh, int sub)
 	while (pid_l)
 	{
 		waitpid(pid_l->pid, &msh->status, WUNTRACED);
-		if (WIFSIGNALED(msh->status) && tmp == 0)
+		if (WIFEXITED(msh->status))
+			msh->status = WEXITSTATUS(msh->status);
+		else if (WIFSIGNALED(msh->status)/*  && tmp == 0 */)
 		{
 			msh->status = WTERMSIG(msh->status) + 128;
-			if (msh->status == 131)
+			if (tmp == 0 && msh->status == 131)
 			{
 				write(2, "Quit (core dumped)\n", 20);
 				tmp = 2;
 			}
-			if (msh->status == 130 && tmp == 0)
+			if (tmp == 0 && msh->status == 130 && tmp == 0)
 			{
 				write(2, "\n", 1);
 				tmp = 1;
@@ -124,10 +126,7 @@ int	pipex_multi(t_msh *msh, int sub)
 		msh->status = 255;
 		ft_exit_bis(msh, sub, -1, -1);
 	}
-	if (WIFEXITED(msh->status))
-		msh->status = WEXITSTATUS(msh->status);
-	else if (WIFSIGNALED(msh->status))
-		msh->status = WTERMSIG(msh->status) + 128;
+	dprintf(2, "status = %d\n", msh->status);
 	ft_signal_handler_msh();
 	sign = 0;
 	mlcgic(NULL, FLUSH, PIP, msh);
