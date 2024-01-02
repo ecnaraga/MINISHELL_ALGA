@@ -6,7 +6,7 @@
 /*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/02 10:43:13 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/02 18:09:26 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,12 +195,10 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 			ft_open_heredoc(msh, &fd.file, &save);
 		else
 			ft_next(msh, &save);
-		// {
-		// 	save.prev = msh->av;
-		// 	msh->av = msh->av->next;
-		// }
 		if (fd.file == -1 || msh->ambiguous == -3) // IF ERREUR OPEN DE FT_OPEN_INFILE OU FT_OPEN_HEREDOC > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
 			return (ft_invalid_infile(msh, rule, j, &save));
+		if (rule == PAR_OPEN)
+			break;
 	}
 	msh->av = save.head;
 	return (ft_dup_stdin(msh, &fd, rule, j)); // IF ERREUR DUP OU DUP2 QUITTE PROCESS ENFANT SI PIPE SINON RETOURNE -1 (-1 SI CMD_ALONE OU EXEC_PAR)

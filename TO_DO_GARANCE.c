@@ -3,6 +3,8 @@
 echo & USER
 */
 
+( cat ) | ( ls )
+
 // << L cat && << L cat | cat && ( cat | cat | cat ) << L && ( echo bravo && (echo bravo && export alix=love && echo $alix) && echo $alix)
 
 // ( cat | cat ) << L && cat | cat << L
@@ -20,6 +22,7 @@ echo & USER
 // 1
 // bash-5.2$ 
 
+( cat | cat ) < infile < infile << L < infile
 
 Minishell$ ^C
 Minishell$ ^C
