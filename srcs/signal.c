@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 17:09:22 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:53:45 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	ft_signal_handler_msh(void)
 		return (perror("signal"), 1);
 	if (signal (SIGQUIT, SIG_IGN) == SIG_ERR)
 		return (perror("signal"), 1);
+	if (signal (SIGPIPE, SIG_DFL) == SIG_ERR)
+		return (perror("signal"), 1);
 	return (0); //revoir le code renvoye en cas d erreur
 }
 
@@ -64,6 +66,12 @@ void	ft_free_bis(int signal)
 	}
 }
 
+void	ft_free_four(int signal)
+{
+	mlcgic(NULL, QUIT, 0, NULL);
+	exit(signal + 128);
+}
+
 /*
 Set the instructions in case of catch Ctrl-C or Ctrl-/
 Ctrl-C : free all except environment + redisplay prompt
@@ -76,6 +84,8 @@ int	ft_signal_handler_msh_bis(void)
 	if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 		return (perror("signal"), 1);
 	if (signal(SIGQUIT, &ft_free) == SIG_ERR)
+		return (perror("signal"), 1);
+	if (signal(SIGPIPE, &ft_free_four) == SIG_ERR)
 		return (perror("signal"), 1);
 	return (0);
 }

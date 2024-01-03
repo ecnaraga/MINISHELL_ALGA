@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 13:05:59 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ typedef struct s_pipex
 	short int	re_split;
 }				t_pipex;
 
+typedef struct s_fdpar
+{
+	int in;
+	int	out;
+}		t_fdpar;
+
 typedef	struct s_msh
 {
 	t_env	**env;
@@ -68,6 +74,7 @@ typedef	struct s_msh
 	int		ac;
 	t_split *av;
 	t_pipex	p;
+	t_fdpar	fd;
 	int ambiguous;
 	int		status;
 	int		previous_status;
@@ -128,6 +135,8 @@ typedef struct s_fd
 	int file;
 	int	old_std;
 }		t_fd;
+
+
 
 typedef struct s_lpid
 {

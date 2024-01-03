@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_handle_pipe.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 16:37:00 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,25 @@ static void	ft_error_fork(t_msh *msh, int fd1, int fd2, int fd3)
 	msh->status = 255;
 }
 
-static void	ft_child_pipe_exec(t_msh *msh)
+static void	ft_child_pipe_exec(t_msh *msh, int fd_in, int fd_out)
 {
 	t_split *head;
+	t_fdpar	fd;
 
 	head = msh->av;
 	if (msh->av->token == PAR_OPEN)
 	{
-		ft_exec_par(msh, &head, 1); // OK PROTEGER
+		fd.in = fd_in;
+		fd.out = fd_out;
+		ft_exec_par(msh, &head, 1, &fd); // OK PROTEGER
 		ft_exit(-1, -1, -1, msh);
 	}
 	else
 	{
+		if (fd_in > -1)
+			close(fd_in);
+		if (fd_out > -1)
+			close(fd_out);
 		msh->p.cmd_t = ft_make_cmd(msh, 1, -1, -1);
 		if (!msh->p.cmd_t) // OK PROTEGER
 			ft_exit(-1, -1, -1, msh);
@@ -62,15 +69,15 @@ void	ft_first_pipe(t_msh *msh, t_lpid **pid_l)
 		if (ft_signal_handler_msh_bis() == 1)
 			ft_exit_bis(msh, 1, msh->p.fd_p[0][0], msh->p.fd_p[0][1]);
 		close(msh->p.fd_p[0][0]);
+		if (ft_dup_fd(msh, 1) == 1)
+			ft_exit_bis(msh, 1, msh->p.fd_p[0][1], -1);
 		redef_stdin(msh, FIRST, 0, 1); // OK PROTEGER
 		redef_stdout(msh, FIRST, 0, 1); // OK PROTEGER
-		close(msh->p.fd_p[0][1]);
-		ft_child_pipe_exec(msh); // OK PROTEGER
+		ft_child_pipe_exec(msh, -1, msh->p.fd_p[0][1]); // OK PROTEGER
 	}
 	else
 	{
 		new = mlcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
-		// new = ft_magic_malloc(ADD, 0, ft_lpidnew(pid), PIP);
 		if (msh->status == 255)
 			return;
 		*pid_l = new;
@@ -93,14 +100,12 @@ void	ft_middle_pipe(t_msh *msh, int j, t_lpid **pid_l)
 				ft_exit_bis(msh, 1, msh->p.fd_p[j][0], msh->p.fd_p[j][1]));
 		close(msh->p.fd_p[j][0]);
 		redef_stdin(msh, MID, j, 1); // OK PROTEGER
-		close(msh->p.fd_p[j - 1][0]);
 		redef_stdout(msh, MID, j, 1); // OK PROTEGER
-		(close(msh->p.fd_p[j][1]), ft_child_pipe_exec(msh)); // OK PROTEGER
+		ft_child_pipe_exec(msh, msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1]); // OK PROTEGER
 	}
 	else
 	{
 		new = mlcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
-		// new = ft_magic_malloc(ADD, 0, ft_lpidnew(pid), PIP);
 		if (msh->status == 255)
 			return;
 		ft_lpidadd_back(pid_l, new);
@@ -121,17 +126,18 @@ void	ft_last_pipe(t_msh *msh, int j, t_lpid **pid_l)
 		if (ft_signal_handler_msh_bis() == 1)
 			ft_exit_bis(msh, 1, msh->p.fd_p[j - 1][0], -1);
 		redef_stdin(msh, LAST, j, 1);
-		close(msh->p.fd_p[j - 1][0]);
+		if (ft_dup_fd(msh, 1) == 1)
+			ft_exit_bis(msh, 1, msh->p.fd_p[j - 1][0], -1);
 		redef_stdout(msh, LAST, j, 1); // OK PROTEGER
-		ft_child_pipe_exec(msh);
+		ft_child_pipe_exec(msh, msh->p.fd_p[j - 1][0], -1);
 	}
 	else
 	{
 		new = mlcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
-		// new = ft_magic_malloc(ADD, 0, ft_lpidnew(pid), PIP);
 		if (msh->status == 255)
 			return;
 		ft_lpidadd_back(pid_l, new);
+		dprintf(2, "msh->p.fd_p[j - 1][0] %d\n", msh->p.fd_p[j - 1][0]);
 		ft_parent(msh, msh->p.fd_p[j - 1][0], -1, PIP);
 	}
 }

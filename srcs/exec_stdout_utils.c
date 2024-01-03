@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdout_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/02 10:45:43 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 16:40:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,8 @@ int	redef_stdout(t_msh *msh, int rule, int j, int sub)
 	
 	ft_init_var_std(&save, &fd, msh);
 	ft_dup_pipe(msh, rule, j); // A CHECK AVEC LES PIPES
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR && msh->av->token != PAR_CLOSE) //voir si PAR CLOSE OU PAS CAR DANS STDIN PARCLOSE ET PAS LA
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR
+		&& msh->av->token != PAR_CLOSE) //voir si PAR CLOSE OU PAS CAR DANS STDIN PARCLOSE ET PAS LA
 	{
 		if (msh->av->token == OUTFILE_TRUNC)
 		{

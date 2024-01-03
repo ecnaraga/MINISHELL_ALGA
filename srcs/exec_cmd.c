@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 16:39:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ pid_t	ft_exec_cmd_fork(t_msh *msh, int old_stdout, int old_stdin, int sub)
 	{
 		close(old_stdout);
 		close(old_stdin);
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		signal(SIGQUIT, &ft_free);
+		signal(SIGINT, SIG_DFL); // A PROTEGER
+		signal(SIGQUIT, SIG_DFL); // A PROTEGER
+		signal(SIGQUIT, &ft_free); // A PROTEGER
 		ft_child_exec(msh);
 	}
 	return (pid);
@@ -65,6 +65,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 
 int ft_return_error(t_msh *msh, int old_std[2], int rule, int sub)
 {
+	ft_close_fd(msh, 0);
 	if (old_std[I] > -1)
 	{
 		if (dup2(old_std[I], 0) == -1)
@@ -93,6 +94,8 @@ int	ft_exec_cmd(t_msh *msh, int sub)
 
 	old_std[I] = -1;
 	old_std[O] = -1;
+	if (ft_dup_fd(msh, 0) == 1)
+		ft_return_error(msh, old_std, CMD_ALONE, sub);
 	old_std[I] = redef_stdin(msh, CMD_ALONE, 0, sub);
 	if (old_std[I] == -1) // OK PROTEGE
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));
@@ -131,7 +134,6 @@ int	ft_cmd_alone(t_msh *msh, int sub)
 				(write(2, "c est pas moi\n", 15), write(2, "\n", 1));
 		}
 	}
-	dprintf(2, "status %d\n", msh->status);
 	sign = 0;
 	mlcgic(NULL, FLUSH, PIP, msh);
 	return (0);

@@ -3,9 +3,12 @@
 echo & USER
 */
 
->> est ce que l entree standard est redefinie dans le pipe avant de creer le subshell et donc de fork a nouveau?
-( cat ) | ( ls )
-( cat | cat | cat) | ls 
+POUR ALIX : Minishell$ ((cat)|(ls))
+
+
+// >> est ce que l entree standard est redefinie dans le pipe avant de creer le subshell et donc de fork a nouveau?
+// ( cat ) | ( ls )
+// ( cat | cat | cat) | ls 
 
 // << L cat && << L cat | cat && ( cat | cat | cat ) << L && ( echo bravo && (echo bravo && export alix=love && echo $alix) && echo $alix)
 
@@ -24,27 +27,27 @@ echo & USER
 // 1
 // bash-5.2$ 
 
-( cat | cat ) < infile < infile << L < infile
+// ( cat | cat ) < infile < infile << L < infile
 
-Minishell$ ^C
-Minishell$ ^C
-Minishell$ ^C
-Minishell$ ^C
-Minishell$ ( cat | cat << L ) << L && cat | cat << L
-Sortie ft_parse_line : _( cat | cat << L ) << L && cat | cat << L_
-PARSE_TER
-FT_EXEC
-> ^C
-Minishell$ ^C
-Minishell$ ^C
-Minishell$ ^C
-Minishell$ ^C
-Minishell$ ( cat | cat << L ) << L && cat | cat << L
-Sortie ft_parse_line : _( cat | cat << L ) << L && cat | cat << L_
-PARSE_TER
-FT_EXEC
-> a
-Minishell$
+// Minishell$ ^C
+// Minishell$ ^C
+// Minishell$ ^C
+// Minishell$ ^C
+// Minishell$ ( cat | cat << L ) << L && cat | cat << L
+// Sortie ft_parse_line : _( cat | cat << L ) << L && cat | cat << L_
+// PARSE_TER
+// FT_EXEC
+// > ^C
+// Minishell$ ^C
+// Minishell$ ^C
+// Minishell$ ^C
+// Minishell$ ^C
+// Minishell$ ( cat | cat << L ) << L && cat | cat << L
+// Sortie ft_parse_line : _( cat | cat << L ) << L && cat | cat << L_
+// PARSE_TER
+// FT_EXEC
+// > a
+// Minishell$
 
 /* 1. PARENTHESE */
 /*

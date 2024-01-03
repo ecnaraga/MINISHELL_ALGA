@@ -3,38 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 19:22:57 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 17:27:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	ft_skip_par(t_msh *msh)
+{
+	int par;
+
+	par = 1;
+	msh->av = msh->av->next;
+	while (msh->av && par > 0)
+	{
+		if (msh->av->token == PAR_OPEN)
+			(par)++;
+		else if (msh->av->token == PAR_CLOSE)
+			(par)--;
+		msh->av = msh->av->next;
+	}
+}
+
 //test : ( cat ) | ( ls )
 int	ft_search_pipe(t_msh *msh)
 {
 	t_split *head;
-	int par;
 
 	head = msh->av;
 	while (msh->av && msh->av->token != OPERATOR)
-	// while (msh->av && msh->av->token != OPERATOR  && msh->av->token != PAR_OPEN
-	// 	&& msh->av->token != PAR_CLOSE)
 	{
 		if (msh->av->token == PAR_OPEN)
 		{
-			par = 0;
-			while (msh->av && par > 0)
-			{
-				if (msh->av->token == PAR_OPEN)
-					par ++;
-				else if (msh->av->token == PAR_CLOSE)
-					par --;
-				dprintf(2, "par %d\n", par);
-				msh->av = msh->av->next;
-			}
+			ft_skip_par(msh);
+			if (!msh->av)
+				break;
 		}
 		if (msh->av->token == PIPE)
 		{
@@ -55,23 +61,38 @@ static void	ft_init_var(t_msh *msh, t_msh *sub_msh, int sub)
 	sub_msh->export_env = msh->export_env;
 }
 
-void	ft_redef_std_sub(t_msh *msh)
+void	ft_redef_std_sub(t_msh *msh, t_fdpar *fd)
 {
 	while (msh->av && msh->av->token != OPERATOR)
 	{
 		if (msh->av->token == HDOC)
 		{
+			if (fd && fd->in > -1)
+			{
+				close(fd->in); // voir si on peut adapter void	ft_close_fd(t_msh *msh, int rule)
+				fd->in = -1;
+			}
 			if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 				ft_exit(-1, -1, -1, msh);
 			msh->av = msh->av->next;
 		}
 		else if (msh->av->token == INFILE)
 		{
+			if (fd && fd->in > -1)
+			{
+				close(fd->in);
+				fd->in = -1;
+			}
 			if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 				ft_exit(-1, -1, -1, msh);
 		}
 		else if (msh->av->token == OUTFILE_TRUNC || msh->av->token == OUTFILE_NO_TRUNC)
 		{	
+			if (fd && fd->out > -1)
+			{
+				close(fd->out);
+				fd->out = -1;
+			}
 			if (redef_stdout(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 				ft_exit(-1, -1, -1, msh); 
 		}
@@ -80,18 +101,33 @@ void	ft_redef_std_sub(t_msh *msh)
 	}
 }
 
-void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub)
+void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub, t_fdpar *fd)
 {
 	pid_t	pid;
 	
 	ft_init_var(msh, sub_msh, sub);
+	//dprintf(2, "msh->line %s\n", msh->line);
 	pid = fork();
 	if (pid == -1)
-		(msh->status = 255, ft_exit_bis(msh, sub, -1, -1)); // SI FORK KO, ON QUITTE LE PROCESS ACTUEL 
-	if (pid == 0)
 	{
-		ft_redef_std_sub(msh);
-		ft_minishell(sub_msh, 1);
+		if (fd && fd->in > -1)
+			close(fd->in);
+		if (fd && fd->out > -1)
+			close(fd->out);
+		(msh->status = 255, ft_exit_bis(msh, sub, -1, -1)); // SI FORK KO, ON QUITTE LE PROCESS ACTUEL 
+	}
+	else if (pid == 0)
+	{
+		ft_redef_std_sub(msh, fd);
+		//dprintf(2, "sub_msh %s\n", sub_msh->line);
+		ft_minishell(sub_msh, 1, fd);
+	}
+	else
+	{
+		if (fd && fd->in > -1)
+			close(fd->in);
+		if (fd && fd->out > -1)
+			close(fd->out);
 	}
 }
 
@@ -114,10 +150,10 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub)
 // 		// printf("FT_CREATE msh->p.hdoc->read %d\n", msh->p.hdoc->read);
 // 		while (msh->av && msh->av->token != OPERATOR)
 // 		{
-// 			// dprintf(2, "msh->av->data %s\n", msh->av->data);
+// 			// //dprintf(2, "msh->av->data %s\n", msh->av->data);
 // 			if (msh->av->token == HDOC)
 // 			{
-// 				// dprintf(2, "HDOC\n");
+// 				// //dprintf(2, "HDOC\n");
 // 				// msh->p.hdoc = sub_msh->p.hdoc;
 // 				if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 // 				// if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
@@ -144,7 +180,7 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub)
 // 	// {
 // 	// 	while (msh->av && msh->av->token != OPERATOR)
 // 	// 	{
-// 	// 		dprintf(2, "test\n");
+// 	// 		//dprintf(2, "test\n");
 // 	// 		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);  
 // 	// 	}
 // 	// }
@@ -198,7 +234,7 @@ void	ft_skip_subelem(t_msh *msh, t_env *head_hd, t_split **head)
 	}
 }
 
-void ft_exec_par(t_msh *msh, t_split **head, int sub)
+void ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd)
 {
 	t_msh	sub_msh;
 	t_env *head_hd;
@@ -206,10 +242,15 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub)
 	sub_msh.p.hdoc = ft_copy_heredoc(msh, msh->p.hdoc, sub); // SI MALLOC KO ON QUITTE DANS 
 	*head = msh->av;
 	head_hd = NULL;
+	//dprintf(2, "EXEC_PAR msh->av->data %s msh->av->next->data %s\n", msh->av->data, msh->av->next->data);
 	ft_skip_subelem(msh, head_hd, head);
 	while (msh->av && msh->av->token == PAR_CLOSE) // et pourquoi pas if a la place
 		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
-	ft_create_sub_msh(&sub_msh, msh, sub); // OK TOUT EST PROTEGE A L INTERIEUR
+	// //dprintf(2, "EXEC_PAR\n");
+	printf("EXEC_PAR\n");
+	ft_create_sub_msh(&sub_msh, msh, sub, fd); // OK TOUT EST PROTEGE A L INTERIEUR
+	//dprintf(2, "AFTER FORK EXEC_PAR\n");
+	printf("AFTER FORK EXEC_PAR\n");
 	while (msh->av && msh->av->token != OPERATOR)
 	{
 		if (msh->av->token == HDOC)
@@ -308,8 +349,8 @@ void	ft_choice_exec(t_msh *msh, t_split **head, int sub)
 	}
 	else if (msh->av->token == PAR_OPEN)
 	{
-		// printf("TEST PAR OPEN\n");
-		ft_exec_par(msh, head, sub); // OK PROTEGE A L INTERIEUR
+		printf("TEST PAR OPEN\n");
+		ft_exec_par(msh, head, sub, NULL); // OK PROTEGE A L INTERIEUR
 	}
 	else
 		ft_cmd_alone(msh, sub); // OK PROTEGE A L INTERIEUR
@@ -362,7 +403,7 @@ int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 
 
 
-int	ft_exec(t_msh *msh, int sub)
+int	ft_exec(t_msh *msh, int sub, t_fdpar *fd)
 {
 	t_split *head;
 	
@@ -371,6 +412,16 @@ int	ft_exec(t_msh *msh, int sub)
 	if (sub == 0 && ft_heredoc(msh) == 130) // SI ERREUR MALLOC OU OPEN ON QUITTE A L INTERIEUR
 		return (1); // OK CTRL + C GERE
 	head = msh->av;
+	if (fd)
+	{
+		msh->fd.in = fd->in;
+		msh->fd.out = fd->out;
+	}
+	else
+	{
+		msh->fd.in = -1;
+		msh->fd.out = -1;
+	}
 	ft_exec_operator(msh, &head, sub); // OK PROTEGE A L INTERIEUR
 	if (sub == 0)
 		ft_unlink_heredoc(msh->p.hdoc);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/30 12:08:59 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 14:32:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	ft_free_fd_p(int **fd_p, int j)
 
 void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 {
+	ft_close_fd(msh, 0);
 	if (fd1 > -1)
 		close(fd1);
 	if (fd2 > -1)
@@ -44,6 +45,7 @@ void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 
 void	ft_exit(int fd_1, int fd_2, int fd_3, t_msh *msh)
 {
+	ft_close_fd(msh, 0);
 	if (fd_1 > -1)
 		close(fd_1);
 	if (fd_2 > -1)

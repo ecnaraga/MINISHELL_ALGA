@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 11:52:13 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 13:40:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,13 @@ static int ft_parsing(t_msh *msh, int sub)
 	return (0);
 }
 
-void	ft_minishell(t_msh *msh, int sub)
+void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd)
 {
+	printf("FT_MINISHELL *************** msh->line |%s|\n", msh->line);
+	//dprintf(2, "DFT_MINISHELL *************** msh->line |%s|\n", msh->line);
 	if (ft_parsing(msh, sub) != 0)  // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return ;
-	if (ft_exec(msh, sub) != 0) // OK GERE ET PROTEGE A l interieur
+	if (ft_exec(msh, sub, fd) != 0) // OK GERE ET PROTEGE A l interieur
 		return ;
 	if (sub == 1)
 		ft_exit(-1, -1, -1, msh);
@@ -133,7 +135,7 @@ int main(int ac, char **av, char **env)
 		if (ft_readline(&msh) == -1)
 			continue;
 		add_history(msh.line);
-		ft_minishell(&msh, 0);
+		ft_minishell(&msh, 0, NULL);
 		mlcgic(NULL, FLUSH, NO_ENV, &msh);
 	}
 }

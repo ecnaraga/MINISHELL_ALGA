@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/03 13:40:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,14 +162,14 @@ static unsigned int	ft_begin_new_s1(char *s1)
 			// if (par == 1)
 			// {
 			// 	count += 1;
-			// 	dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
+			// 	//dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
 			// 	break ;
 			// }
 			par--;
 		}
 		else if (par == 0 && (s1[i] == '&' || s1[i] == '|'))
 		{
-			// dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
+			// //dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
 			break ;
 		}
 		count++;
@@ -213,7 +213,9 @@ char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub)
 		if (!(*s1))
 			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
 		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + count + len2 - 1), NO_ENV);
-		// printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
+		printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
+		// mlcgic(mlcp(msh->line, 0), FREE, NO_ENV, msh);
+		// msh->line = *s1;
 		mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 		// ft_magic_malloc(FREE, 0, tmp, NO_ENV);
 	}

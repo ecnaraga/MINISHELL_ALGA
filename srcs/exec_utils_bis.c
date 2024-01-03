@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_bis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 11:45:29 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 17:19:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	ft_child_exec(t_msh *msh)
 {
 	int	err;
 	char **env;
-	(void) env;
 
 	err = ft_access_cmd(msh, &msh->p.good_path);
 	if (msh->status == 255)// OK PROTEGER
@@ -100,23 +99,49 @@ static void	update_hdoc_list(t_msh *msh, t_env *head, t_env *prev)
 	msh->p.hdoc = head;
 }
 
+void	ft_close_fdp(int fd_1, int fd_2)
+{
+	if (fd_1 > -1)
+		close(fd_1);
+	if (fd_2 > -1)
+		close(fd_2);
+}
+
+static void	ft_init_var(t_env **head_hd, t_env **prev_hd, int *par)
+{
+	*head_hd = NULL;
+	*prev_hd = NULL;
+	*par = 0;
+}
+
+void	ft_handle_par(t_msh *msh, int rule, int *par)
+{
+	if(msh->av->token == PAR_OPEN && rule != CMD_ALONE)
+	{
+		if (*par == 0)
+			ft_strtrim_msh(msh, &msh->line, 1); // OK PROTEGER A L INTERIEUR
+		(*par)++;
+	}
+	else if (msh->av->token == PAR_CLOSE)
+		(*par)--;
+}
+
 //TO DO : free tous les elemnts jusqu au pipe ou prochain operateur
 void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 {
 	t_split *head;
 	t_env *head_hd;
 	t_env *prev_hd;
+	int		par;
 	
-	signal(SIGINT, SIG_IGN);
-	if (fd_1 > -1)
-		close(fd_1);
-	if (fd_2 > -1)
-		close(fd_2);
+	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
+		perror("signal");
+	ft_close_fdp(fd_1, fd_2);
+	ft_init_var(&head_hd, &prev_hd, &par);
 	head = msh->av;
-	head_hd = NULL;
-	prev_hd = NULL;
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
+	while (msh->av && ((msh->av->token != PIPE && msh->av->token != OPERATOR) || (par == 1 && rule != CMD_ALONE)))
 	{
+		ft_handle_par(msh, rule, &par);
 		if (msh->av->token == HDOC && rule != CMD_ALONE)
 			update_hdoc_list(msh, head_hd, prev_hd);
 		msh->av = lstdel_relink_split(msh, msh->av, NULL, &head);

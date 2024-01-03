@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/02 12:11:09 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/03 16:35:10 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,4 +190,46 @@ char **ft_transcript_env(t_env **env,/*  char *str, */ t_msh *msh)
 	// if (msh->status == 255) // OK PROTEGER
 	// 	return (NULL);
 	return (env_tab);
+}
+/*
+rule == 1 : close fd.in
+rule == 2 : close fd.out
+rule == 0 : close fd.in and fd.out
+*/
+void	ft_close_fd(t_msh *msh, int rule)
+{
+	if ((rule == 1 || rule == 0) && msh->fd.in > -1)
+	{
+		close(msh->fd.in);
+		msh->fd.in = -1;
+	}
+	if ((rule == 2 || rule == 0) && msh->fd.out > -1)
+	{
+		close(msh->fd.out);
+		msh->fd.out = -1;
+	}
+}
+
+/*
+rule == 1 : dup and close fd.in
+rule == 2 : dup and close fd.out
+rule == 0 : dup and close fd.in and fd.out
+*/
+int	ft_dup_fd(t_msh *msh, int rule)
+{
+	if ((rule == 1 || rule == 0) && msh->fd.in > -1)
+	{
+		if (dup2(msh->fd.in, STDIN_FILENO) == -1) // A PROTEGER
+			return (1);
+		close(msh->fd.in);
+		msh->fd.in = -1;
+	}
+	if ((rule == 2 || rule == 0) && msh->fd.out > -1)
+	{
+		if (dup2(msh->fd.out, STDOUT_FILENO) == -1) // A PROTEGER
+			return (1);
+		close(msh->fd.out);
+		msh->fd.out = -1;
+	}
+	return (0);
 }
