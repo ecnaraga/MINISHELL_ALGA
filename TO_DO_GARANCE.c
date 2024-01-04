@@ -16,6 +16,7 @@ POUR ALIX : Minishell$ ((cat)|(ls))
 // ( cat | cat << L ) << L && cat | cat << L
 
 // << L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
+// << L cat && ( cat | cat << L && ( cat | cat ) << L && cat | cat << L ) && cat | cat << L
 // valide key dans expand
 // ft_expand dans heredoc 
 // wildcard potentiellement dans heredoc // PAS DE WILDCARD DANS HDOC

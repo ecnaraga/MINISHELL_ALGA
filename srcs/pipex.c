@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 14:43:18 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:23:40 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 			ft_middle_pipe(msh, index.j, pid_l);
 		if (msh->status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
 			return ;
-		ft_close_fd(msh, 1);
+		ft_close_fd(&msh->fd, 1);
 		index.j++;
 	}
 	ft_last_pipe(msh, index.j, pid_l);
-	ft_close_fd(msh, 2);
+	ft_close_fd(&msh->fd, 2);
 }
 
 int	pipex_multi(t_msh *msh, int sub)

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 16:26:21 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:22:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**wildcards(char *str, t_msh *msh, char *cmd_0);
 int	valide_expand(char *key);
 char *get_value(t_msh *msh, t_env **env, char *str, int rule);
 
-void	ft_close_fd(t_msh *msh, int rule);
+void	ft_close_fd(t_fdpar *fd, int rule);
 int	ft_dup_fd(t_msh *msh, int rule);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2024/01/03 16:37:00 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:57:27 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ void	ft_last_pipe(t_msh *msh, int j, t_lpid **pid_l)
 		if (msh->status == 255)
 			return;
 		ft_lpidadd_back(pid_l, new);
-		dprintf(2, "msh->p.fd_p[j - 1][0] %d\n", msh->p.fd_p[j - 1][0]);
 		ft_parent(msh, msh->p.fd_p[j - 1][0], -1, PIP);
 	}
 }

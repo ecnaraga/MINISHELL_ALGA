@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 16:39:19 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:22:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 
 int ft_return_error(t_msh *msh, int old_std[2], int rule, int sub)
 {
-	ft_close_fd(msh, 0);
+	ft_close_fd(&msh->fd, 0);
 	if (old_std[I] > -1)
 	{
 		if (dup2(old_std[I], 0) == -1)

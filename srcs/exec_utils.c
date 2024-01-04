@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/03 16:35:10 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 10:25:59 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,17 +196,17 @@ rule == 1 : close fd.in
 rule == 2 : close fd.out
 rule == 0 : close fd.in and fd.out
 */
-void	ft_close_fd(t_msh *msh, int rule)
+void	ft_close_fd(t_fdpar *fd, int rule)
 {
-	if ((rule == 1 || rule == 0) && msh->fd.in > -1)
+	if ((rule == 1 || rule == 0) && fd && fd->in > -1)
 	{
-		close(msh->fd.in);
-		msh->fd.in = -1;
+		close(fd->in);
+		fd->in = -1;
 	}
-	if ((rule == 2 || rule == 0) && msh->fd.out > -1)
+	if ((rule == 2 || rule == 0) && fd && fd->out > -1)
 	{
-		close(msh->fd.out);
-		msh->fd.out = -1;
+		close(fd->out);
+		fd->out = -1;
 	}
 }
 

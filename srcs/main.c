@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 13:40:22 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 11:29:04 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,11 @@ static int	ft_readline(t_msh *msh)
 		return (mlcgic(NULL, FLUSH, NO_ENV, msh), -1);	
 	return (0);
 }
-
+/*
+if isatty(0) == 1, in case of the STDOUT_FILENO has already been redirected,
+	we open /dev/stdin tu dup2 , to be sure the STDOUT_FILENO of our
+	minishell will be the terminal
+*/
 int main(int ac, char **av, char **env)
 {
 	t_msh msh;
