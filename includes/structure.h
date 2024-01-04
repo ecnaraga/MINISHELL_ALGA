@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 13:05:59 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 15:43:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ typedef	struct s_quote
 	int d;
 	int s;
 	int wildcard;
+	int mod_dollar;
+	int dollar;
 }		t_quote;
 
 typedef struct s_letter

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 16:16:50 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 14:36:18 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,25 @@
 
 char	*ft_error_message_final(char *str, t_msh *msh)
 {
-	char	*message;
+	char	*e;
 
 	if (!str[0])
 	{
-		message = mlcgic(mlcp(ft_strdup("minishell: syntax error near unexpected token `newline'\n"), 1), ADD, NO_ENV, msh);
-		// message = ft_magic_malloc(ADD, 0, ft_strdup("minishell: syntax error near unexpected token `newline'\n"), NO_ENV); // SI MALLOC KO ON QUITTE
-		if (!message)
+		e = mlcgic(mlcp(ft_strdup("minishell: syntax error near unexpected token `newline'\n"), 1), ADD, NO_ENV, msh); // SI MALLOC KO ON QUITTE
+		if (!e)
 			ft_exit(-1, -1, -1, msh);
 	}
 	else
 	{
-		message = mlcgic(mlcp(ft_strjoin("minishell: syntax error near unexpected token `", str), 1), ADD, NO_ENV, msh);
-		// message = ft_magic_malloc(ADD, 0, ft_strjoin("minishell: syntax error near unexpected token `", str), NO_ENV); // SI MALLOC KO ON QUITTE
-		if (!message)
+		e = ft_strjoin("minishell: syntax error near unexpected token `", str);
+		e = mlcgic(mlcp(e, 1), ADD, NO_ENV, msh); // SI MALLOC KO ON QUITTE
+		if (!e)
 			ft_exit(-1, -1, -1, msh);
-		message = mlcgic(mlcp(ft_strjoin(message, "'\n"), 1), ADD, NO_ENV, msh);
-		// message = ft_magic_malloc(ADD, 0, ft_strjoin(message, "'\n"), NO_ENV); // SI MALLOC KO ON QUITTE
-		if (!message)
+		e = mlcgic(mlcp(ft_strjoin(e, "'\n"), 1), ADD, NO_ENV, msh); // SI MALLOC KO ON QUITTE
+		if (!e)
 			ft_exit(-1, -1, -1, msh);
 	}
-	return (message);
+	return (e);
 }
 
 char	*err_chev(char *str, int skip, t_msh *msh)
@@ -159,6 +157,16 @@ int	ft_handle_chev(t_msh *msh, t_split *prev, t_split **head)
 	return (0);
 }
 
+int	ft_last_token(t_msh *msh, t_split *head)
+{
+	if (msh->av->token == CHEVRON)
+		return (msh->status = 2, err_syntax(err_chev(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+	if (msh->av->token == OPERATOR || msh->av->token == PIPE) // avoir si on decide de considerer en dernier un operator comme erreur ou non
+		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+	msh->av = head;
+	return (0);
+}
+
 // SUPPRIMER LES MAILLONS CHEVRONS SI PAS D ERREUR AVDC FT_LSTDELONE_SPLIT
 int	ft_parse_ter(t_msh *msh)
 {
@@ -167,25 +175,15 @@ int	ft_parse_ter(t_msh *msh)
 
 	head = msh->av;
 	tmp = NULL;
-	printf("PARSE_TER\n");
-	// if (msh->av->token == CHEVRON/* && msh->ac == 1*/)
-	// 	ft_handle_chev(msh, tmp);
-	// if (msh->av->token == CHEVRON && msh->ac == 1)
-	// 	return (status = 2, err_syntax(err_chev(msh->av->data, 1)));
 	if (msh->av->token == OPERATOR || msh->av->token == PIPE)
 		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 	while (msh->av->next)
 	{
-		// printf("msh->av->token %d msh->av->data %s\n", msh->av->token, msh->av->data);
 		if (msh->av->token == CHEVRON)
 		{
 			if (ft_handle_chev(msh, tmp, &head) == 1) // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
 				return (1);
 		}
-		// if (ft_check_chev(msh) == 1)
-		// 	return (1);
-		// if (ft_check_op(msh) == 1)
-		// 	return (1);
 		else
 		{
 			if (ft_check_op(msh) == 1) // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
@@ -194,74 +192,98 @@ int	ft_parse_ter(t_msh *msh)
 			msh->av = msh->av->next;
 		}
 	}
-	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
-	// 	return (err_syntax(ft_err_op(msh->av[msh->ac - 1].data, 0), 2, 1));
-	// printf("msh->av->token %d msh->av->data %s\n", msh->av->token, msh->av->data);
-	if (msh->av->token == CHEVRON)
-		return (msh->status = 2, err_syntax(err_chev(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
-	if (msh->av->token == OPERATOR || msh->av->token == PIPE) // avoir si on decide de considerer en dernier un operator comme erreur ou non
-		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
-	msh->av = head;
-	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
-	// {
-	// 	ft_free_split_msh(msh->av);
-	// 	char *new_line;
-	// 	char *tmp;
-		
-	// 	new_line = readline("> ");
-	// 	new_line = ft_magic_malloc(ADD, 0, new_line);
-	// 	if (status == 0)
-	// 	{
-	// 		tmp = msh->line;
-	// 		msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, " ")); // MALLOC
-	// 		ft_magic_malloc(FREE, 0, tmp);
-	// 		// IF ERROR MALLOC
-	// 		// free(tmp);
-	// 		tmp = msh->line;
-	// 		msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, new_line)); // MALLOC
-	// 		// IF ERROR MALLOC
-	// 		// free(tmp);
-	// 		ft_magic_malloc(FREE, 0, tmp);
-	// 		// tmp = NULL;
-	// 		ft_magic_malloc(FREE, 0, new_line);
-	// 	}
-	// 	else
-	// 		msh->line = new_line;
-	// 	// free(new_line);
-	// 	// new_line = NULL;
-	// 	add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
-	// 	ft_parse_line(msh); // MALLOC
-	// 	// IF ERROR MALLOC
-	// 	ft_parse_bis(msh); // MALLOC
-	// 	// IF ERROR MALLOC
-	// 	msh->av = ft_split_msh(msh->line); //malloc
-	// 	if (!msh->av)
-	// 	{
-	// 		ft_magic_malloc(FLUSH, 0, NULL);
-	// 		// free(msh->line);
-	// 		return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
-	// 	}
-	// 	msh->ac = ft_structtablen(msh->av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
-	// 	if (msh->ac == 0)
-	// 	{
-	// 		// free(msh->line);
-	// 		// ft_free_split_msh(msh->av);
-	// 		ft_magic_malloc(FLUSH, 0, NULL);
-	// 		return (1) ; //Verif quel exitstatus
-	// 	}
-	// 	ft_token(msh);
-	// 	// printf("msh->ac = %d\n", msh->ac)			printf("msh->av->data %s\n", msh->av->data);
-;
-	// 	if (ft_parse_ter(msh) != 0)
-	// 	{
-	// 		// free(msh->line);
-	// 		// ft_free_split_msh(msh->av);
-	// 		ft_magic_malloc(FLUSH, 0, NULL);
-	// 		return (1) ; //Verif quel exitstatus
-	// 	}
-	// }
-	return (0);
+	return (ft_last_token(msh, head));
 }
+
+// int	ft_parse_ter(t_msh *msh)
+// {
+// 	t_split	*head;
+// 	t_split	*tmp;
+
+// 	head = msh->av;
+// 	tmp = NULL;
+// 	if (msh->av->token == OPERATOR || msh->av->token == PIPE)
+// 		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+// 	while (msh->av->next)
+// 	{
+// 		if (msh->av->token == CHEVRON)
+// 		{
+// 			if (ft_handle_chev(msh, tmp, &head) == 1) // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+// 				return (1);
+// 		}
+// 		else
+// 		{
+// 			if (ft_check_op(msh) == 1) // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+// 				return (1);
+// 			tmp = msh->av;
+// 			msh->av = msh->av->next;
+// 		}
+// 	}
+// 	if (msh->av->token == CHEVRON)
+// 		return (msh->status = 2, err_syntax(err_chev(msh->av->data, 1, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+// 	if (msh->av->token == OPERATOR || msh->av->token == PIPE) // avoir si on decide de considerer en dernier un operator comme erreur ou non
+// 		return (msh->status = 2, err_syntax(ft_err_op(msh->av->data, 0, msh))); // SI MALLOC KO ON QUITTE DANS FT_ERROR_MESSAGE_FINAL
+// 	msh->av = head;
+// 	// if (msh->av[msh->ac - 1].token == OPERATOR) // si se termine par un operateur -> rester a l ecoute
+// 	// {
+// 	// 	ft_free_split_msh(msh->av);
+// 	// 	char *new_line;
+// 	// 	char *tmp;
+		
+// 	// 	new_line = readline("> ");
+// 	// 	new_line = ft_magic_malloc(ADD, 0, new_line);
+// 	// 	if (status == 0)
+// 	// 	{
+// 	// 		tmp = msh->line;
+// 	// 		msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, " ")); // MALLOC
+// 	// 		ft_magic_malloc(FREE, 0, tmp);
+// 	// 		// IF ERROR MALLOC
+// 	// 		// free(tmp);
+// 	// 		tmp = msh->line;
+// 	// 		msh->line = ft_magic_malloc(ADD, 0, ft_strjoin(msh->line, new_line)); // MALLOC
+// 	// 		// IF ERROR MALLOC
+// 	// 		// free(tmp);
+// 	// 		ft_magic_malloc(FREE, 0, tmp);
+// 	// 		// tmp = NULL;
+// 	// 		ft_magic_malloc(FREE, 0, new_line);
+// 	// 	}
+// 	// 	else
+// 	// 		msh->line = new_line;
+// 	// 	// free(new_line);
+// 	// 	// new_line = NULL;
+// 	// 	add_history(msh->line); //voir comment supprimer derniere lg de l historique et remplacer par la nouvelle ici
+// 	// 	ft_parse_line(msh); // MALLOC
+// 	// 	// IF ERROR MALLOC
+// 	// 	ft_parse_bis(msh); // MALLOC
+// 	// 	// IF ERROR MALLOC
+// 	// 	msh->av = ft_split_msh(msh->line); //malloc
+// 	// 	if (!msh->av)
+// 	// 	{
+// 	// 		ft_magic_malloc(FLUSH, 0, NULL);
+// 	// 		// free(msh->line);
+// 	// 		return (128 + 6); //6 = SIGABRT =>Verifier si signal ok
+// 	// 	}
+// 	// 	msh->ac = ft_structtablen(msh->av); // A DAPTER A ft_split_minishell qui renvoie un tableau de struct dont la derniere data == NULL
+// 	// 	if (msh->ac == 0)
+// 	// 	{
+// 	// 		// free(msh->line);
+// 	// 		// ft_free_split_msh(msh->av);
+// 	// 		ft_magic_malloc(FLUSH, 0, NULL);
+// 	// 		return (1) ; //Verif quel exitstatus
+// 	// 	}
+// 	// 	ft_token(msh);
+// 	// 	// printf("msh->ac = %d\n", msh->ac)			printf("msh->av->data %s\n", msh->av->data);
+// ;
+// 	// 	if (ft_parse_ter(msh) != 0)
+// 	// 	{
+// 	// 		// free(msh->line);
+// 	// 		// ft_free_split_msh(msh->av);
+// 	// 		ft_magic_malloc(FLUSH, 0, NULL);
+// 	// 		return (1) ; //Verif quel exitstatus
+// 	// 	}
+// 	// }
+// 	return (0);
+// }
 
 
 

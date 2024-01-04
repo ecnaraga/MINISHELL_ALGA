@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/24 17:12:36 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 13:38:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_list_remove(t_list **begin_list, t_list **lst, t_list **prev)
 	}
 }
 
-void	ft_list_remove_if(t_list **begin_list, t_magic *p/* , void *addr */, int (*cmp)())
+void	ft_list_remove_if(t_list **begin_list, t_magic *p, int (*cmp)())
 {
 	t_list	*prev;
 	t_list	*lst;
@@ -60,7 +60,7 @@ void	ft_list_remove_if(t_list **begin_list, t_magic *p/* , void *addr */, int (*
 	free(p);
 }
 
-static void	*ft_magic_add_malloc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
+static void	*ft_magic_add_mlc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 {
 	t_list	*head;
 	t_list	*tmp;
@@ -102,6 +102,22 @@ t_magic	*mlcp(void *addr, size_t size)
 	param->size = size;
 	return (param);
 }
+void	ft_clearlst(int lst, t_list **mlc, t_list **mlc_env, t_list **mlc_pip)
+{
+	if (lst == NO_ENV)
+		ft_lstclear(mlc, del);
+	else if (lst == ENV)
+		ft_lstclear(mlc_env, del);
+	else if (lst == PIP)
+		ft_lstclear(mlc_pip, del);
+}
+void	ft_clearall(t_list **mlc, t_list **mlc_env, t_list **mlc_pip)
+{
+	ft_lstclear(mlc, del);
+	ft_lstclear(mlc_env, del);
+	ft_lstclear(mlc_pip, del);
+}
+
 /*
 Garbagge collector : Store in a linked list all the address malloc
 	mlc_env : Contains malloc addresses containing the environment
@@ -119,7 +135,6 @@ addr : if the rule is add or free, address of the elemnt sent
 lst : if the rule is add or malloc, linked list concerning
 */
 void	*mlcgic(t_magic *p, int rule, int lst, t_msh *msh)
-// void	*ft_magic_malloc(int rule, size_t size, void *addr, int lst)
 {
 	static t_list	*mlc;
 	static t_list	*mlc_pip;
@@ -130,28 +145,20 @@ void	*mlcgic(t_magic *p, int rule, int lst, t_msh *msh)
 	if (!p && rule == FREE)
 		return (NULL);
 	if ((rule == MALLOC || rule == ADD) && lst == NO_ENV)
-		return (ft_magic_add_malloc(msh, &mlc, rule, p));
+		return (ft_magic_add_mlc(msh, &mlc, rule, p));
 	else if ((rule == MALLOC || rule == ADD) && lst == ENV)
-		return (ft_magic_add_malloc(msh, &mlc_env, rule, p));
+		return (ft_magic_add_mlc(msh, &mlc_env, rule, p));
 	else if ((rule == MALLOC || rule == ADD) && lst == PIP)
-		return (ft_magic_add_malloc(msh, &mlc_pip, rule, p));
+		return (ft_magic_add_mlc(msh, &mlc_pip, rule, p));
 	else if (rule == FREE && lst == NO_ENV)
 		ft_list_remove_if(&mlc, p, ft_check);
 	else if (rule == FREE && lst == ENV)
 		ft_list_remove_if(&mlc_env, p, ft_check);
 	else if (rule == FREE && lst == PIP)
 		ft_list_remove_if(&mlc_pip, p, ft_check);
-	else if (rule == FLUSH && lst == NO_ENV)
-		ft_lstclear(&mlc, del);
-	else if (rule == FLUSH && lst == ENV)
-		ft_lstclear(&mlc_env, del);
-	else if (rule == FLUSH && lst == PIP)
-		ft_lstclear(&mlc_pip, del);
+	else if (rule == FLUSH)
+		ft_clearlst(lst, &mlc, &mlc_env, &mlc_pip);
 	else //QUIT
-	{
-		ft_lstclear(&mlc, del);
-		ft_lstclear(&mlc_env, del);
-		ft_lstclear(&mlc_pip, del);
-	}
+		ft_clearall(&mlc, &mlc_env, &mlc_pip);
 	return (NULL);
 }

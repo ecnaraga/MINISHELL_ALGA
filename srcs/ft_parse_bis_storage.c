@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/20 15:55:54 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 12:25:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	ft_par_open(t_msh *msh, t_par *p, int *i)
 	if (p->prec_iss == PAR_CLOSE
 		|| ((p->prec_iss == OTHER || p->prec_iss == CHEVRON)
 		&& (p->chev == 1 || p->multi_cmd > 1)))
-		return (msh->status = 2, err_syntax("syntax error near unexpected token `('\n"));
+		return (msh->status = 2, err_syntax("minishell: syntax error near unexpected token `('\n"));
 	if (p->prec_iss == OTHER || p->prec_iss == CHEVRON)
 	{
 		while (ft_isspace(msh->line[++(*i)]) == 0)
@@ -38,7 +38,7 @@ static int	ft_par_close(t_msh *msh, t_par *p, int *i)
 	(void) msh;
 	if (p->par_o <= p->par_c || (p->prec_iss == PAR_OPEN || p->prec_iss == CHEVRON)
 			/*&& p->multi_par == 0)*/)
-		return (msh->status = 2, err_syntax("syntax error near unexpected token `)'\n"));
+		return (msh->status = 2, err_syntax("minishell: syntax error near unexpected token `)'\n"));
 	// if (p->par_o - p->par_c == 1)
 	// 	p->multi_par = 0;
 	p->prec_iss = PAR_CLOSE;

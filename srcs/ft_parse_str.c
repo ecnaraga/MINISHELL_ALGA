@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 11:32:54 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 13:42:30 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ char	*add_spaces(t_msh *msh, char *str)
 
 	get_final_size(&count, &flag, str, &i);
 	fstr = mlcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MALLOC, NO_ENV, msh);
-	// fstr = ft_magic_malloc(MALLOC, sizeof(char) * (i + count + 1), NULL, NO_ENV);
 	if (!fstr)
 		ft_exit(-1, -1, -1, msh); // SI MALLOC KO => ON QUITTE MINISHELL
 	i = -1;
@@ -128,6 +127,5 @@ char	*add_spaces(t_msh *msh, char *str)
 	}
 	fstr[j] = '\0';
 	mlcgic(mlcp(str, 0), FREE, NO_ENV, msh);
-	// ft_magic_malloc(FREE, 0, str, NO_ENV);
 	return (fstr);
 }

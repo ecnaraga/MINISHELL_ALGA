@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 12:14:56 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/29 16:28:43 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 15:32:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,8 @@ static char	**ft_split_strs(t_msh *msh, const char *s, t_spl *st, char c)
 		if (c_lt > 0)
 		{
 			st->strs[j] = mlcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MALLOC, PIP, msh);
-			// strs[j] = ft_magic_malloc(MALLOC, sizeof(char) * (c_lt + 1), NULL, PIP);
 			if (st->strs[j] == NULL)
 				return (NULL); // TOUT SERA FREE DANS LE GARBAGGE COLLECTOR
-				// return (ft_free_strs(strs, j));
 			ft_strlcpy (st->strs[j], s - c_lt, c_lt + 1);
 		}
 	}
@@ -80,18 +78,14 @@ static char	**ft_split_strs(t_msh *msh, const char *s, t_spl *st, char c)
 char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s, char c)
 {
 	t_spl	st;
-	// int		st->;
-	// char	**strs;
 
 	if (!s)
 		return (NULL);
 	if (s[0] == '\0')
-	// if (!c && s[0] == '\0')
-			st.c_wd = 0;
+		st.c_wd = 0;
 	else
 		st.c_wd = ft_countwords(s, c);
 	st.strs = mlcgic(mlcp(NULL, sizeof(char *) * (st.c_wd + 1)), MALLOC, PIP, msh);
-	// st.strs = ft_magic_malloc(MALLOC, sizeof(char *) * (st.c_wd + 1), NULL, PIP);
 	if (st.strs == NULL)
 		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
 	if (ft_split_strs(msh, s, &st, c) == NULL)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2024/01/02 10:10:55 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:22:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,16 @@ void	ft_lstadd_back_split(t_split **lst, t_split *new)
 	}
 }
 
-t_split	*ft_lstnew_split(t_msh *msh)
+t_split	*ft_lstnew_split(t_msh *msh, t_quote q)
 {
 	t_split	*temp;
 
 	temp = NULL;
 	temp = mlcgic(mlcp(NULL, sizeof(t_split)), MALLOC, NO_ENV, msh);
-	// temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV); // SI MALLOC KO ON QUITTE
 	if (temp == NULL)
 		ft_exit(-1, -1, -1, msh);
-		// return (NULL);
-	temp->dollar = 0;
+	temp->dollar = q.dollar;
+	temp->wildcard = q.wildcard;
 	temp->type = NULL;
 	temp->next = NULL;
 	return (temp);
