@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 10:16:25 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:57:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ t_env	*ft_lst_new_heredoc(t_msh *msh, char *lim, int sub)
 
 	temp = NULL;
 	temp = mcgic(mlcp(NULL, sizeof(t_env)), MLC, NO_ENV, msh);
-	// temp = ft_magic_malloc(MLC, sizeof(t_env), NULL, NO_ENV);
 	if (temp == NULL)
 		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
 	temp->name = lim;

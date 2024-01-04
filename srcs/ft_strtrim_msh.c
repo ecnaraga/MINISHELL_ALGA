@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim_msh.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:42:08 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,20 +158,9 @@ static unsigned int	ft_begin_new_s1(char *s1)
 		if (s1[i] == '(')
 			par++;
 		else if (s1[i] == ')')
-		{
-			// if (par == 1)
-			// {
-			// 	count += 1;
-			// 	//dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
-			// 	break ;
-			// }
 			par--;
-		}
 		else if (par == 0 && (s1[i] == '&' || s1[i] == '|'))
-		{
-			// //dprintf(2, "s1[%zu] = %c s1[%zu] = %c\n", count, s1[count], count + 1, s1[count + 1]);
 			break ;
-		}
 		count++;
 		i++;
 	}
@@ -194,30 +183,19 @@ char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub)
 
 	if (!s1)
 		return (NULL);
+	count = ft_count_deb(*s1) + 1;
+	if (count == ft_strlen(*s1))
+		len2 = 1;
 	else
-	{
-		count = ft_count_deb(*s1) + 1;
-		if (count == ft_strlen(*s1))
-			len2 = 1;
-		else
-			len2 = ft_count_end(*s1) + 1;
-		s2 = mcgic(mlcp(NULL, sizeof(char) * len2), MLC, NO_ENV, msh);
-		// s2 = ft_magic_malloc(MLC, sizeof(char) * len2, NULL, NO_ENV);
-		if (!s2)
-			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
-		ft_strlcpy(s2, *s1 + count , len2 - 1);
-		tmp = *s1;
-		// printf("count_new *s1 %u\n", ft_begin_new_s1(*s1));
-		*s1 = mcgic(mlcp(ft_strdup(*s1 + ft_begin_new_s1(*s1)), 1), ADD, NO_ENV, msh);
-		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + ft_begin_new_s1(*s1)), NO_ENV);
-		if (!(*s1))
-			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
-		// *s1 = ft_magic_malloc(ADD, 0, ft_strdup(*s1 + count + len2 - 1), NO_ENV);
-		printf("*s1 %s count %ld len2 %d\n", *s1, count, len2);
-		// mcgic(mlcp(msh->line, 0), FREE, NO_ENV, msh);
-		// msh->line = *s1;
-		mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
-		// ft_magic_malloc(FREE, 0, tmp, NO_ENV);
-	}
+		len2 = ft_count_end(*s1) + 1;
+	s2 = mcgic(mlcp(NULL, sizeof(char) * len2), MLC, NO_ENV, msh);
+	if (!s2)
+		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
+	ft_strlcpy(s2, *s1 + count , len2 - 1);
+	tmp = *s1;
+	*s1 = mcgic(mlcp(ft_strdup(*s1 + ft_begin_new_s1(*s1)), 1), ADD, NO_ENV, msh);
+	if (!(*s1))
+		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE LE PROCESS ACTUEL
+	mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 	return (s2);
 }

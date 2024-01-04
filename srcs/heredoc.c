@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 18:10:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	create_here_doc(t_msh *msh, t_split *av, t_env **hdoc)
 	
 	/*Add the limiter in the linked list*/
 	tmp = mcgic(mlcp(ft_strdup(av->data), 1), ADD, NO_ENV, msh);
-	// tmp = ft_magic_malloc(ADD, 0, ft_strdup(av->data), NO_ENV);
 	if (!tmp)
 		ft_exit_bis(msh, 0, -1, -1); // IF MALLOC KO ON QUITTE 
 	new = ft_lst_new_heredoc(msh, tmp, 0); // IF MALLOC KO ON QUITTE A L INTERIEUR
@@ -57,11 +56,11 @@ void	create_here_doc(t_msh *msh, t_split *av, t_env **hdoc)
 			break;
 		else
 			mcgic(mlcp(new->content, 0), FREE, NO_ENV, msh);
-			// ft_magic_malloc(FREE, 0, new->content, NO_ENV);
 	}
 	ft_lstadd_back_env(hdoc, new);
 }
 
+// A PROTEGER
 void	ft_write_hdoc(t_msh *msh, char *line, int fd)
 {
 	int i;
@@ -73,53 +72,30 @@ void	ft_write_hdoc(t_msh *msh, char *line, int fd)
 	while (line[i])
 	{
 		if (line[i] != '$')
+			ft_putchar_fd(line[i++], fd);
+		else if (!line[i + 1] || ft_isalpha(line[i + 1]) == 0)
+			ft_putchar_fd(line[i++], fd);
+		else if (line[i + 1] == '$')
 		{
 			ft_putchar_fd(line[i], fd);
-			i++;
+			i += 2 ;
 		}
 		else
 		{
-			if (!line[i + 1])
-			{
-				ft_putchar_fd(line[i], fd);
-				i += 1 ;
-			}
-			else if (line[i + 1] == '$')
-			{
-				ft_putchar_fd(line[i], fd);
-				i += 2 ;
-			}
-			else if (ft_isalpha(line[i + 1]) == 0)
-			{
-				ft_putchar_fd(line[i], fd);
-				i++;
-			}
+			len = valide_expand(line + i + 1);
+			if (len == 0)
+				var = mcgic(mlcp(ft_strdup(line + i + 1), 0), ADD, NO_ENV, msh);
 			else
-			{
-				len = valide_expand(line + i + 1);
-				printf("line + i + 1 %s len %d\n", line + i + 1, len);
-				if (len == 0)
-					var = mcgic(mlcp(ft_strdup(line + i + 1), 0), ADD, NO_ENV, msh);
-				else
-					var = mcgic(mlcp(ft_substr(line, i + 1, (size_t)len), 0), ADD, NO_ENV, msh);
-				printf("var = %s\n", var);
-				str = get_value(msh, msh->env, var, HDOC);
-				if (ft_strcmp(str, " ") != 0)
-				{
-					ft_putstr_fd(str, fd);
-					// i += len;
-					printf("line[%d] = %c\n", i, line[i]);
-					printf("str = %s\n", str);
-				}
-				if (len == 0)
-					break;
-				i += (len + 1);
-			}
+				var = mcgic(mlcp(ft_substr(line, i + 1, (size_t)len), 0), ADD, NO_ENV, msh);
+			str = get_value(msh, msh->env, var, HDOC);
+			if (ft_strcmp(str, " ") != 0)
+				ft_putstr_fd(str, fd);
+			if (len == 0)
+				break;
+			i += (len + 1);
 		}
 	}
-	write(fd, "\n", 1);
-	mcgic(mlcp(line, 0), FREE, NO_ENV, msh);
-	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
+	(write(fd, "\n", 1), mcgic(mlcp(line, 0), FREE, NO_ENV, msh));
 }
 
 /*
