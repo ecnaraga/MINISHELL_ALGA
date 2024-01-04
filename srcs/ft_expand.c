@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:15:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ char	*ft_multi_dollar(t_msh *msh, char *cmd, t_expand *e)
 		return (NULL);
 	if (e->tmp)
 		mcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
-	// while (msh->av->data[e->i] && msh->av->data[e->i] == '$')
 	(e->i)++;
 	(e->j)++;
 	return (cmd);
@@ -95,17 +94,6 @@ char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 	char *tmp2;
 	
 	tmp = get_value(msh, msh->env, tmp, rule);
-	printf("tmp = %s\n", tmp);
-	// if (msh->p.cmd_t[0] && ft_strcmp(msh->p.cmd_t[0], "export") == 0)
-	// {
-	// 	tmp2 = tmp;
-	// 	tmp = mcgic(mlcp(ft_strjoin("\"", tmp), 1), ADD, NO_ENV, msh);
-	// 	mcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-	// 	tmp2 = tmp;
-	// 	tmp = mcgic(mlcp(ft_strjoin(tmp, "\""), 1), ADD, NO_ENV, msh);
-	// 	mcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-	// }
-	printf("tmp = %s\n", tmp);
 	if (msh->status == 255)// IF MALLOC KO return NULL
 		return (NULL);
 	tmp2 = cmd;
@@ -136,6 +124,19 @@ char	*ft_expand_exitcode(t_msh *msh, char *cmd, t_expand *e)
 	return (cmd);
 }
 
+char	*ft_expand_valid_var(t_msh *msh, char *cmd, int rule, t_expand *e)
+{
+	e->tmp2 = e->tmp;
+	e->tmp = mcgic(mlcp(ft_substr(e->tmp, 0, e->len), 1), ADD, NO_ENV, msh);
+	if (msh->status == 255) // IF MALLOC KO return NULL
+		return (NULL);
+	mcgic(mlcp(e->tmp2, 0), FREE, NO_ENV, msh);
+	cmd = ft_do_expand(msh, e->tmp, cmd, rule);
+	if (msh->status == 255)// IF MALLOC KO return NULL
+		return (NULL);
+	return (cmd);
+}
+
 char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 {
 	e->tmp = mcgic(mlcp(ft_substr(msh->av->data, e->i + 1, msh->av->type[e->j].len_variable - 1), 1), ADD, NO_ENV, msh);
@@ -153,13 +154,8 @@ char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 		e->i += 2;
 	else
 	{
-		e->tmp2 = e->tmp;
-		e->tmp = mcgic(mlcp(ft_substr(e->tmp, 0, e->len), 1), ADD, NO_ENV, msh);
-		if (msh->status == 255) // IF MALLOC KO return NULL
-			return (NULL);
-		mcgic(mlcp(e->tmp2, 0), FREE, NO_ENV, msh);
-		cmd = ft_do_expand(msh, e->tmp, cmd, rule);
-		if (msh->status == 255)// IF MALLOC KO return NULL
+		cmd = ft_expand_valid_var(msh, cmd, rule, e);
+		if (msh->status == 255)
 			return (NULL);
 		e->i += (e->len + 1);
 	}
@@ -173,6 +169,22 @@ char	*ft_expand_var(t_msh *msh, char *cmd, int rule, t_expand *e)
 		cmd = ft_expand_exitcode(msh, cmd, e); // PROTEGER APRES LES IF ELSE IF
 	else
 		cmd = ft_expand_env(msh, cmd, rule, e);
+	return (cmd);
+}
+
+char	*ft_handle_dollar(t_msh *msh, char *cmd, int rule, t_expand *e)
+{
+	if (msh->av->type[e->j].expnd == MULTI_DOLLAR)
+		cmd = ft_add_char(msh, cmd, e, &e->j); // PROTEGER DANS FT_EXPAND
+	else if ((msh->av->type[e->j].expnd == 1 && msh->av->type[e->j].len_variable == 1) || msh->av->type[e->j].expnd == 2)
+		cmd = ft_add_char(msh, cmd, e, &e->j); // PROTEGER DANS FT_EXPAND
+	else if(msh->av->type[e->j].expnd == 1 && msh->av->type[e->j].len_variable == 0)
+	{
+		e->i += 1;
+		e->j += 1;
+	}
+	else if (msh->av->type[e->j].expnd == 1 && msh->av->type[e->j].len_variable > 1)
+		cmd = ft_expand_var(msh, cmd, rule, e); // PROTEGER DANS FT_EXPAND
 	return (cmd);
 }
 
@@ -206,19 +218,7 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 	while (msh->av->data[e.i])
 	{
 		if (msh->av->data[e.i] == '$')
-		{
-			if (msh->av->type[e.j].expnd == MULTI_DOLLAR)
-				cmd = ft_add_char(msh, cmd, &e, &e.j); // PROTEGER APRES LES IF ELSE IF
-			else if ((msh->av->type[e.j].expnd == 1 && msh->av->type[e.j].len_variable == 1) || msh->av->type[e.j].expnd == 2)
-				cmd = ft_add_char(msh, cmd, &e, &e.j); // PROTEGER APRES LES IF ELSE IF
-			else if(msh->av->type[e.j].expnd == 1 && msh->av->type[e.j].len_variable == 0)
-			{
-				e.i += 1;
-				e.j += 1;
-			}
-			else if (msh->av->type[e.j].expnd == 1 && msh->av->type[e.j].len_variable > 1)
-				cmd = ft_expand_var(msh, cmd, rule, &e); // PROTEGER APRES LES IF ELSE IF
-		}
+			cmd = ft_handle_dollar(msh, cmd, rule, &e); // PROTEGER APRES LES IF ELSE IF
 		else
 			cmd = ft_add_char(msh, cmd, &e, NULL); // PROTEGER APRES LES IF ELSE IF
 		if (msh->status == 255) // IF MALLOC KO return NULL

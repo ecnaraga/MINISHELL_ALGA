@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_make_cmd.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:13:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,9 @@ int		ft_count_cmd(t_msh *msh)
 	return (count);
 }
 
-char **ft_realloc_cmd(char **cmd_t, int *cmd_nb, int *i, t_msh *msh)
+char **ft_realloc_cmd(t_msh *msh, int *cmd_nb, int *i, char **tmp)
 {
 	char 	**cmd;
-	char 	**tmp;
 	int		j;
 	int		k;
 
@@ -48,20 +47,23 @@ char **ft_realloc_cmd(char **cmd_t, int *cmd_nb, int *i, t_msh *msh)
 	j = 0;
 	while (j < *i)
 	{
-		cmd[j] = cmd_t[j];
+		cmd[j] = msh->p.cmd_t[j];
 		j++;
 	}
-	tmp = ft_split_isspace_magic_malloc(msh, cmd_t[j]);
 	if (!tmp)
-		return (NULL); // IF ERREUR MALLOC DANS FT_SPLIT_ISSPACE_MAGIC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
+	{
+		tmp = ft_split_isspace_magic_malloc(msh, msh->p.cmd_t[j]);
+		if (!tmp)
+			return (NULL); // IF ERREUR MALLOC DANS FT_SPLIT_ISSPACE_MAGIC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
+	}
 	k = 0;
 	while (tmp[k])
 		cmd[j++] = tmp[k++];
 	cmd[j] = NULL; // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
-	*i = j - 1;
-	mcgic(mlcp(cmd_t, 0), FREE, PIP, msh);
-	mcgic(mlcp(tmp, 0), FREE, PIP, msh);
-	return (cmd);
+	// *i = j - 1;
+	mcgic(mlcp(msh->p.cmd_t, 0), FREE, PIP, msh);
+	// mcgic(mlcp(tmp, 0), FREE, PIP, msh);
+	return (*i = j - 1, mcgic(mlcp(tmp, 0), FREE, PIP, msh), cmd);
 }
 
 char	**ft_handle_expand(t_msh *msh, int *i, int *cmd_nb)
@@ -80,7 +82,7 @@ char	**ft_handle_expand(t_msh *msh, int *i, int *cmd_nb)
 	if ((c_wd > 1 && !msh->p.cmd_t[0]) || (c_wd > 1 && ft_strcmp(msh->p.cmd_t[0], "export")))
 	{
 		*cmd_nb = *cmd_nb + c_wd;
-		msh->p.cmd_t = ft_realloc_cmd(msh->p.cmd_t, cmd_nb, i, msh);
+		msh->p.cmd_t = ft_realloc_cmd(msh, cmd_nb, i, NULL);
 		if (!msh->p.cmd_t)
 			return (NULL); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	}

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2023/12/29 13:57:23 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:03:41 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 static void	ft_init_var(t_index *x, t_quote *q)
 {
 	x->i = 1;
-	// if (begin == -1)
-	// 	x->i = 0;
 	x->j = 0;
 	x->d = 0;
 	x->mod_dollar = 0;
@@ -44,7 +42,7 @@ Fonction permettant de deficir si le char courant (src[x->i]) fait ou non parti
 Renvoie 0 si OUI
 Renvoie 1 si NON 
 */
-static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
+static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote *q)
 {
 	if (!strs->type)
 		return (1);
@@ -54,15 +52,35 @@ static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote q)
 		return (1);
 	if (strs->type[x->d].expnd != EXPAND)
 		return (1);
-	// if (strs->type[x->d].expnd == EXPAND && src[x->i] == '$' && !src[x->i + 1])
-	// 	return (1);
 	if (src[x->i] != '$')
 		return (0);
-	else if (q.d % 2 == 1)
+	else if (q->d % 2 == 1)
 		return (0);
 	else if (!src[x->i + 1] || (src[x->i + 1] != '"' && src[x->i + 1] != '\''))
 		return (0);
 	return (1);
+}
+
+void	ft_exec_strlcpy_msh(t_split *strs, const char *src, t_index *x, t_quote *q)
+{
+	if (ft_test_four(strs, src, x, q) == 0)
+		strs->type[x->d].len_variable += 1;
+	if (src[x->i] == '$' && strs->type && strs->type[x->d].expnd == MULTI_DOLLAR)
+		x->i++;
+	else if (ft_test_bis(src[x->i], q->d, q->s) == 0)
+	{
+		strs->data[x->j] = src[x->i++];
+		if (strs->wildcard > 0)
+		{
+			if (q->s % 2 == 1 || q->d % 2 == 1 || strs->data[x->j] != '*')
+				strs->wild[x->j] = 1;
+			else
+				strs->wild[x->j] = 0;
+		}
+		x->j++;
+	}
+	else
+		x->i++;
 }
 
 /*
@@ -92,7 +110,6 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 	t_quote	q;
 
 	ft_init_var(&x, &q);
-	// x.mod_dollar = 0;
 	strs->quote = 0;
 	if (begin > -1)
 	{
@@ -108,28 +125,8 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 			x.mod_dollar = 0;
 		ft_inc_quote(src[x.i], &q.d, &q.s);
 		ft_dollar(strs, src, &x, q);
-		// ft_dollar(strs, src, &x, q, &x.mod_dollar);
 		if (ft_test_ter(src[x.i], q) == 0)
-		{
-			if (ft_test_four(strs, src, &x, q) == 0)
-				strs->type[x.d].len_variable += 1;
-			if (src[x.i] == '$' && strs->type && strs->type[x.d].expnd == MULTI_DOLLAR)
-				x.i++;
-			else if (ft_test_bis(src[x.i], q.d, q.s) == 0)
-			{
-				strs->data[x.j] = src[x.i++];
-				if (strs->wildcard > 0)
-				{
-					if (q.s % 2 == 1 || q.d % 2 == 1 || strs->data[x.j] != '*')
-						strs->wild[x.j] = 1;
-					else
-						strs->wild[x.j] = 0;
-				}
-				x.j++;
-			}
-			else
-				x.i++;
-		}
+			ft_exec_strlcpy_msh(strs, src, &x, &q);
 		else
 			ft_inc_d(strs, &x.d, src[x.i++]);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str_ter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:17:14 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,7 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 	int		flag;
 
 	get_final_size(&i, &count, &flag, str);
-	fstr = mcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MLC, NO_ENV, msh);
-	// fstr = ft_magic_malloc(MLC, sizeof(char) * (i + count + 1), NULL, NO_ENV);
+	fstr = mcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MALLOC, NO_ENV, msh);
 	if (!fstr)
 		return (NULL);
 	i = -1;
@@ -92,6 +91,5 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 	}
 	fstr[j] = '\0';
 	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
-	// ft_magic_malloc(FREE, 0, str, NO_ENV);
 	return (fstr);
 }

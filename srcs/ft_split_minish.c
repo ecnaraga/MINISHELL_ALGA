@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:22:55 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static void	ft_init_var(int *n1, int *n2, t_quote *q)
 	q->d = 0;
 	q->s = 0;
 	q->wildcard = 0;
-	// *n3 = 0;
-	// *n4 = 0;
+	q->mod_dollar = 0;
+	q->dollar = 0;
 }
 
 static void	ft_init_var_bis(int *n1, int *n2, int *n3, int *n4)
@@ -60,6 +60,22 @@ static int	ft_countwords(const char *s)
 	return (wd);
 }
 
+static void	ft_count_dlw(const char *s, int *i, t_quote *q, t_letter *l)
+{
+	ft_inc_quote(s[*i], &q->d, &q->s);
+	if (q->wildcard == 0 && s[*i] == '*')
+		q->wildcard += 1;
+	if (s[*i] == '$')
+	{
+		if (*i == 0 || s[*i - 1] != '$' || (q->mod_dollar % 2 == 0 && s[*i - 1] == '$'))
+			q->dollar += 1;
+		q->mod_dollar += 1;
+	}
+	if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
+		l->lt++;
+	l->k += 1;
+}
+
 /*
 Compte le nb de char a copies et le renvoie + compte le nb de potentielles
 	variables d'environnement 
@@ -70,7 +86,7 @@ k = nb de char qui seront copiees + nb de quote(double et single) qui ne seront
 dollar = nb de potentielles variables d environnement (qui commencent par un $)
 	ps : une suite de dollar est comptee comme un seul dollar
 */
-static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar, int *mod_dollar)
+static t_letter	ft_count_letter(const char *s, t_quote *q, int *i)
 {
 	t_letter	l;
 
@@ -79,89 +95,68 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar, 
 		&& (s[*i] == '"' || s[*i] == 39 || ft_isspace(s[*i]) == 0))
 		ft_inc_quote(s[(*i)++], &q->d, &q->s);
 	if (i == 0 && s[*i] && ft_test(s[*i], &s[*i + 1], NULL, q) == 0)
-	{
-		ft_inc_quote(s[*i], &q->d, &q->s);
-		if (q->wildcard == 0 && s[*i] == '*')
-			q->wildcard += 1;
-		if (s[*i] == '$')
-		{
-			if (*i == 0 || s[*i - 1] != '$' || (*mod_dollar % 2 == 0 && s[*i - 1] == '$'))
-			{
-				printf("i %d\n", *i);
-				*dollar += 1;
-			}
-			*mod_dollar += 1;
-		}
-		// if (s[*i] == '$' && (*i == 0 || s[*i - 1] != '$'))
-		// {
-		// 	*mod_dollar += 1;
-		// 	*dollar += 1;
-		// }
-		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
-			l.lt++;
-		l.k += 1;
-	}
+		ft_count_dlw(s, i, q, &l);
 	while (s[*i] && ft_test(s[*i], &s[*i + 1], &s[*i - 1], q) == 0)
 	{
 		if (s[*i] != '$')
-			*mod_dollar = 0;
-		ft_inc_quote(s[*i], &q->d, &q->s);
-		if (q->wildcard == 0 && s[*i] == '*')
-			q->wildcard += 1;
-		if (s[*i] == '$')
-		{
-			if (*i == 0 || s[*i - 1] != '$' || (*mod_dollar % 2 == 0 && s[*i - 1] == '$'))
-			{
-				printf("i %d\n", *i);
-				*dollar += 1;
-			}
-			*mod_dollar += 1;
-		}
-		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
-			l.lt++;
-		l.k += 1;
+			q->mod_dollar = 0;
+		ft_count_dlw(s, i, q, &l);
 	}
-	printf("dollar %d mod_dollar %d\n", *dollar, *mod_dollar);
 	return (l);
 }
 
-// t_split	*ft_lstlast_split(t_split *lst)
+/*
+Compte le nb de char a copies et le renvoie + compte le nb de potentielles
+	variables d'environnement 
+lt = nb de char a copies
+k = nb de char qui seront copiees + nb de quote(double et single) qui ne seront
+	pas copies car non suivies/ou precedees selon si fermant/ou ouvrant d'un
+	issspace // incrementation a faire pour passer au mot suivant
+dollar = nb de potentielles variables d environnement (qui commencent par un $)
+	ps : une suite de dollar est comptee comme un seul dollar
+*/
+// static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar)
 // {
-// 	t_split	*temp;
+// 	t_letter	l;
 
-// 	if (lst == NULL)
-// 		return (NULL);
-// 	temp = lst;
-// 	while (temp->next != NULL)
-// 		temp = temp->next;
-// 	return (temp);
-// }
-
-// void	ft_lstadd_back_split(t_split **lst, t_split *new)
-// {
-// 	t_split	*temp;
-
-// 	if (!*lst)
-// 		*lst = new;
-// 	else
+// 	ft_init_var(&l.lt, &l.k, q);
+// 	while (s[*i] && q->d % 2 == 0 && q->s % 2 == 0
+// 		&& (s[*i] == '"' || s[*i] == 39 || ft_isspace(s[*i]) == 0))
+// 		ft_inc_quote(s[(*i)++], &q->d, &q->s);
+// 	if (i == 0 && s[*i] && ft_test(s[*i], &s[*i + 1], NULL, q) == 0)
 // 	{
-// 		temp = ft_lstlast_split(*lst);
-// 		temp->next = new;
+// 		ft_inc_quote(s[*i], &q->d, &q->s);
+// 		if (q->wildcard == 0 && s[*i] == '*')
+// 			q->wildcard += 1;
+// 		if (s[*i] == '$')
+// 		{
+// 			if (*i == 0 || s[*i - 1] != '$' || (q->mod_dollar % 2 == 0 && s[*i - 1] == '$'))
+// 				*dollar += 1;
+// 			q->mod_dollar += 1;
+// 		}
+// 		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
+// 			l.lt++;
+// 		l.k += 1;
 // 	}
-// }
-
-// t_split	*ft_lstnew_split(void)
-// {
-// 	t_split	*temp;
-
-// 	temp = NULL;
-// 	temp = ft_magic_malloc(MLC, sizeof(t_split), NULL, NO_ENV);
-// 	if (temp == NULL)
-// 		return (NULL);
-// 	// temp -> content = content;
-// 	temp->dollar = 0;
-// 	temp->next = NULL;
-// 	return (temp);
+// 	while (s[*i] && ft_test(s[*i], &s[*i + 1], &s[*i - 1], q) == 0)
+// 	{
+// 		if (s[*i] != '$')
+// 			q->mod_dollar = 0;
+// 		ft_inc_quote(s[*i], &q->d, &q->s);
+// 		if (q->wildcard == 0 && s[*i] == '*')
+// 			q->wildcard += 1;
+// 		if (s[*i] == '$')
+// 		{
+// 			if (*i == 0 || s[*i - 1] != '$' || (q->mod_dollar % 2 == 0 && s[*i - 1] == '$'))
+// 				*dollar += 1;
+// 			q->mod_dollar += 1;
+// 		}
+// 		if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
+// 			l.lt++;
+// 		l.k += 1;
+// 	}
+// 	printf("dollar %d mod_dollar %d\n", *dollar, q->mod_dollar);
+// 	return (l);
 // }
 
 /*
@@ -183,30 +178,24 @@ Tableau de structure strs->type : strs[i]->type[d]
 		suivants
 */
 static void	ft_split_strs(const char *s, t_split **strs, int wd, t_msh *msh)
-// static int	ft_split_strs(const char *s, t_split **strs, int wd/*, t_list **strss*/)
 {
 	int			j;
 	t_letter	l;
 	t_quote		q;
 	int	 i;
 	t_split		*new;
-	int			mod_dollar;
 
 	i = 0;
 	j = -1;
 	while (s[i] && ++j < wd)
 	{
-		new = ft_lstnew_split(msh); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
-		mod_dollar = 0;
-		l = ft_count_letter(s, &q, &i, &new->dollar, &mod_dollar);
-		new->wildcard = q.wildcard;
+		l = ft_count_letter(s, &q, &i);
+		new = ft_lstnew_split(msh, q); // SI MALLOC KO ON QUITTE DANS FT_LST_NEW_SPLIT
 		new->data = mcgic(mlcp(NULL, sizeof(char) * (l.lt + 1)), MLC, NO_ENV, msh);
 		if (new->data == NULL)
 			ft_exit(-1, -1, -1, msh); // SI MALLOC KO => ON QUITTE MINISHELL
 		new->token = TO_DEFINE;
 		ft_alloc_type(new, msh, l.lt);  // SI MALLOC KO ON QUITTE DANS FT_ALLOC_TYPE
-		// if (ft_alloc_type(new) == 1)
-			// return (1);
 		if (l.lt >= 0)
 			ft_strlcpy_msh(new, s + i - l.k - 1, l.lt + 1, i - l.k - 1);
 		else
@@ -232,21 +221,19 @@ t_split	*ft_split_msh(char const *s, t_msh *msh)
 	wd = ft_countwords(s);
 	strs = NULL;
 	ft_split_strs(s, &strs, wd, msh); // SI MALLOC KO ON QUITTE A L INTERIEUR
-	
-	// int j = -1;
-	t_split *head = strs;
-	while (strs)
-	{
-		int i = -1;
-		printf("strs->data %s\n", strs->data);
-		if (strs->wild)
-		{
-			while (strs->data[++i])
-				printf("msh->av->data[%d] = |%c| msh->av->wild[%d] = %d\n", i, strs->data[i], i, strs->wild[i]);
-		}
-		strs = strs->next;
-	}
-	strs = head;
+	// t_split *head = strs;
+	// while (strs)
+	// {
+	// 	int i = -1;
+	// 	printf("strs->data %s\n", strs->data);
+	// 	if (strs->wild)
+	// 	{
+	// 		while (strs->data[++i])
+	// 			printf("msh->av->data[%d] = |%c| msh->av->wild[%d] = %d\n", i, strs->data[i], i, strs->wild[i]);
+	// 	}
+	// 	strs = strs->next;
+	// }
+	// strs = head;
 	return (strs);
 }
 

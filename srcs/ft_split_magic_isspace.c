@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_magic_isspace.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:21:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ static void	*ft_free_strs(t_msh *msh, char **strs, int j)
 	while (i < j)
 	{
 		mcgic(mlcp(strs[i], 0), FREE, PIP, msh);
-		// ft_magic_malloc(FREE, 0, strs[i], PIP);
 		i++;
 	}
 	mcgic(mlcp(strs, 0), FREE, PIP, msh);
-	// ft_magic_malloc(FREE, 0, strs, PIP);
 	return (NULL);
 }
 
@@ -69,7 +67,6 @@ static char	**ft_split_strs(t_msh *msh, const char *s, char **strs, int c_wd)
 		if (c_lt > 0)
 		{
 			strs[j] = mcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MLC, PIP, msh);
-			// strs[j] = ft_magic_malloc(MLC, (sizeof(char) * (c_lt + 1)), 0, PIP);
 			if (strs[j] == NULL)
 				return (ft_free_strs(msh, strs, j));
 			ft_strlcpy(strs[j], s - c_lt, c_lt + 1);
@@ -87,7 +84,6 @@ char	**ft_split_isspace_magic_malloc(t_msh *msh, char const *s)
 		return (NULL);
 	c_wd = ft_countword(s);
 	strs = mcgic(mlcp(NULL, sizeof(char *) * (c_wd + 1)), MLC, PIP, msh);
-	// strs = ft_magic_malloc(MLC, (sizeof(char *) * (c_wd + 1)), 0, PIP);
 	if (strs == NULL)
 		return (NULL);
 	if (ft_split_strs(msh, s, strs, c_wd) == NULL)
