@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 10:25:59 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,18 @@ static int	ft_find_good_path(t_msh *msh, char **ok_path, int accss)
 	i = 0;
 	while (msh->p.path[i] && accss != 0)
 	{
-		*ok_path = mlcgic(mlcp(ft_strjoin(msh->p.path[i], "/"), 1), ADD, PIP, msh);
+		*ok_path = mcgic(mlcp(ft_strjoin(msh->p.path[i], "/"), 1), ADD, PIP, msh);
 		if (!ok_path)
 			return (255);// OK PROTEGER
 		tmp = *ok_path;
-		*ok_path = mlcgic(mlcp(ft_strjoin(*ok_path, msh->p.cmd_t[0]), 1), ADD, PIP, msh);
+		*ok_path = mcgic(mlcp(ft_strjoin(*ok_path, msh->p.cmd_t[0]), 1), ADD, PIP, msh);
 		if (!*ok_path)
 			return (255);// OK PROTEGER
-		mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
+		mcgic(mlcp(tmp, 0), FREE, PIP, msh);
 		accss = access(*ok_path, F_OK | X_OK);
 		if (accss == 0)
 			return (E_OK);
-		mlcgic(mlcp(*ok_path, 0), FREE, PIP, msh);
+		mcgic(mlcp(*ok_path, 0), FREE, PIP, msh);
 		*ok_path = NULL;
 		i++;
 	}
@@ -81,13 +81,13 @@ int	ft_access_cmd(t_msh *msh, char **ok_path)
 	accss = access(msh->p.cmd_t[0], F_OK | X_OK);
 	if (accss == 0)
 	{
-		tmp = mlcgic(mlcp(ft_strjoin(msh->p.cmd_t[0], "/"), 1), ADD, PIP, msh);
+		tmp = mcgic(mlcp(ft_strjoin(msh->p.cmd_t[0], "/"), 1), ADD, PIP, msh);
 		if (!tmp) // OK PROTEGER
 			return (255);
 		accss = access(tmp, F_OK | X_OK);
 		if (accss == 0)
-			return (mlcgic(mlcp(tmp, 0), FREE, PIP, msh), E_NO_CMD);
-		*ok_path = mlcgic(mlcp(ft_strdup(msh->p.cmd_t[0]), 1), ADD, PIP, msh);
+			return (mcgic(mlcp(tmp, 0), FREE, PIP, msh), E_NO_CMD);
+		*ok_path = mcgic(mlcp(ft_strdup(msh->p.cmd_t[0]), 1), ADD, PIP, msh);
 		if (!*ok_path) // OK PROTEGER
 			return (255);
 		return (E_OK);
@@ -105,14 +105,14 @@ int	ft_access_cmd(t_msh *msh, char **ok_path)
 // 	if (ft_strncmp(env_tab[i], "SHLVL", 5) == 0)
 // 	{
 // 		shlvl = ft_atoi(env_tab[i] + 6) + 1;
-// 		tmp = mlcgic(mlcp(ft_itoa(shlvl), 1), ADD, PIP, msh);
+// 		tmp = mcgic(mlcp(ft_itoa(shlvl), 1), ADD, PIP, msh);
 // 		if (msh->status == 255) // OK PROTEGER
 // 			return (1);
-// 		mlcgic(mlcp(env_tab[i], 0), FREE, PIP, msh);
-// 		env_tab[i] = mlcgic(mlcp(ft_strjoin("SHLVL=", tmp), 1), ADD, PIP, msh);
+// 		mcgic(mlcp(env_tab[i], 0), FREE, PIP, msh);
+// 		env_tab[i] = mcgic(mlcp(ft_strjoin("SHLVL=", tmp), 1), ADD, PIP, msh);
 // 		if (msh->status == 255) // OK PROTEGER
 // 			return (255);
-// 		mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
+// 		mcgic(mlcp(tmp, 0), FREE, PIP, msh);
 // 		return (1);
 // 	}
 // 	return (0);
@@ -133,18 +133,18 @@ int	ft_access_cmd(t_msh *msh, char **ok_path)
 // 		if (ft_strncmp(env_tab[i], "SHLVL", 5) == 0)
 // 		{
 // 			shlvl = ft_atoi(env_tab[i] + 6) + 1;
-// 			tmp = mlcgic(mlcp(ft_itoa(shlvl), 1), ADD, PIP, msh);
+// 			tmp = mcgic(mlcp(ft_itoa(shlvl), 1), ADD, PIP, msh);
 // 			if (msh->status == 255) // OK PROTEGER
 // 				return ;
-// 			mlcgic(mlcp(env_tab[i], 0), FREE, PIP, msh);
-// 			env_tab[i] = mlcgic(mlcp(ft_strjoin("SHLVL=", tmp), 1), ADD, PIP, msh);
+// 			mcgic(mlcp(env_tab[i], 0), FREE, PIP, msh);
+// 			env_tab[i] = mcgic(mlcp(ft_strjoin("SHLVL=", tmp), 1), ADD, PIP, msh);
 // 			if (msh->status == 255) // OK PROTEGER
 // 				return ;
-// 			mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
+// 			mcgic(mlcp(tmp, 0), FREE, PIP, msh);
 // 			return ;
 // 		}
 // 	}
-// 	env_tab[i] = mlcgic(mlcp(ft_strjoin("SHLVL=", "0"), 1), ADD, PIP, msh);
+// 	env_tab[i] = mcgic(mlcp(ft_strjoin("SHLVL=", "0"), 1), ADD, PIP, msh);
 // 	if (msh->status == 255) // OK PROTEGER
 // 		return ;
 // 	env_tab[++i] = NULL;
@@ -155,12 +155,12 @@ char *ft_copy_env(t_msh *msh, t_env	**env)
 	char *str;
 	char *tmp;
 	
-	str = mlcgic(mlcp(ft_strjoin((*env)->name, "="), 1), ADD, PIP, msh);
+	str = mcgic(mlcp(ft_strjoin((*env)->name, "="), 1), ADD, PIP, msh);
 	if (!str)  // OK PROTEGER
 		return (NULL);
 	tmp = str;
-	str = mlcgic(mlcp(ft_strjoin(str, (*env)->content), 1), ADD, PIP, msh);
-	mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
+	str = mcgic(mlcp(ft_strjoin(str, (*env)->content), 1), ADD, PIP, msh);
+	mcgic(mlcp(tmp, 0), FREE, PIP, msh);
 	if (!str)  // OK PROTEGER
 		return (NULL);
 	return (str);
@@ -173,7 +173,7 @@ char **ft_transcript_env(t_env **env,/*  char *str, */ t_msh *msh)
 	int i;
 	
 	head = *env;
-	env_tab = mlcgic(mlcp(NULL, sizeof(char *) * (ft_lstsize_env(*env) + 2)), MALLOC, PIP, msh);
+	env_tab = mcgic(mlcp(NULL, sizeof(char *) * (ft_lstsize_env(*env) + 2)), MLC, PIP, msh);
 	if (!env_tab)  // OK PROTEGER
 			return (NULL);
 	i = -1;

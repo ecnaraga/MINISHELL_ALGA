@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:47:35 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/14 16:40:09 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 15:15:52 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,20 @@ int	valide_key(char *key)
 				return (0);	
 		}
 		return (1);
+	}
+	return (0);
+}
+
+int	node_exist(t_env **env, char *str, int size)
+{
+	t_env	*tmp;
+
+	tmp = *env;
+	while (tmp)
+	{
+		if (ft_strncmp(str, tmp->name, size) == 0)
+			return (1);
+		tmp = tmp->next;
 	}
 	return (0);
 }

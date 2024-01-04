@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_make_cmd.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char **ft_realloc_cmd(char **cmd_t, int *cmd_nb, int *i, t_msh *msh)
 	int		j;
 	int		k;
 
-	cmd = mlcgic(mlcp(NULL, sizeof(char *) * (*cmd_nb + 1)), MALLOC, PIP, msh);
+	cmd = mcgic(mlcp(NULL, sizeof(char *) * (*cmd_nb + 1)), MLC, PIP, msh);
 	if (!cmd)
 		return (NULL); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	j = 0;
@@ -59,8 +59,8 @@ char **ft_realloc_cmd(char **cmd_t, int *cmd_nb, int *i, t_msh *msh)
 		cmd[j++] = tmp[k++];
 	cmd[j] = NULL; // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	*i = j - 1;
-	mlcgic(mlcp(cmd_t, 0), FREE, PIP, msh);
-	mlcgic(mlcp(tmp, 0), FREE, PIP, msh);
+	mcgic(mlcp(cmd_t, 0), FREE, PIP, msh);
+	mcgic(mlcp(tmp, 0), FREE, PIP, msh);
 	return (cmd);
 }
 
@@ -69,9 +69,9 @@ char	**ft_handle_expand(t_msh *msh, int *i, int *cmd_nb)
 	int	c_wd;
 	
 	if (*i == 0)
-		msh->p.cmd_t[*i] = ft_expand(msh, msh->p.cmd_t[*i], CMD); // IF ERROR MALLOC, EXPAND RETURN (NULL)
+		msh->p.cmd_t[*i] = ft_expand(msh, msh->p.cmd_t[*i], CMD); // IF ERROR MLC, EXPAND RETURN (NULL)
 	else
-		msh->p.cmd_t[*i] = ft_expand(msh, msh->p.cmd_t[*i], OTHER); // IF ERROR MALLOC, EXPAND RETURN (NULL)
+		msh->p.cmd_t[*i] = ft_expand(msh, msh->p.cmd_t[*i], OTHER); // IF ERROR MLC, EXPAND RETURN (NULL)
 	if (msh->status == 255)
 		return (NULL); // IF ERREUR MALLOC DANS EXPAND ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	if (msh->av->quote && !msh->p.cmd_t[0][0])
@@ -103,7 +103,7 @@ int ft_copy_cmd(t_msh *msh, t_head *save, int *i, int *cmd_nb)
 	}
 	else
 	{
-		msh->p.cmd_t[*i] = mlcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP, msh);
+		msh->p.cmd_t[*i] = mcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP, msh);
 		if (!msh->p.cmd_t[*i])
 			return (255); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
 	}
@@ -150,7 +150,7 @@ char	**ft_make_cmd(t_msh *msh, int sub, int fd1, int fd2)
 			write(2, "minishell: : command not found\n", 32);
 		return (NULL); // OK GERE DANS LE PARENT
 	}
-	msh->p.cmd_t = mlcgic(mlcp(NULL, sizeof(char *) * (cmd_nb + 1)), MALLOC, PIP, msh);
+	msh->p.cmd_t = mcgic(mlcp(NULL, sizeof(char *) * (cmd_nb + 1)), MLC, PIP, msh);
 	if (!msh->p.cmd_t)
 		ft_exit_bis(msh, sub, fd1, fd2); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
 	msh->p.cmd_t[0] = NULL;

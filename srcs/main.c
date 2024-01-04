@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 11:29:04 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ Call all the parsing function + split the line + tokenisation
 static int ft_parsing(t_msh *msh, int sub)
 {
 	if (sub == 0 && ft_parse_line(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
+		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	if (sub == 0 && ft_parse_bis(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
+		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	msh->av = ft_split_msh(msh->line, msh); // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 	if (!msh->av)
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
+		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 
 	// int i = 0;
 	// t_split *head;
@@ -53,10 +53,10 @@ static int ft_parsing(t_msh *msh, int sub)
 			
 	msh->ac = ft_lstsize_split(msh->av);
 	if (msh->ac == 0)
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
+		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	ft_token(msh);
 	if (sub == 0 && ft_parse_ter(msh) != 0) // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh), 1);
+		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	return (0);
 }
 
@@ -79,7 +79,7 @@ static void	ft_handle_eof(t_msh *msh)
 {
 	ft_putstr_fd("exit\n", 2);
 	rl_clear_history();
-	mlcgic(NULL, QUIT, 0, msh);
+	mcgic(NULL, QUIT, 0, msh);
 }
 
 static int	ft_readline(t_msh *msh)
@@ -88,8 +88,8 @@ static int	ft_readline(t_msh *msh)
 	if (sign == 2)
 	{
 		msh->status = 130;
-		mlcgic(NULL, FLUSH, NO_ENV, msh);
-		mlcgic(NULL, FLUSH, PIP, msh);
+		mcgic(NULL, FLUSH, NO_ENV, msh);
+		mcgic(NULL, FLUSH, PIP, msh);
 		sign = 0;
 	}
 	if (sign == 1)
@@ -101,10 +101,10 @@ static int	ft_readline(t_msh *msh)
 	msh->status = 0;
 	if (!msh->line) // EOF
 		(ft_handle_eof(msh), exit(msh->previous_status));
-	if (!mlcgic(mlcp(msh->line, 1), ADD, NO_ENV, msh))
-		(mlcgic(NULL, QUIT, 0, msh), exit(msh->status)); // SI MALLOC KO ON QUITTE
+	if (!mcgic(mlcp(msh->line, 1), ADD, NO_ENV, msh))
+		(mcgic(NULL, QUIT, 0, msh), exit(msh->status)); // SI MALLOC KO ON QUITTE
 	if (!msh->line[0])
-		return (mlcgic(NULL, FLUSH, NO_ENV, msh), -1);	
+		return (mcgic(NULL, FLUSH, NO_ENV, msh), -1);	
 	return (0);
 }
 /*
@@ -140,6 +140,6 @@ int main(int ac, char **av, char **env)
 			continue;
 		add_history(msh.line);
 		ft_minishell(&msh, 0, NULL);
-		mlcgic(NULL, FLUSH, NO_ENV, &msh);
+		mcgic(NULL, FLUSH, NO_ENV, &msh);
 	}
 }

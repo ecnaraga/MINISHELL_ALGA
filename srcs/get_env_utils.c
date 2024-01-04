@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:04:43 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 15:00:14 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,15 @@ t_env	*ft_lst_new_malloc(t_msh *msh, size_t size, size_t size2)
 	t_env	*temp;
 
 	temp = NULL;
-	temp = mlcgic(mlcp(NULL, sizeof(t_env)), MALLOC, ENV, msh);
-	// temp = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
+	temp = mcgic(mlcp(NULL, sizeof(t_env)), MLC, ENV, msh);
+	// temp = ft_magic_malloc(MLC, sizeof(t_env), NULL, ENV);
 	if (temp == NULL)
 		return (NULL);
-	temp->name = mlcgic(mlcp(ft_calloc(sizeof(char), size), 1), ADD, ENV, msh);
+	temp->name = mcgic(mlcp(ft_calloc(sizeof(char), size), 1), ADD, ENV, msh);
 	// temp->name = ft_magic_malloc(ADD, 0, ft_calloc(sizeof(char), size), ENV);
 	if (!temp->name)
 		return (NULL);
-	temp->content = mlcgic(mlcp(ft_calloc(sizeof(char), size2), 1), ADD, ENV, msh);
+	temp->content = mcgic(mlcp(ft_calloc(sizeof(char), size2), 1), ADD, ENV, msh);
 	// temp->content = ft_magic_malloc(ADD, 0, ft_calloc(sizeof(char), size2), ENV);
 	if (!temp->content)
 		return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structure.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 13:05:59 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:52:19 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ enum	e_parenthesis
 
 enum	e_malloc
 {
-	MALLOC,
+	MLC,
 	ADD,
 	FREE,
 	FLUSH,

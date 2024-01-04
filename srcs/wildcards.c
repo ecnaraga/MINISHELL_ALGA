@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/29 16:40:12 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strjoin3(t_msh *msh, char *s1, char *s2)
 		return (NULL);
 	if (!s1)
 	{
-		s1 = mlcgic(mlcp(NULL, sizeof(char)), MALLOC, PIP, msh);
+		s1 = mcgic(mlcp(NULL, sizeof(char)), MLC, PIP, msh);
 		s1[0] = '\0';
 		len = ft_strlen(s2);
 	}
@@ -32,7 +32,7 @@ char	*ft_strjoin3(t_msh *msh, char *s1, char *s2)
 		len = ft_strlen(s1);
 	else
 		len = ft_strlen(s1) + ft_strlen(s2);
-	s = mlcgic(mlcp(NULL, sizeof(char) * (len + 2)), MALLOC, PIP, msh);
+	s = mcgic(mlcp(NULL, sizeof(char) * (len + 2)), MLC, PIP, msh);
 	if (!s)
 		return (NULL);
 	s[0] = '\0';
@@ -42,7 +42,7 @@ char	*ft_strjoin3(t_msh *msh, char *s1, char *s2)
 		ft_strcat(s, s2);
 	s[len++] = '\t';
 	s[len] = '\0';
-	mlcgic(mlcp(s1, 0), FREE, PIP, msh);
+	mcgic(mlcp(s1, 0), FREE, PIP, msh);
 	return (s);
 }
 
@@ -138,36 +138,27 @@ char	**wildcards(char *str, t_msh *msh, char *cmd_0)
 	{
 		if (matchWildcard(read->d_name, str, msh->av->wild) == 1)
 		{
-			if((ft_strcmp("echo", cmd_0) == 0 && !(read->d_name[0] == '.')) || ft_strcmp("echo", cmd_0) != 0)
+			if((ft_strcmp("ls", cmd_0) != 0 && !(read->d_name[0] == '.')) || ft_strcmp("ls", cmd_0) == 0)
 			{
 				str2 = ft_strjoin3(msh, str2, read->d_name);
 				if (msh && msh->status == 255)
 					return (NULL);
 			}
+			// if((ft_strcmp("echo", cmd_0) == 0 && !(read->d_name[0] == '.')) || ft_strcmp("echo", cmd_0) != 0)
+			// {
+			// 	str2 = ft_strjoin3(msh, str2, read->d_name);
+			// 	if (msh && msh->status == 255)
+			// 		return (NULL);
+			// }
 		}
 		read = readdir(dir);
 	}
-	// if(!str2)
-	// 	return (NULL);
 	closedir(dir);
 	str3 = ft_split_magic_malloc(msh, 1, str2, '\t');
 	if (!str3)
 		return (NULL);
-	mlcgic(mlcp(str2, 0), FREE, PIP, msh);
+	mcgic(mlcp(str2, 0), FREE, PIP, msh);
 	if(str3[1])
 		str3 = make_in_order(str3);
 	return (str3);
 }
-
-// int	main(int ac, char **av)
-// {	
-// 	char **oui;
-// 	oui = wildcards(av[1], NULL);
-// 	if (oui)
-// 	{
-// 		for (size_t i = 0; oui[i]; i++)
-// 			printf("%s\n", oui[i]);
-// 	}
-	
-// 	return (0);
-// }

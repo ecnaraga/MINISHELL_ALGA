@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   magic_malloc.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 12:17:56 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 10:19:44 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 ft_magic_malloc.c
 */
 // void *ft_magic_malloc(int rule, size_t size, void *addr, int nb);
-void	*mlcgic(t_magic *p, int rule, int lst, t_msh *msh);
-// void	*mlcgic(t_magic *p, size_t size, void *addr, t_msh *msh);
+void	*mcgic(t_magic *p, int rule, int lst, t_msh *msh);
+// void	*mcgic(t_magic *p, size_t size, void *addr, t_msh *msh);
 t_magic	*mlcp(void *addr, size_t size);
 // t_magic	*mlcp(t_msh *msh, int rule, int lst);
 

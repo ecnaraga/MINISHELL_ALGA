@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 10:22:42 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,6 @@ int	ft_cmd_alone(t_msh *msh, int sub)
 		}
 	}
 	sign = 0;
-	mlcgic(NULL, FLUSH, PIP, msh);
+	mcgic(NULL, FLUSH, PIP, msh);
 	return (0);
 }

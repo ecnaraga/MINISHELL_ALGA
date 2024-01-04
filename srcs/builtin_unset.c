@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	del_node(t_env *node, t_env **env, t_msh *msh)
 	tmp = *env;
 	if (tmp == node)
 	{
-		mlcgic(mlcp(tmp->name, 0), FREE, ENV, msh);
+		mcgic(mlcp(tmp->name, 0), FREE, ENV, msh);
 		// ft_magic_malloc(FREE, 0, tmp->name, ENV);
-		mlcgic(mlcp(tmp->content, 0), FREE, ENV, msh);
+		mcgic(mlcp(tmp->content, 0), FREE, ENV, msh);
 		// ft_magic_malloc(FREE, 0, tmp->content, ENV);
 		*env = tmp->next;
-		mlcgic(mlcp(tmp, 0), FREE, ENV, msh);
+		mcgic(mlcp(tmp, 0), FREE, ENV, msh);
 		// ft_magic_malloc(FREE, 0, tmp, ENV);
 		return ;
 	}
@@ -32,12 +32,12 @@ void	del_node(t_env *node, t_env **env, t_msh *msh)
 	{
 		if(tmp->next == node)
 		{
-			mlcgic(mlcp(tmp->next->name, 0), FREE, ENV, msh);
+			mcgic(mlcp(tmp->next->name, 0), FREE, ENV, msh);
 			// ft_magic_malloc(FREE, 0, tmp->next->name, ENV);
-			mlcgic(mlcp(tmp->next->content, 0), FREE, ENV, msh);
+			mcgic(mlcp(tmp->next->content, 0), FREE, ENV, msh);
 			// ft_magic_malloc(FREE, 0, tmp->next->content, ENV);
 			tmp->next = tmp->next->next;
-			mlcgic(mlcp(node, 0), FREE, ENV, msh);
+			mcgic(mlcp(node, 0), FREE, ENV, msh);
 			// ft_magic_malloc(FREE, 0, node, ENV);
 			break ;
 		}

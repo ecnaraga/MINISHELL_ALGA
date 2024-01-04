@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/30 11:33:32 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	create_here_doc(t_msh *msh, t_split *av, t_env **hdoc)
 	char *tmp;
 	
 	/*Add the limiter in the linked list*/
-	tmp = mlcgic(mlcp(ft_strdup(av->data), 1), ADD, NO_ENV, msh);
+	tmp = mcgic(mlcp(ft_strdup(av->data), 1), ADD, NO_ENV, msh);
 	// tmp = ft_magic_malloc(ADD, 0, ft_strdup(av->data), NO_ENV);
 	if (!tmp)
 		ft_exit_bis(msh, 0, -1, -1); // IF MALLOC KO ON QUITTE 
@@ -49,14 +49,14 @@ void	create_here_doc(t_msh *msh, t_split *av, t_env **hdoc)
 	/* Create and add the name of the here_doc in the linked list*/
 	while (1)
 	{
-		new->content = mlcgic(mlcp(ft_random_filename("/tmp/", 8), 1), ADD, NO_ENV, msh);
+		new->content = mcgic(mlcp(ft_random_filename("/tmp/", 8), 1), ADD, NO_ENV, msh);
 		// new->content = ft_magic_malloc(ADD, 0, ft_random_filename("/tmp/", 8), NO_ENV);
 		if (!new->content)
 			ft_exit_bis(msh, 0, -1, -1); // IF MALLOC KO ON QUITTE 
 		if (ft_check_unique_name(new->content, hdoc) == 0)
 			break;
 		else
-			mlcgic(mlcp(new->content, 0), FREE, NO_ENV, msh);
+			mcgic(mlcp(new->content, 0), FREE, NO_ENV, msh);
 			// ft_magic_malloc(FREE, 0, new->content, NO_ENV);
 	}
 	ft_lstadd_back_env(hdoc, new);
@@ -99,9 +99,9 @@ void	ft_write_hdoc(t_msh *msh, char *line, int fd)
 				len = valide_expand(line + i + 1);
 				printf("line + i + 1 %s len %d\n", line + i + 1, len);
 				if (len == 0)
-					var = mlcgic(mlcp(ft_strdup(line + i + 1), 0), ADD, NO_ENV, msh);
+					var = mcgic(mlcp(ft_strdup(line + i + 1), 0), ADD, NO_ENV, msh);
 				else
-					var = mlcgic(mlcp(ft_substr(line, i + 1, (size_t)len), 0), ADD, NO_ENV, msh);
+					var = mcgic(mlcp(ft_substr(line, i + 1, (size_t)len), 0), ADD, NO_ENV, msh);
 				printf("var = %s\n", var);
 				str = get_value(msh, msh->env, var, HDOC);
 				if (ft_strcmp(str, " ") != 0)
@@ -118,8 +118,8 @@ void	ft_write_hdoc(t_msh *msh, char *line, int fd)
 		}
 	}
 	write(fd, "\n", 1);
-	mlcgic(mlcp(line, 0), FREE, NO_ENV, msh);
-	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mlcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
+	mcgic(mlcp(line, 0), FREE, NO_ENV, msh);
+	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
 }
 
 /*
@@ -140,31 +140,31 @@ static int	ft_recover_prompt(t_msh *msh, int fd_temp, char *lim)
 		msh->status = 130;
 		if (open("/dev/stdout", O_RDONLY) == -1)
 			(close(fd_temp), msh->status = 1, ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR OPEN , status == 1 + ON QUITTE
-		mlcgic(NULL, FLUSH, NO_ENV, msh);
+		mcgic(NULL, FLUSH, NO_ENV, msh);
 		return (close(fd_temp), 130); // SI CTRL + C OK GERE
 	}
 	if (msh->status == 255)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
 	if (!line)
 	{
-		str = mlcgic(mlcp(ft_strjoin("bash: warning: here-document delimited by end-of-file (wanted `", lim), 1), ADD, NO_ENV, msh);
+		str = mcgic(mlcp(ft_strjoin("bash: warning: here-document delimited by end-of-file (wanted `", lim), 1), ADD, NO_ENV, msh);
 		if (msh->status == 255)
 			(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
-		tmp = mlcgic(mlcp(ft_strjoin(str, "')\n"), 1), ADD, NO_ENV, msh);
+		tmp = mcgic(mlcp(ft_strjoin(str, "')\n"), 1), ADD, NO_ENV, msh);
 		if (msh->status == 255)
 			(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI ERREUR MALLOC GNL > ON QUITTE
 		write(2, tmp, ft_strlen(tmp));
-		mlcgic(mlcp(str, 0), FREE, NO_ENV, msh);
-		mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 		return (close(fd_temp), 1); // SI ERREUR MALLOC GNL > ON QUITTE
 	}
-	line = mlcgic(mlcp(line, 1), ADD, NO_ENV, msh);
+	line = mcgic(mlcp(line, 1), ADD, NO_ENV, msh);
 	if (msh->status == 255)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // SI MALLOC KO ON QUITTE
 	if (ft_strcmp(msh->av->data, line) == 0)
-		return (mlcgic(mlcp(line, 0), FREE, NO_ENV, msh), 1);
+		return (mcgic(mlcp(line, 0), FREE, NO_ENV, msh), 1);
 	ft_write_hdoc(msh, line, fd_temp);
-	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mlcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
+	// (write(fd_temp, line, ft_strlen(line)), write(fd_temp, "\n", 1), mcgic(mlcp(line, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, line, NO_ENV) */);
 	return (0);
 }
 
@@ -186,7 +186,7 @@ int	ft_prompt(t_msh *msh, t_split *av, t_env **hdoc)
 	fd_temp = open((*hdoc)->content, O_CREAT | O_APPEND | O_WRONLY, 0744);
 	if (fd_temp == -1)
 		(perror((*hdoc)->content), msh->status = 1, ft_exit_bis(msh, 0, -1, -1)); // IF ERREUR OPEN -> status = 1 + ON QUITTE
-	lim = mlcgic(mlcp(ft_strdup(av->data), 1), ADD, NO_ENV, msh);
+	lim = mcgic(mlcp(ft_strdup(av->data), 1), ADD, NO_ENV, msh);
 	if (!lim)
 		(close(fd_temp), ft_exit_bis(msh, 0, -1, -1)); // IF MALLOC KO ON QUITTE
 	while (1)
@@ -201,14 +201,14 @@ int	ft_prompt(t_msh *msh, t_split *av, t_env **hdoc)
 	}
 	ft_signal_handler_msh();
 	*hdoc = head;
- 	(close(fd_temp), mlcgic(mlcp(lim, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, lim, NO_ENV) */);
+ 	(close(fd_temp), mcgic(mlcp(lim, 0), FREE, NO_ENV, msh)/* ft_magic_malloc(FREE, 0, lim, NO_ENV) */);
 	return (0);
 }
 
 /*
 Create a copy of the list of heredoc
 If there is no list of heredoc, return sub_heredoc = NULL
-If error malloc, quit the actual process
+If error MLC, quit the actual process
 */
 t_env	*ft_copy_heredoc(t_msh *msh, t_env *hdoc, int sub)
 {
@@ -221,11 +221,11 @@ t_env	*ft_copy_heredoc(t_msh *msh, t_env *hdoc, int sub)
 	sub_hdoc = NULL;
 	while (hdoc)
 	{
-		tmp = mlcgic(mlcp(ft_strdup(hdoc->name), 1), ADD, NO_ENV, msh);
+		tmp = mcgic(mlcp(ft_strdup(hdoc->name), 1), ADD, NO_ENV, msh);
 		if (!tmp)
 			ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
 		new = ft_lst_new_heredoc(msh, tmp, sub); // SI MALLOC KO ON QUITTE DANS F_LST_NEW_HEREDOC 
-		new->content = mlcgic(mlcp(ft_strdup(hdoc->content), 1), ADD, NO_ENV, msh);
+		new->content = mcgic(mlcp(ft_strdup(hdoc->content), 1), ADD, NO_ENV, msh);
 		if (!new->content)
 			ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE
 		new->read = hdoc->read;

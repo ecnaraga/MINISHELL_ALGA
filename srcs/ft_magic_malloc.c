@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/24 17:12:36 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:55:09 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	*ft_magic_add_malloc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 	t_list	*tmp;
 
 	head = *mlc;
-	if (rule == MALLOC)
+	if (rule == MLC)
 		tmp = ft_lstnew_malloc(p->size);
 	else
 		tmp = ft_lstnew_add(p->addr);
@@ -107,33 +107,33 @@ Garbagge collector : Store in a linked list all the address malloc
 	mlc_env : Contains malloc addresses containing the environment
 	mlc : Contains the other malloc addresses in the program
 5 rules:
-	- Malloc : malloc, adds the address to the linked list and returns the
+	- Malloc : MLC, adds the address to the linked list and returns the
 		address of the malloc element.
 	- Add : adds a malloc element to the linked list and returns it
 	- Free : free a malloc element and remove it from the linked list
 	- Flush : free all except elements containing the environment
 	- Quit : free all
 rule : choice of the rule
-size : if the rule asked is malloc, size of the element to malloc
+size : if the rule asked is MLC, size of the element to malloc
 addr : if the rule is add or free, address of the elemnt sent
-lst : if the rule is add or malloc, linked list concerning
+lst : if the rule is add or MLC, linked list concerning
 */
-void	*mlcgic(t_magic *p, int rule, int lst, t_msh *msh)
+void	*mcgic(t_magic *p, int rule, int lst, t_msh *msh)
 // void	*ft_magic_malloc(int rule, size_t size, void *addr, int lst)
 {
 	static t_list	*mlc;
 	static t_list	*mlc_pip;
 	static t_list	*mlc_env;
 
-	if (!p && (rule == MALLOC || rule == ADD))
+	if (!p && (rule == MLC || rule == ADD))
 		return (msh->status = 255, NULL);
 	if (!p && rule == FREE)
 		return (NULL);
-	if ((rule == MALLOC || rule == ADD) && lst == NO_ENV)
+	if ((rule == MLC || rule == ADD) && lst == NO_ENV)
 		return (ft_magic_add_malloc(msh, &mlc, rule, p));
-	else if ((rule == MALLOC || rule == ADD) && lst == ENV)
+	else if ((rule == MLC || rule == ADD) && lst == ENV)
 		return (ft_magic_add_malloc(msh, &mlc_env, rule, p));
-	else if ((rule == MALLOC || rule == ADD) && lst == PIP)
+	else if ((rule == MLC || rule == ADD) && lst == PIP)
 		return (ft_magic_add_malloc(msh, &mlc_pip, rule, p));
 	else if (rule == FREE && lst == NO_ENV)
 		ft_list_remove_if(&mlc, p, ft_check);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 10:23:14 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 	if (sub == 0 && msh->p.hdoc)
 		ft_unlink_heredoc(msh->p.hdoc);
 	rl_clear_history();
-	mlcgic(NULL, QUIT, 0, msh);
+	mcgic(NULL, QUIT, 0, msh);
 	// ft_magic_malloc(QUIT, 0, NULL, 0);
 	exit(msh->status);
 }
@@ -53,7 +53,7 @@ void	ft_exit(int fd_1, int fd_2, int fd_3, t_msh *msh)
 	if (fd_3 > -1)
 		close(fd_3);
 	rl_clear_history();
-	mlcgic(NULL, QUIT, 0, msh);
+	mcgic(NULL, QUIT, 0, msh);
 	// ft_magic_malloc(QUIT, 0, NULL, 0);
 	exit(msh->status);
 }
@@ -91,10 +91,10 @@ static int	ft_message_directory(t_msh *msh, char *cmd)
 	ck = ft_check_cmd(cmd);
 	if (ck == 1 || ck == 3)
 	{
-		str = mlcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
+		str = mcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
 		if (!str) // OK PROTEGE
 			return (255);
-		str = mlcgic(mlcp(ft_strjoin(str, ": Is a directory\n"), 1), ADD, PIP, msh);
+		str = mcgic(mlcp(ft_strjoin(str, ": Is a directory\n"), 1), ADD, PIP, msh);
 		if (!str) // OK PROTEGE
 			return (255);
 		write(2, str, ft_strlen(str));
@@ -109,7 +109,7 @@ void	ft_cmd_not_found(t_msh *msh, char*cmd)
 	
 	if (ck_char(cmd, '/') > 0)
 	{
-		str = mlcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
+		str = mcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
 		if (!str) // OK PROTEGE
 			return ;
 		perror(str);
@@ -117,10 +117,10 @@ void	ft_cmd_not_found(t_msh *msh, char*cmd)
 	}
 	else
 	{
-		str = mlcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
+		str = mcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);
 		if (!str) // OK PROTEGE
 			return ;
-		str = mlcgic(mlcp(ft_strjoin(str, ": command not found\n"), 1), ADD, PIP, msh);
+		str = mcgic(mlcp(ft_strjoin(str, ": command not found\n"), 1), ADD, PIP, msh);
 		if (!str) // OK PROTEGE
 			return ;
 		msh->status = 127;

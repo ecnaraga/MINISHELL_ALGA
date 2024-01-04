@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_export_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/21 15:41:39 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	fill_export_env(t_msh *msh, t_env **export_env, char **str)
 		new = ft_lst_new_malloc(msh, name_size + 1, content_size + 2 + 1);
 		if (!new)
 		{
-			mlcgic(NULL, FLUSH, ENV, msh);
+			mcgic(NULL, FLUSH, ENV, msh);
 			// ft_magic_malloc(FLUSH, 0, NULL, ENV);
 			return (1);
 		}
@@ -107,8 +107,8 @@ t_env	**get_export_env(t_msh *msh, char **str)
 {
 	t_env	**export_env;
 
-	export_env = mlcgic(mlcp(NULL, sizeof(t_env)), MALLOC, ENV, msh);
-	// export_env = ft_magic_malloc(MALLOC, sizeof(t_env), NULL, ENV);
+	export_env = mcgic(mlcp(NULL, sizeof(t_env)), MLC, ENV, msh);
+	// export_env = ft_magic_malloc(MLC, sizeof(t_env), NULL, ENV);
 	if (!export_env)
 		return (NULL);
 	*export_env = NULL;

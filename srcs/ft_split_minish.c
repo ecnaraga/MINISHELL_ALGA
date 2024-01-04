@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:33 by garance           #+#    #+#             */
-/*   Updated: 2023/12/29 11:11:41 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ static t_letter	ft_count_letter(const char *s, t_quote *q, int *i, int *dollar, 
 // 	t_split	*temp;
 
 // 	temp = NULL;
-// 	temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV);
+// 	temp = ft_magic_malloc(MLC, sizeof(t_split), NULL, NO_ENV);
 // 	if (temp == NULL)
 // 		return (NULL);
 // 	// temp -> content = content;
@@ -200,7 +200,7 @@ static void	ft_split_strs(const char *s, t_split **strs, int wd, t_msh *msh)
 		mod_dollar = 0;
 		l = ft_count_letter(s, &q, &i, &new->dollar, &mod_dollar);
 		new->wildcard = q.wildcard;
-		new->data = mlcgic(mlcp(NULL, sizeof(char) * (l.lt + 1)), MALLOC, NO_ENV, msh);
+		new->data = mcgic(mlcp(NULL, sizeof(char) * (l.lt + 1)), MLC, NO_ENV, msh);
 		if (new->data == NULL)
 			ft_exit(-1, -1, -1, msh); // SI MALLOC KO => ON QUITTE MINISHELL
 		new->token = TO_DEFINE;

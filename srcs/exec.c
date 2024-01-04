@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 11:41:44 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -391,7 +391,7 @@ int	ft_exec(t_msh *msh, int sub, t_fdpar *fd)
 	ft_exec_operator(msh, &head, sub); // OK PROTEGE A L INTERIEUR
 	if (sub == 0)
 		ft_unlink_heredoc(msh->p.hdoc);
-	mlcgic(NULL, FLUSH, NO_ENV, msh);
+	mcgic(NULL, FLUSH, NO_ENV, msh);
 	// ft_magic_malloc(FLUSH, 0, NULL, NO_ENV);
 	return (0);
 }

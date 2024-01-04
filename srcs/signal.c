@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 15:53:45 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	ft_free_bis(int signal)
 
 void	ft_free_four(int signal)
 {
-	mlcgic(NULL, QUIT, 0, NULL);
+	mcgic(NULL, QUIT, 0, NULL);
 	exit(signal + 128);
 }
 

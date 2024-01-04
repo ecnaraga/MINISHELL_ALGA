@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 10:23:40 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 	int	j;
 
 	j = -1;
-	p->fd_p = mlcgic(mlcp(NULL, sizeof(int *) * (size + 1)), MALLOC, PIP, msh);
+	p->fd_p = mcgic(mlcp(NULL, sizeof(int *) * (size + 1)), MLC, PIP, msh);
 	if (!p->fd_p)
 		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	while (++j < size)
 	{
-		p->fd_p[j] = mlcgic(mlcp(NULL, sizeof(int *) * 2), MALLOC, PIP, msh);
+		p->fd_p[j] = mcgic(mlcp(NULL, sizeof(int *) * 2), MLC, PIP, msh);
 		if (!p->fd_p)
 			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
 	}
@@ -131,6 +131,6 @@ int	pipex_multi(t_msh *msh, int sub)
 	//dprintf(2, "status = %d\n", msh->status);
 	ft_signal_handler_msh();
 	sign = 0;
-	mlcgic(NULL, FLUSH, PIP, msh);
+	mcgic(NULL, FLUSH, PIP, msh);
 	return (0);
 }

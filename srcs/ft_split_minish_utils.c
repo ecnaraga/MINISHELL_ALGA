@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2023/12/22 15:01:24 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_alloc_type(t_split *new, t_msh *msh, int l)
 
 	if (new->dollar > 0)
 	{
-		new->type = mlcgic(mlcp(NULL, sizeof(t_dollar) * new->dollar), MALLOC, NO_ENV, msh);
+		new->type = mcgic(mlcp(NULL, sizeof(t_dollar) * new->dollar), MLC, NO_ENV, msh);
 		if (new->type == NULL)
 			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
 		d = -1;
@@ -81,7 +81,7 @@ void	ft_alloc_type(t_split *new, t_msh *msh, int l)
 	new->wild = NULL;
 	if (new->wildcard > 0)
 	{
-		new->wild = mlcgic(mlcp(NULL, sizeof(int) * l), MALLOC, NO_ENV, msh);
+		new->wild = mcgic(mlcp(NULL, sizeof(int) * l), MLC, NO_ENV, msh);
 		if (new->wild == NULL)
 			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
 	}

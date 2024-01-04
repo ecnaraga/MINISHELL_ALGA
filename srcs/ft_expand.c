@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/02 11:06:19 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,29 +47,29 @@ char *get_value(t_msh *msh, t_env **env, char *str, int rule)
 	{
 		if (strcmp(node->name, str) == 0)
 		{
-			mlcgic(mlcp(str, 0), FREE, NO_ENV, msh);
+			mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
 			if (rule == CMD)
-				return (mlcgic(mlcp(ft_strtrim(node->content, " \b\t\n\v\f\r"), 1), ADD, NO_ENV, msh));
+				return (mcgic(mlcp(ft_strtrim(node->content, " \b\t\n\v\f\r"), 1), ADD, NO_ENV, msh));
 			if (rule == OTHER)
-				return (mlcgic(mlcp(ft_strtrim_except_tips(node->content, " \b\t\n\v\f\r"), 1), ADD, NO_ENV, msh));
+				return (mcgic(mlcp(ft_strtrim_except_tips(node->content, " \b\t\n\v\f\r"), 1), ADD, NO_ENV, msh));
 			if (rule == INFILE || rule == OUTFILE_NO_TRUNC || rule == OUTFILE_TRUNC || rule == HDOC)
-				return (mlcgic(mlcp(ft_strdup(node->content), 1), ADD, NO_ENV, msh));
+				return (mcgic(mlcp(ft_strdup(node->content), 1), ADD, NO_ENV, msh));
 		}
 		else
 			node = node->next;
 	}
-	mlcgic(mlcp(str, 0), FREE, NO_ENV, msh);
-	return (mlcgic(mlcp(ft_strdup(""), 1), ADD, NO_ENV, msh));
+	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
+	return (mcgic(mlcp(ft_strdup(""), 1), ADD, NO_ENV, msh));
 }
 
 char	*ft_multi_dollar(t_msh *msh, char *cmd, t_expand *e)
 {
 	e->tmp = cmd;
-	cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[e->i]), 1), ADD, NO_ENV, msh);
+	cmd = mcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[e->i]), 1), ADD, NO_ENV, msh);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	if (e->tmp)
-		mlcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
 	// while (msh->av->data[e->i] && msh->av->data[e->i] == '$')
 	(e->i)++;
 	(e->j)++;
@@ -79,11 +79,11 @@ char	*ft_multi_dollar(t_msh *msh, char *cmd, t_expand *e)
 char	*ft_add_char(t_msh *msh, char *cmd, t_expand *e, int *j)
 {
 	e->tmp = cmd;
-	cmd = mlcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[e->i]), 1), ADD, NO_ENV, msh);
+	cmd = mcgic(mlcp(ft_strjoin_char(cmd, msh->av->data[e->i]), 1), ADD, NO_ENV, msh);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	if (e->tmp)
-		mlcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
 	(e->i)++;
 	if (j)
 		(*j)++;
@@ -99,38 +99,38 @@ char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 	// if (msh->p.cmd_t[0] && ft_strcmp(msh->p.cmd_t[0], "export") == 0)
 	// {
 	// 	tmp2 = tmp;
-	// 	tmp = mlcgic(mlcp(ft_strjoin("\"", tmp), 1), ADD, NO_ENV, msh);
-	// 	mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	// 	tmp = mcgic(mlcp(ft_strjoin("\"", tmp), 1), ADD, NO_ENV, msh);
+	// 	mcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
 	// 	tmp2 = tmp;
-	// 	tmp = mlcgic(mlcp(ft_strjoin(tmp, "\""), 1), ADD, NO_ENV, msh);
-	// 	mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	// 	tmp = mcgic(mlcp(ft_strjoin(tmp, "\""), 1), ADD, NO_ENV, msh);
+	// 	mcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
 	// }
 	printf("tmp = %s\n", tmp);
 	if (msh->status == 255)// IF MALLOC KO return NULL
 		return (NULL);
 	tmp2 = cmd;
-	cmd = mlcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
+	cmd = mcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
 	printf("cmd = %s\n", cmd);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	if (tmp2)
-		mlcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
-	mlcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(tmp2, 0), FREE, NO_ENV, msh);
+	mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 	return (cmd);
 }
 
 char	*ft_expand_exitcode(t_msh *msh, char *cmd, t_expand *e)
 {
-	e->tmp = mlcgic(mlcp(ft_itoa(msh->previous_status), 1), ADD, NO_ENV, msh);
+	e->tmp = mcgic(mlcp(ft_itoa(msh->previous_status), 1), ADD, NO_ENV, msh);
 	if (msh->status == 255)// IF MALLOC KO return NULL
 		return (NULL);
 	e->tmp2 = cmd;
-	cmd = mlcgic(mlcp(ft_strjoin(cmd, e->tmp), 1), ADD, NO_ENV, msh);
+	cmd = mcgic(mlcp(ft_strjoin(cmd, e->tmp), 1), ADD, NO_ENV, msh);
 	if (msh->status == 255)// IF MALLOC KO return NULL
 		return (NULL);
 	if (e->tmp2)
-		mlcgic(mlcp(e->tmp2, 0), FREE, NO_ENV, msh);
-	mlcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(e->tmp2, 0), FREE, NO_ENV, msh);
+	mcgic(mlcp(e->tmp, 0), FREE, NO_ENV, msh);
 	(e->i) += 2;
 	(e->j)++;
 	return (cmd);
@@ -138,7 +138,7 @@ char	*ft_expand_exitcode(t_msh *msh, char *cmd, t_expand *e)
 
 char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 {
-	e->tmp = mlcgic(mlcp(ft_substr(msh->av->data, e->i + 1, msh->av->type[e->j].len_variable - 1), 1), ADD, NO_ENV, msh);
+	e->tmp = mcgic(mlcp(ft_substr(msh->av->data, e->i + 1, msh->av->type[e->j].len_variable - 1), 1), ADD, NO_ENV, msh);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	e->len = valide_expand(e->tmp);
@@ -154,10 +154,10 @@ char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 	else
 	{
 		e->tmp2 = e->tmp;
-		e->tmp = mlcgic(mlcp(ft_substr(e->tmp, 0, e->len), 1), ADD, NO_ENV, msh);
+		e->tmp = mcgic(mlcp(ft_substr(e->tmp, 0, e->len), 1), ADD, NO_ENV, msh);
 		if (msh->status == 255) // IF MALLOC KO return NULL
 			return (NULL);
-		mlcgic(mlcp(e->tmp2, 0), FREE, NO_ENV, msh);
+		mcgic(mlcp(e->tmp2, 0), FREE, NO_ENV, msh);
 		cmd = ft_do_expand(msh, e->tmp, cmd, rule);
 		if (msh->status == 255)// IF MALLOC KO return NULL
 			return (NULL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2024/01/02 10:10:55 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ t_split	*ft_lstnew_split(t_msh *msh)
 	t_split	*temp;
 
 	temp = NULL;
-	temp = mlcgic(mlcp(NULL, sizeof(t_split)), MALLOC, NO_ENV, msh);
-	// temp = ft_magic_malloc(MALLOC, sizeof(t_split), NULL, NO_ENV); // SI MALLOC KO ON QUITTE
+	temp = mcgic(mlcp(NULL, sizeof(t_split)), MLC, NO_ENV, msh);
+	// temp = ft_magic_malloc(MLC, sizeof(t_split), NULL, NO_ENV); // SI MALLOC KO ON QUITTE
 	if (temp == NULL)
 		ft_exit(-1, -1, -1, msh);
 		// return (NULL);
@@ -69,10 +69,10 @@ int	ft_lstsize_split(t_split *lst)
 
 void    del_two(t_msh *msh, t_split *lst)
 {
-	lst->data = mlcgic(mlcp(lst->data, 0), FREE, NO_ENV, msh);
+	lst->data = mcgic(mlcp(lst->data, 0), FREE, NO_ENV, msh);
     // lst->data = ft_magic_malloc(FREE, 0, lst->data, NO_ENV);
     if (lst->type)
-		lst->type = mlcgic(mlcp(lst->type, 0), FREE, NO_ENV, msh);
+		lst->type = mcgic(mlcp(lst->type, 0), FREE, NO_ENV, msh);
         // lst->type = ft_magic_malloc(FREE, 0, lst->type, NO_ENV);
 }
 
@@ -81,15 +81,15 @@ void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_spli
 	if (!lst || !del)
 		return ;
 	del_two(msh, lst);
-	lst = mlcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
+	lst = mcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
 	// lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 }
 
 // void    del_three(t_env *lst)
 // {
-// 	lst->name = mlcgic(mlcp(lst->name, 0), FREE, NO_ENV, msh);
+// 	lst->name = mcgic(mlcp(lst->name, 0), FREE, NO_ENV, msh);
 //     // lst->name = ft_magic_malloc(FREE, 0, lst->name, NO_ENV);
-// 	lst->content = mlcgic(mlcp(lst->content, 0), FREE, NO_ENV, msh);
+// 	lst->content = mcgic(mlcp(lst->content, 0), FREE, NO_ENV, msh);
 //     // lst->content = ft_magic_malloc(FREE, 0, lst->content, NO_ENV);
 // }
 
@@ -98,7 +98,7 @@ void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_spli
 // 	if (!lst || !del)
 // 		return ;
 // 	del_three(lst);
-// 	lst = mlcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
+// 	lst = mcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
 // 	// lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 // }
 

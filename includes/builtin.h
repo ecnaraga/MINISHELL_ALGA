@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2023/12/21 13:52:36 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 15:16:13 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	builtin_cd(t_msh *minish);
 exit
 */
 int	builtin_exit(t_msh *minish);
+long long	ft_atol(char *nptr, int *err);
 
 /*
 get_env
@@ -69,6 +70,7 @@ int	get_statut(char *cmd);
 int	valide_key(char *key);
 int	new_env_node_env(t_msh *msh, char *str, int statut, t_env **env);
 int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env);
+int	node_exist(t_env **env, char *str, int size);
 
 /*
 unset

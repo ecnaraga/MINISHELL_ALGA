@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_handle_pipe.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 10:57:27 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_first_pipe(t_msh *msh, t_lpid **pid_l)
 	}
 	else
 	{
-		new = mlcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
+		new = mcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
 		if (msh->status == 255)
 			return;
 		*pid_l = new;
@@ -105,7 +105,7 @@ void	ft_middle_pipe(t_msh *msh, int j, t_lpid **pid_l)
 	}
 	else
 	{
-		new = mlcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
+		new = mcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
 		if (msh->status == 255)
 			return;
 		ft_lpidadd_back(pid_l, new);
@@ -133,7 +133,7 @@ void	ft_last_pipe(t_msh *msh, int j, t_lpid **pid_l)
 	}
 	else
 	{
-		new = mlcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
+		new = mcgic(mlcp(ft_lpidnew(pid), 1), ADD, PIP, msh);
 		if (msh->status == 255)
 			return;
 		ft_lpidadd_back(pid_l, new);

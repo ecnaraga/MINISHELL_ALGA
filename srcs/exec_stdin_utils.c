@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdin_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/03 15:31:17 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	ft_open_infile(t_msh *msh, int *fd_infile, t_head *save)
 	if (*fd_infile != -2)
 		close(*fd_infile);
 	if (msh->av->type )
-		msh->av->data = ft_expand(msh, msh->av->data, INFILE); //IF ERROR MALLOC, EXPAND RETURN (NULL)
+		msh->av->data = ft_expand(msh, msh->av->data, INFILE); //IF ERROR MLC, EXPAND RETURN (NULL)
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
 	*fd_infile = open(msh->av->data, O_RDONLY); // IF ERREUR OPEN > GERE DANS REDEF_STDIN
@@ -80,22 +80,22 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 {
 	char *str;
 	
-	str = mlcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
+	str = mcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
 	if (str && msh->ambiguous == -3)
 	{
 		msh->status = 1;
-		str = mlcgic(mlcp(ft_strjoin(str, ": ambiguous redirect\n"), 1), ADD, PIP, msh);
+		str = mcgic(mlcp(ft_strjoin(str, ": ambiguous redirect\n"), 1), ADD, PIP, msh);
 		if (str)
 			write(2, str, ft_strlen(str));
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
-		mlcgic(mlcp(str, 0), FREE, PIP, msh);
+		mcgic(mlcp(str, 0), FREE, PIP, msh);
 	}
 	else if (str)
 	{
 		perror(str);
 		msh->status = 1;
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
-		mlcgic(mlcp(str, 0), FREE, PIP, msh);
+		mcgic(mlcp(str, 0), FREE, PIP, msh);
 	}
 	return (ft_exit_invalidfile(msh, rule, j));
 }
