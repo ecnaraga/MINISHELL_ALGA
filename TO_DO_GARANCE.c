@@ -3,6 +3,14 @@
 echo & USER
 */
 
+bash-5.1$ echo $eee hola
+hola
+bash-5.1$ echo "$eee" "hola"
+ hola
+bash-5.1$
+
+(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+
 POUR ALIX : Minishell$ ((cat)|(ls))
 
 export a=* && echo $a if cmd = export export le wild card si apres =

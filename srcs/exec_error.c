@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 13:27:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,21 @@ void	ft_free_fd_p(int **fd_p, int j)
 
 void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 {
-	ft_close_fd(&msh->fd, 0);
-	if (fd1 > -1)
-		close(fd1);
-	if (fd2 > -1)
-		close(fd2);
+	ft_close_fd(&msh->fd, 0, fd1, fd2);
 	if (sub == 0 && msh->p.hdoc)
 		ft_unlink_heredoc(msh->p.hdoc);
 	rl_clear_history();
 	mcgic(NULL, QUIT, 0, msh);
-	// ft_magic_malloc(QUIT, 0, NULL, 0);
 	exit(msh->status);
 }
 
-void	ft_exit(int fd_1, int fd_2, int fd_3, t_msh *msh)
+void	ft_exit(int fd1, int fd2, int fd3, t_msh *msh)
 {
-	ft_close_fd(&msh->fd, 0);
-	if (fd_1 > -1)
-		close(fd_1);
-	if (fd_2 > -1)
-		close(fd_2);
-	if (fd_3 > -1)
-		close(fd_3);
+	ft_close_fd(&msh->fd, 0, fd1, fd2);
+	if (fd3 > -1)
+		close(fd3);
 	rl_clear_history();
 	mcgic(NULL, QUIT, 0, msh);
-	// ft_magic_malloc(QUIT, 0, NULL, 0);
 	exit(msh->status);
 }
 

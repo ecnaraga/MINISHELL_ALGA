@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 21:56:04 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 17:23:24 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 12:15:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	ft_lstsize_split(t_split *lst)
 {
 	int	count;
 
-    // printf("LSTSIZE\n");
 	count = 0;
 	while (lst)
 	{
@@ -69,10 +68,8 @@ int	ft_lstsize_split(t_split *lst)
 void    del_two(t_msh *msh, t_split *lst)
 {
 	lst->data = mcgic(mlcp(lst->data, 0), FREE, NO_ENV, msh);
-    // lst->data = ft_magic_malloc(FREE, 0, lst->data, NO_ENV);
     if (lst->type)
 		lst->type = mcgic(mlcp(lst->type, 0), FREE, NO_ENV, msh);
-        // lst->type = ft_magic_malloc(FREE, 0, lst->type, NO_ENV);
 }
 
 void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_split *))
@@ -81,7 +78,6 @@ void	ft_lstdelone_split(t_msh *msh, t_split *lst, void (*del)(t_msh *msh, t_spli
 		return ;
 	del_two(msh, lst);
 	lst = mcgic(mlcp(lst, 0), FREE, NO_ENV, msh);
-	// lst = ft_magic_malloc(FREE, 0, lst, NO_ENV);
 }
 
 // void    del_three(t_env *lst)

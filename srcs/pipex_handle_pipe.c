@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_handle_pipe.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:30:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,7 @@ static void	ft_child_pipe_exec(t_msh *msh, int fd_in, int fd_out)
 	}
 	else
 	{
-		if (fd_in > -1)
-			close(fd_in);
-		if (fd_out > -1)
-			close(fd_out);
+		ft_close_fd(NULL, -1, fd_in, fd_out);
 		msh->p.cmd_t = ft_make_cmd(msh, 1, -1, -1);
 		if (!msh->p.cmd_t) // OK PROTEGER
 			ft_exit(-1, -1, -1, msh);

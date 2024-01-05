@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:06:46 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:25:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef	struct s_msh
 	int ambiguous;
 	int		status;
 	int		previous_status;
+	int			sub;
 }		t_msh;
 
 typedef	struct s_quote
@@ -137,8 +138,6 @@ typedef struct s_fd
 	int file;
 	int	old_std;
 }		t_fd;
-
-
 
 typedef struct s_lpid
 {

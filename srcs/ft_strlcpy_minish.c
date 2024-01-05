@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 17:03:41 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 10:45:09 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ Copie dans dst size - 1 char de src. Saute les quotes non compris entre quotes
 		normalement le $ et les char qui suivent
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
-begin == -1 > cas de figure : "" ou ''
+begin == -1 > cas de figure : "" ou '' ou "$USUSUSUS" ( a la difference de $USUSUSUS)
 */
 void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 {

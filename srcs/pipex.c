@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:27:05 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,31 +76,17 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 			ft_middle_pipe(msh, index.j, pid_l);
 		if (msh->status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
 			return ;
-		ft_close_fd(&msh->fd, 1);
+		ft_close_fd(&msh->fd, 1, -1, -1);
 		index.j++;
 	}
 	ft_last_pipe(msh, index.j, pid_l);
-	ft_close_fd(&msh->fd, 2);
+	ft_close_fd(&msh->fd, 2, -1, -1);
 }
 
-int	pipex_multi(t_msh *msh, int sub)
+void	ft_waitpid_loop(t_msh *msh, t_lpid *pid_l)
 {
-	size_t	nb_pipe;
-	t_split *head;
-	t_index	index;
-	t_lpid	*pid_l;
-	int free;
 	int tmp;
 	
-	pid_l = NULL;
-	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	head = msh->av;
-	nb_pipe = ft_count_pipe(msh, head);
-	ft_create_fd_p(msh, sub, nb_pipe, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
-	index.i = -1;
-	index.j = 0;
-	ft_pipex(msh, nb_pipe, index, &pid_l);
-	free = msh->status; // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
 	tmp = 0;
 	while (pid_l)
 	{
@@ -115,7 +101,7 @@ int	pipex_multi(t_msh *msh, int sub)
 				write(2, "Quit (core dumped)\n", 20);
 				tmp = 2;
 			}
-			if (tmp == 0 && msh->status == 130 && tmp == 0)
+			if (tmp == 0 && msh->status == 130)
 			{
 				write(2, "\n", 1);
 				tmp = 1;
@@ -123,12 +109,32 @@ int	pipex_multi(t_msh *msh, int sub)
 		}
 		pid_l = pid_l->next;
 	}
+}
+
+int	pipex_multi(t_msh *msh, int sub)
+{
+	size_t	nb_pipe;
+	t_split *head;
+	t_index	index;
+	t_lpid	*pid_l;
+	int free;
+	
+	pid_l = NULL;
+	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	head = msh->av;
+	nb_pipe = ft_count_pipe(msh, head);
+	ft_create_fd_p(msh, sub, nb_pipe, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	index.i = -1;
+	index.j = 0;
+	msh->sub = sub;
+	ft_pipex(msh, nb_pipe, index, &pid_l);
+	free = msh->status; // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
+	ft_waitpid_loop(msh, pid_l);
 	if (free == 255) // IF PIPE KO OR FORK KO DANS F_PIPEX ON QUITTE LE PROCESS ACTUEL
 	{
 		msh->status = 255;
 		ft_exit_bis(msh, sub, -1, -1);
 	}
-	//dprintf(2, "status = %d\n", msh->status);
 	ft_signal_handler_msh();
 	sign = 0;
 	mcgic(NULL, FLUSH, PIP, msh);

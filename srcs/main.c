@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:32:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ static int ft_parsing(t_msh *msh, int sub)
 
 void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd)
 {
-	printf("FT_MINISHELL *************** msh->line |%s|\n", msh->line);
-	//dprintf(2, "DFT_MINISHELL *************** msh->line |%s|\n", msh->line);
 	if (ft_parsing(msh, sub) != 0)  // OK PROTEGE ET SI MALLOC KO ON QUITTE A L INTERIEUR
 		return ;
 	if (ft_exec(msh, sub, fd) != 0) // OK GERE ET PROTEGE A l interieur
@@ -107,6 +105,16 @@ static int	ft_readline(t_msh *msh)
 		return (mcgic(NULL, FLUSH, NO_ENV, msh), -1);	
 	return (0);
 }
+
+static void	ft_init_var(t_msh *msh, char ** env)
+{
+	msh->status = 0;
+	msh->env = get_env(env, msh);
+	msh->export_env = get_export_env(msh, env);
+	msh->status = 0;
+	msh->previous_status = 0;
+	msh->sub = 0;
+}
 /*
 if isatty(0) == 1, in case of the STDOUT_FILENO has already been redirected,
 	we open /dev/stdin tu dup2 , to be sure the STDOUT_FILENO of our
@@ -128,11 +136,12 @@ int main(int ac, char **av, char **env)
 		exit (0);
 	if (ac != 1)
 		return (write(2, "bash: minishell: too many arguments\n", 37), 1); // si cd avec 2 arguments meme message d erreur et exit status 1
-	msh.status = 0;
-	msh.env = get_env(env, &msh);
-	msh.export_env = get_export_env(&msh, env);
-	msh.status = 0;
-	msh.previous_status = 0;
+	ft_init_var(&msh, env);
+	// msh.status = 0;
+	// msh.env = get_env(env, &msh);
+	// msh.export_env = get_export_env(&msh, env);
+	// msh.status = 0;
+	// msh.previous_status = 0;
 	while (1)
 	{
 		ft_signal_handler_msh();

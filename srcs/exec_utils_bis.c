@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/03 17:19:23 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 13:29:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	ft_child_exec(t_msh *msh)
 
 static void	update_hdoc_list(t_msh *msh, t_env *head, t_env *prev)
 {
-	(void) prev;
 	head = msh->p.hdoc;
 	prev = NULL;
 	while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0
@@ -97,14 +96,6 @@ static void	update_hdoc_list(t_msh *msh, t_env *head, t_env *prev)
 	if (msh->p.hdoc)
 		msh->p.hdoc->read = 1;
 	msh->p.hdoc = head;
-}
-
-void	ft_close_fdp(int fd_1, int fd_2)
-{
-	if (fd_1 > -1)
-		close(fd_1);
-	if (fd_2 > -1)
-		close(fd_2);
 }
 
 static void	ft_init_var(t_env **head_hd, t_env **prev_hd, int *par)
@@ -126,7 +117,6 @@ void	ft_handle_par(t_msh *msh, int rule, int *par)
 		(*par)--;
 }
 
-//TO DO : free tous les elemnts jusqu au pipe ou prochain operateur
 void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 {
 	t_split *head;
@@ -136,7 +126,7 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 	
 	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
 		perror("signal");
-	ft_close_fdp(fd_1, fd_2);
+	ft_close_fd(NULL, -1, fd_1, fd_2);
 	ft_init_var(&head_hd, &prev_hd, &par);
 	head = msh->av;
 	while (msh->av && ((msh->av->token != PIPE && msh->av->token != OPERATOR) || (par == 1 && rule != CMD_ALONE)))

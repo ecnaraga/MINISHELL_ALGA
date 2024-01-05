@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:09:09 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:22:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,21 @@ void	ft_redef_std_sub(t_msh *msh, t_fdpar *fd)
 	{
 		if (msh->av->token == HDOC)
 		{
-			ft_close_fd(fd, 1);
+			ft_close_fd(fd, 1, -1, -1);
 			if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 				ft_exit(-1, -1, -1, msh);
 			msh->av = msh->av->next;
 		}
 		else if (msh->av->token == INFILE)
 		{
-			ft_close_fd(fd, 1);
+			ft_close_fd(fd, 1, -1, -1);
 			if (redef_stdin(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 				ft_exit(-1, -1, -1, msh);
 		}
 		else if (msh->av->token == OUTFILE_TRUNC
 			|| msh->av->token == OUTFILE_NO_TRUNC)
 		{	
-			ft_close_fd(fd, 2);
+			ft_close_fd(fd, 2, -1, -1);
 			if (redef_stdout(msh, PAR_OPEN, 0, 1) == -1) // SI ERREUR OPEN OU DUP OU DUP2 QUIT LE PROCESS ACTUEL + SI MALLOC KO ON QUITTE A L INTERIEUR
 				ft_exit(-1, -1, -1, msh); 
 		}
@@ -106,6 +106,7 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub, t_fdpar *fd)
 	}
 	else if (pid == 0)
 	{
+		signal(SIGINT, SIG_IGN);
 		ft_redef_std_sub(msh, fd);
 		ft_minishell(sub_msh, 1, fd);
 	}
@@ -190,6 +191,11 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd)
 	;
 	if (WIFEXITED(msh->status))
 		msh->status = WEXITSTATUS(msh->status);
+	// else if (WIFSIGNALED(msh->status))
+	// {
+	// 	if (
+	// }
+	// ft_signal_handler_msh_bis();
 	msh->av = *head;
 }
 

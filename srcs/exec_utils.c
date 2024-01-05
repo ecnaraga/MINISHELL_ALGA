@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 13:30:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,9 +186,6 @@ char **ft_transcript_env(t_env **env,/*  char *str, */ t_msh *msh)
 	}
 	env_tab[++i] = NULL;
 	*env = head;
-	// ft_inc_shlvl(env_tab, str, msh);
-	// if (msh->status == 255) // OK PROTEGER
-	// 	return (NULL);
 	return (env_tab);
 }
 /*
@@ -196,7 +193,7 @@ rule == 1 : close fd.in
 rule == 2 : close fd.out
 rule == 0 : close fd.in and fd.out
 */
-void	ft_close_fd(t_fdpar *fd, int rule)
+void	ft_close_fd(t_fdpar *fd, int rule, int fd1, int fd2)
 {
 	if ((rule == 1 || rule == 0) && fd && fd->in > -1)
 	{
@@ -208,6 +205,10 @@ void	ft_close_fd(t_fdpar *fd, int rule)
 		close(fd->out);
 		fd->out = -1;
 	}
+	if (fd1 > -1)
+		close(fd1);
+	if (fd2 > -1)
+		close(fd2);
 }
 
 /*

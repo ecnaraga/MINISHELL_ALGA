@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 15:16:13 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 12:54:06 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_env	*ft_lstlast_env(t_env *lst);
 int	ft_lstsize_env(t_env *lst);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env	*ft_lst_new_malloc(t_msh *msh, size_t size, size_t size2);
-int	check_env(t_env **export_env, char **str);
+int	check_env(char **str);
 
 /*
 get_export_env

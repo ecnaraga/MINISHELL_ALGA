@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 12:55:23 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 13:21:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	valide_expand(char *key);
 char *get_value(t_msh *msh, t_env **env, char *str, int rule);
 char **ft_realloc_cmd(t_msh *msh, int *cmd_nb, int *i, char **tmp);
 
-void	ft_close_fd(t_fdpar *fd, int rule);
+void	ft_close_fd(t_fdpar *fd, int rule, int fd1, int fd2);
 int	ft_dup_fd(t_msh *msh, int rule);
 
 #endif
