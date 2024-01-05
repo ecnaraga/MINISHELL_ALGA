@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 14:32:23 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:24:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd)
 		return ;
 	if (ft_exec(msh, sub, fd) != 0) // OK GERE ET PROTEGE A l interieur
 		return ;
-	if (sub == 1)
+	if (sub != 0)
 		ft_exit(-1, -1, -1, msh);
 }
 

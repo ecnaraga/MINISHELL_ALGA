@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 10:01:52 by garance           #+#    #+#             */
-/*   Updated: 2024/01/05 14:30:17 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:43:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	ft_middle_pipe(t_msh *msh, int j, t_lpid **pid_l)
 		if (ft_signal_handler_msh_bis() == 1)
 			(close(msh->p.fd_p[j - 1][0]),
 				ft_exit_bis(msh, 1, msh->p.fd_p[j][0], msh->p.fd_p[j][1]));
-		close(msh->p.fd_p[j][0]);
+		ft_close_fd(&msh->fd, 0, msh->p.fd_p[j][0], -1);
 		redef_stdin(msh, MID, j, 1); // OK PROTEGER
 		redef_stdout(msh, MID, j, 1); // OK PROTEGER
 		ft_child_pipe_exec(msh, msh->p.fd_p[j - 1][0], msh->p.fd_p[j][1]); // OK PROTEGER

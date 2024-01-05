@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/04 17:17:14 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 18:09:57 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ static void	flag_handler(int *flag, char c)
 		*flag = 0;
 }
 
+/* attention 
+dans la boucle on teste des str [i - 1] et str[i + 1] .. risque de invalid read ou write
+*/
 static void	get_final_size(size_t *i, int *count, int *flag, char *str)
 {
 	*i = 0;
@@ -41,7 +44,7 @@ static void	get_final_size(size_t *i, int *count, int *flag, char *str)
 			if (((*i) + 1 < ft_strlen(str) && ft_isspace(str[(*i) + 1]) == 1))
 				*count += 1;
 		}
-		*i++ += 1;
+		(*i)++;
 	}
 	*flag = 0;
 }
@@ -75,13 +78,14 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 	int		flag;
 
 	get_final_size(&i, &count, &flag, str);
-	fstr = mcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MALLOC, NO_ENV, msh);
+	fstr = mcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MLC, NO_ENV, msh);
 	if (!fstr)
-		return (NULL);
+		ft_exit(-1, -1, -1, msh);
 	i = -1;
 	j = 0;
 	while (str[++i])
 	{
+		dprintf(2, "hey\n");
 		flag_handler(&flag, str[i]);
 		if ((str[i] == '(' || str[i] == ')') && flag == 0)
 			get_final_str(&i, &j, fstr, str);

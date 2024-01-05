@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/05 13:30:17 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:38:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,5 +232,6 @@ int	ft_dup_fd(t_msh *msh, int rule)
 		close(msh->fd.out);
 		msh->fd.out = -1;
 	}
+	ft_close_fd(&msh->fd, 0, -1, -1);
 	return (0);
 }

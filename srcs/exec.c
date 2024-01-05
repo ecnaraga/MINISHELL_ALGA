@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 14:22:22 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:31:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,8 @@ void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub, t_fdpar *fd)
 	}
 	else if (pid == 0)
 	{
-		signal(SIGINT, SIG_IGN);
+		(dprintf(2, "sub_msh pid %d\n", getpid()));
+		msh->sub = sub;
 		ft_redef_std_sub(msh, fd);
 		ft_minishell(sub_msh, 1, fd);
 	}
@@ -174,6 +175,8 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd)
 	t_msh	sub_msh;
 	t_env *head_hd;
 
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	sub_msh.p.hdoc = ft_copy_heredoc(msh, msh->p.hdoc, sub); // SI MALLOC KO ON QUITTE DANS 
 	*head = msh->av;
 	head_hd = NULL;
@@ -191,11 +194,6 @@ void ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd)
 	;
 	if (WIFEXITED(msh->status))
 		msh->status = WEXITSTATUS(msh->status);
-	// else if (WIFSIGNALED(msh->status))
-	// {
-	// 	if (
-	// }
-	// ft_signal_handler_msh_bis();
 	msh->av = *head;
 }
 

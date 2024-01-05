@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:43:25 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:51:18 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ ft_parse.c
 int		ft_parse_line(t_msh *minish);
 char	*add_spaces(t_msh *msh, char *str);
 int	is_operator(char c);
+char	*ft_parse_bis_bis(t_msh *msh, char *str);
 
 //char	*ft_parse_bis_bis(char *str);
 
