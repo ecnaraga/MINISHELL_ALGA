@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:13:52 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 18:48:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,12 @@ int ft_copy_cmd(t_msh *msh, t_head *save, int *i, int *cmd_nb)
 		msh->p.cmd_t = ft_handle_expand(msh, i, cmd_nb);
 		if (msh->status == 255)
 			return (255);
+		if (ck_char(msh->p.cmd_t[*i], '*'))
+			msh->p.cmd_t = ft_expand_wildcard(msh, cmd_nb, i, msh->p.cmd_t[*i]);
 	}
 	else if (ck_char(msh->av->data, '*'))
 	{
-		msh->p.cmd_t = ft_expand_wildcard(msh, cmd_nb, i);
+		msh->p.cmd_t = ft_expand_wildcard(msh, cmd_nb, i, msh->av->data);
 		if (msh->status == 255)
 			return (255);
 	}

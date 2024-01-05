@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:15:16 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 18:47:33 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 		return (NULL);
 	tmp2 = cmd;
 	cmd = mcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
-	printf("cmd = %s\n", cmd);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	if (tmp2)

@@ -13,6 +13,9 @@ bash-5.1$
 
 POUR ALIX : Minishell$ ((cat)|(ls))
 
+bash-5.1$ < $b
+bash: $b: ambiguous redirect
+
 export a=* && echo $a if cmd = export export le wild card si apres =
 
 bash-5.1$ export a=* && echo $a

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 13:21:38 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 18:34:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd);
 char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub);
 void ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd);
 char	*ft_expand(t_msh *msh, char *cmd, int rule);
-char **ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i);
+char **ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i, char *data);
 char	**wildcards(char *str, t_msh *msh, char *cmd_0);
 int	valide_expand(char *key);
 char *get_value(t_msh *msh, t_env **env, char *str, int rule);

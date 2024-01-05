@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdin_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 18:18:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static int	ft_open_infile(t_msh *msh, int *fd_infile, t_head *save)
 		msh->av->data = ft_expand(msh, msh->av->data, INFILE); //IF ERROR MLC, EXPAND RETURN (NULL)
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
+	if (!msh->av->data[0] || msh->av->data[0] == '*')
+		return (msh->ambiguous = -3, 0);
 	*fd_infile = open(msh->av->data, O_RDONLY); // IF ERREUR OPEN > GERE DANS REDEF_STDIN
 	if (*fd_infile > -1)
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);

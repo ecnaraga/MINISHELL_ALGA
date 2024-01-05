@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdout_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 18:18:44 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static int	ft_open_outfile_tr(t_msh *msh, int *fd_outfile, t_head *save)
 		msh->av->data = ft_expand(msh, msh->av->data, OUTFILE_TRUNC);
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
+	if (!msh->av->data[0] || msh->av->data[0] == '*')
+		return (msh->ambiguous = -3, 0);
 	*fd_outfile = open(msh->av->data, O_CREAT | O_TRUNC | O_WRONLY, 0744); // IF ERREUR OPEN > GERE DANS REDEF_STDOUT
 	if (*fd_outfile > -1)
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
@@ -56,6 +58,8 @@ static int	ft_open_outfile_notr(t_msh *msh, int *fd_outfile, t_head *save)
 		msh->av->data = ft_expand(msh, msh->av->data, OUTFILE_NO_TRUNC);
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
+	if (!msh->av->data[0] || msh->av->data[0] == '*')
+		return (msh->ambiguous = -3, 0);
 	*fd_outfile = open(msh->av->data, O_CREAT | O_APPEND | O_WRONLY, 0744); // IF ERREUR OPEN > GERE DANS REDEF_STDOUT
 	if (*fd_outfile > -1)
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
