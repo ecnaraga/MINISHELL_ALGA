@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 13:22:41 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:33:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int	ft_cmd_alone(t_msh *msh, int sub)
 			if (msh->status == 131)
 				write(2, "Quit (core dumped)\n", 20);
 			else if (msh->status == 130)
-				(write(2, "c est pas moi\n", 15), write(2, "\n", 1));
+				write(2, "\n", 1);
 		}
 	}
 	sign = 0;

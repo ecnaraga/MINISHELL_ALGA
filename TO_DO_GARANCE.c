@@ -9,7 +9,7 @@ bash-5.1$ echo "$eee" "hola"
  hola
 bash-5.1$
 
-(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+// (cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
 
 POUR ALIX : Minishell$ ((cat)|(ls))
 

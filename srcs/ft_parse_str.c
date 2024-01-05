@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/04 17:24:13 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 17:55:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,6 @@ char	*add_spaces(t_msh *msh, char *str)
 	}
 	fstr[j] = '\0';
 	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
+	// return (ft_parse_bis_bis(msh, fstr));
 	return (fstr);
 }
