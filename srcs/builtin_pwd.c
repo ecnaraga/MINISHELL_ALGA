@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:42:04 by athiebau          #+#    #+#             */
-/*   Updated: 2023/12/12 15:12:44 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:38:45 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	builtin_pwd()
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
-		perror("pwd: error retrieving current directory:");
+		perror("pwd: error retrieving current directory: getcwd: cannot access parent directories");
 		return (1);
 	}
 	printf("%s\n", pwd);

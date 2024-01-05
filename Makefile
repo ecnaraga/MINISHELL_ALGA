@@ -48,11 +48,13 @@ SRCS = main.c \
 	   builtin_pwd.c \
 	   builtin_export.c \
 	   builtin_export_utils.c \
+	   builtin_export_utils_bis.c \
 	   builtin_unset.c \
 	   builtin_env.c \
 	   builtin_cd.c \
 	   builtin_exit.c \
-	   builtin_exit_utils.c
+	   builtin_exit_utils.c \
+
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)
 #SRCS_BONUS := $(SRCS_BONUS:%=$(SRC_DIR_BONUS)/%)

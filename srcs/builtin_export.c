@@ -6,94 +6,11 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:41:27 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-size_t	ft_strlen2(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	if (*s == '=')
-		s++;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin2(char const *s1, char const *s2)
-{
-	int		len;
-	char	*s;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (*s2 == '=')
-		s2++;
-	if (!s1)
-		len = ft_strlen2(s2);
-	else if (!s2)
-		len = ft_strlen(s1);
-	else
-		len = ft_strlen(s1) + ft_strlen2(s2);
-	s = (char *)malloc(sizeof(char) * (len + 1));
-	if (!s)
-		return (NULL);
-	s[0] = '\0';
-	if (s1)
-		ft_strcat(s, s1);
-	if (s2)
-		ft_strcat(s, s2);
-	return (s);
-}
-
-static char	*ft_exstrjoin(t_msh *msh, char const *s1, char const *s2)
-{
-	int		len;
-	char	*s;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (*s2 == '=')
-		s2++;
-	if (!s1)
-		len = ft_strlen2(s2);
-	else if (!s2)
-		len = ft_strlen(s1);
-	else
-		len = ft_strlen(s1) + ft_strlen(s2);
-	s = mcgic(mlcp(NULL, sizeof(char) * (len + 1)), MLC, ENV, msh);
-	if (!s)
-		return (NULL);
-	s[0] = '\0';
-	if (s1)
-		ft_strlcat(s, s1, ft_strlen(s1));
-	if (s2)
-		ft_strcat(s, s2);
-	s[len - 1] = '"';
-	s[len] = '\0';
-	return (s);
-}
-
-static void	strlcpy_enjoyer(char *str, t_env *node, int statut, int size)
-{
-	if (statut == 2)
-		ft_bzero(node->content, 2 + 1);
-	else if (statut == 3 || statut == 5)
-		ft_exstrlcpy(node->content, str, size + 2 + 1);
-	else if (statut == 4 || statut == 6)
-		ft_strlcpy(node->content, str, size + 1);
-}
-
-static void	change_env(t_env *node, t_env **env, int info)
-{
-	ft_lstadd_back_env(env, node);
-	if (info == 1)
-		order_export_env(env);
-}
 
 void	doublon_handler_bis(t_msh *msh, char *str, t_env *tmp, t_intel i)
 {
@@ -137,6 +54,7 @@ void	doublon_handler(t_msh *m, char *str, t_env **env, t_intel i)
 		mcgic(mlcp(tmp2, 0), FREE, ENV, m);
 		ft_exstrlcpy(t->content, str + i.name_size, c + 2 + 1);
 	}
+	doublon_handler_bis(m, str, t, i);
 	if (i.statut == 6)
 	{
 		tmp2 = t->content;
@@ -144,21 +62,6 @@ void	doublon_handler(t_msh *m, char *str, t_env **env, t_intel i)
 						+ 1), 1), ADD, ENV, m);
 		mcgic(mlcp(tmp2, 0), FREE, ENV, m);
 	}
-	doublon_handler_bis(m, str, t, i);
-}
-
-static void	error_export(t_msh *msh, char *str)
-{
-	char *message;
-	char *tmp;
-
-	tmp = mcgic(mlcp(ft_strjoin("minishell: export: `", str), 1), ADD, NO_ENV,
-		msh);
-	message = mcgic(mlcp(ft_strjoin(tmp, "\': not a valid identifier\n"), 1),
-				ADD, NO_ENV, msh);
-	mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
-	ft_putstr_fd(message, 2);
-	mcgic(mlcp(message, 0), FREE, NO_ENV, msh);
 }
 
 int	new_env_node_env(t_msh *msh, char *str, int statut, t_env **env)
@@ -176,7 +79,7 @@ int	new_env_node_env(t_msh *msh, char *str, int statut, t_env **env)
 			return (255);
 		ft_strlcpy(new->name, str, i.name_size + 1);
 		strlcpy_enjoyer(str + (i.name_size + 1), new, statut + 2, content_size);
-		change_env(new, env, 2);
+		change_env_export(new, env, 2);
 	}
 	else
 	{
@@ -201,7 +104,7 @@ int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env)
 			return (255);
 		ft_strlcpy(new->name, str, i.name_size + 1);
 		strlcpy_enjoyer(str + (i.name_size + 1), new, statut + 1, content_size);
-		change_env(new, env, 1);
+		change_env_export(new, env, 1);
 	}
 	else
 	{
@@ -247,7 +150,10 @@ void	builtin_export(t_msh *msh)
 		while (msh->p.cmd_t[++i])
 		{
 			if (!valide_key(msh->p.cmd_t[i]))
-				(msh->status = 1, error_export(msh, msh->p.cmd_t[i]));
+			{
+				msh->status = 1;
+				error_export(msh, msh->p.cmd_t[i]);
+			}
 			else
 			{
 				if (builtin_export_exec(i, msh) == 1)

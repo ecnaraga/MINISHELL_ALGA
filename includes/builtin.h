@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 12:54:06 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:40:47 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,20 @@ void	order_export_env(t_env **export_env);
 export
 */
 void	builtin_export(t_msh *minish);
+int	new_env_node_env(t_msh *msh, char *str, int statut, t_env **env);
+int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env);
+
 void	ft_print_export(t_msh *minish);
 int	get_statut(char *cmd);
 int	valide_key(char *key);
-int	new_env_node_env(t_msh *msh, char *str, int statut, t_env **env);
-int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env);
 int	node_exist(t_env **env, char *str, int size);
+void	error_export(t_msh *msh, char *str);
+
+size_t	ft_strlen2(const char *s);
+char	*ft_strjoin2(char const *s1, char const *s2);
+char	*ft_exstrjoin(t_msh *msh, char const *s1, char const *s2);
+void	strlcpy_enjoyer(char *str, t_env *node, int statut, int size);
+void	change_env_export(t_env *node, t_env **env, int info);
 
 /*
 unset
