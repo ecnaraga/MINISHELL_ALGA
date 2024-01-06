@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 17:41:49 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/06 10:53:03 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_exit(int fd1, int fd2, int fd3, t_msh *msh)
 	exit(msh->status);
 }
 
-static int	ft_check_cmd(char *cmd)
+static int	ft_check_cmd(t_msh *msh, char *cmd)
 {
 	int		i;
 	size_t	count_slash;
@@ -68,7 +68,7 @@ static int	ft_check_cmd(char *cmd)
 		return (1);
 	if (count_slash > 0 && count_slash + count_space == ft_strlen(cmd))
 		return (2);
-	if (access(cmd, F_OK | X_OK) == 0)
+	if (access(cmd, F_OK | X_OK) == 0 && msh->ambiguous == 0)
 		return (3);
 	return (0);
 }
@@ -78,7 +78,7 @@ static int	ft_message_directory(t_msh *msh, char *cmd)
 	char	*str;
 	int		ck;
 
-	ck = ft_check_cmd(cmd);
+	ck = ft_check_cmd(msh, cmd);
 	if (ck == 1 || ck == 3)
 	{
 		str = mcgic(mlcp(ft_strjoin("minishell: ", cmd), 1), ADD, PIP, msh);

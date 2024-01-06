@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdin_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/05 18:18:54 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/06 10:43:28 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,25 @@ fail open gere dans ft_invalid_infile
 */
 static int	ft_open_infile(t_msh *msh, int *fd_infile, t_head *save)
 {
+	char *tmp;
+	
 	if (msh->av->data[0] == '*')
-		return (msh->ambiguous = -3, 0);
+		return (msh->ambiguous = 1, 0);
 	if (*fd_infile != -2)
 		close(*fd_infile);
-	if (msh->av->type )
+	if (msh->av->type)
+	{
+		tmp = msh->av->data;
 		msh->av->data = ft_expand(msh, msh->av->data, INFILE); //IF ERROR MLC, EXPAND RETURN (NULL)
+	}
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
 	if (!msh->av->data[0] || msh->av->data[0] == '*')
-		return (msh->ambiguous = -3, 0);
+	{
+		if (!msh->av->data[0])
+			msh->av->data = tmp;
+		return (msh->ambiguous = 1, 0);
+	}
 	*fd_infile = open(msh->av->data, O_RDONLY); // IF ERREUR OPEN > GERE DANS REDEF_STDIN
 	if (*fd_infile > -1)
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
@@ -83,7 +92,7 @@ int	ft_invalid_infile(t_msh *msh, int rule, int j, t_head *save)
 	char *str;
 	
 	str = mcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
-	if (str && msh->ambiguous == -3)
+	if (str && msh->ambiguous == 1)
 	{
 		msh->status = 1;
 		str = mcgic(mlcp(ft_strjoin(str, ": ambiguous redirect\n"), 1), ADD, PIP, msh);
@@ -197,7 +206,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 			ft_open_heredoc(msh, &fd.file, &save);
 		else
 			ft_next(msh, &save);
-		if (fd.file == -1 || msh->ambiguous == -3) // IF ERREUR OPEN DE FT_OPEN_INFILE OU FT_OPEN_HEREDOC > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
+		if (fd.file == -1 || msh->ambiguous == 1) // IF ERREUR OPEN DE FT_OPEN_INFILE OU FT_OPEN_HEREDOC > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
 			return (ft_invalid_infile(msh, rule, j, &save));
 		if (rule == PAR_OPEN)
 			break;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 18:47:33 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/06 10:50:02 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,11 @@ char	*ft_handle_dollar(t_msh *msh, char *cmd, int rule, t_expand *e)
 		e->j += 1;
 	}
 	else if (msh->av->type[e->j].expnd == 1 && msh->av->type[e->j].len_variable > 1)
+	{
 		cmd = ft_expand_var(msh, cmd, rule, e); // PROTEGER DANS FT_EXPAND
+		if (rule == CMD)
+			msh->ambiguous = 2;
+	}
 	return (cmd);
 }
 

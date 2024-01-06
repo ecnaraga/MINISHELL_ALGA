@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_bis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 13:29:58 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/06 09:29:30 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,28 +82,23 @@ void	ft_child_exec(t_msh *msh)
 	(perror("execve"), ft_exit(-1, -1, -1, msh));
 }
 
-static void	update_hdoc_list(t_msh *msh, t_env *head, t_env *prev)
+static void	update_hdoc_list(t_msh *msh, t_env *head)
 {
 	head = msh->p.hdoc;
-	prev = NULL;
 	while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0
 		|| (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0
 				&& msh->p.hdoc->read == 1)))
-	{
-		prev = msh->p.hdoc;
 		msh->p.hdoc = msh->p.hdoc->next;
-	}
 	if (msh->p.hdoc)
 		msh->p.hdoc->read = 1;
 	msh->p.hdoc = head;
 }
 
-static void	ft_init_var(t_env **head_hd, t_env **prev_hd, int *par)
-{
-	*head_hd = NULL;
-	*prev_hd = NULL;
-	*par = 0;
-}
+// static void	ft_init_var(t_env **head_hd, int *par)
+// {
+// 	*head_hd = NULL;
+// 	*par = 0;
+// }
 
 void	ft_handle_par(t_msh *msh, int rule, int *par)
 {
@@ -121,19 +116,20 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 {
 	t_split *head;
 	t_env *head_hd;
-	t_env *prev_hd;
 	int		par;
 	
 	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
 		perror("signal");
 	ft_close_fd(NULL, -1, fd_1, fd_2);
-	ft_init_var(&head_hd, &prev_hd, &par);
+	// ft_init_var(&head_hd, &par);
+	head_hd = NULL;
+	par = 0;
 	head = msh->av;
 	while (msh->av && ((msh->av->token != PIPE && msh->av->token != OPERATOR) || (par == 1 && rule != CMD_ALONE)))
 	{
 		ft_handle_par(msh, rule, &par);
 		if (msh->av->token == HDOC && rule != CMD_ALONE)
-			update_hdoc_list(msh, head_hd, prev_hd);
+			update_hdoc_list(msh, head_hd);
 		msh->av = lstdel_relink_split(msh, msh->av, NULL, &head);
 	}
 	if (msh->av && (msh->av->token == PIPE || msh->av->token == PAR_CLOSE))
