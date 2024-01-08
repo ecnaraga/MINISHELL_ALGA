@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   librairies.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:44:45 by galambey          #+#    #+#             */
-/*   Updated: 2023/11/30 10:47:55 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/08 14:48:14 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <readline/history.h>
 #include <errno.h>
 #include <signal.h>
-# include <sys/wait.h>
+#include <sys/wait.h>
+#include <dirent.h>
+#include <sys/types.h>
 
 #endif

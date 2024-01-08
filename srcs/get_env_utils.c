@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:04:43 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/05 12:53:50 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/08 14:21:08 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ t_env	*ft_lst_new_malloc(t_msh *msh, size_t size, size_t size2)
 	temp->name = mcgic(mlcp(ft_calloc(sizeof(char), size), 1), ADD, ENV, msh);
 	if (!temp->name)
 		return (NULL);
-	temp->content = mcgic(mlcp(ft_calloc(sizeof(char), size2), 1), ADD, ENV, msh);
+	temp->content = mcgic(mlcp(ft_calloc(sizeof(char),
+					size2), 1), ADD, ENV, msh);
 	if (!temp->content)
 		return (NULL);
 	temp->next = NULL;

@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 15:40:47 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/08 13:55:01 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,10 @@ int	builtin_pwd();
 cd
 */
 int	builtin_cd(t_msh *minish);
+
+int	change_env(char	*old_pwd, t_msh *msh, int statut);
+char	*get_path(char	**str);
+char	*get_old_pwd(t_env **env, t_msh *msh);
 
 /*
 exit
@@ -80,6 +84,8 @@ char	*ft_exstrjoin(t_msh *msh, char const *s1, char const *s2);
 void	strlcpy_enjoyer(char *str, t_env *node, int statut, int size);
 void	change_env_export(t_env *node, t_env **env, int info);
 
+void	doublon_handler(t_msh *m, char *str, t_env **env, t_intel i);
+void	doublon_handler_bis(t_msh *msh, char *str, t_env *tmp, t_intel i);
 /*
 unset
 */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str_ter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/05 18:09:57 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:57:46 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	flag_handler(int *flag, char c)
 }
 
 /* attention 
-dans la boucle on teste des str [i - 1] et str[i + 1] .. risque de invalid read ou write
+dans la boucle on teste des str [i - 1] et str[i + 1] .. risque de invalid read ou write <-- Non, c'est protege
 */
 static void	get_final_size(size_t *i, int *count, int *flag, char *str)
 {
@@ -36,13 +36,13 @@ static void	get_final_size(size_t *i, int *count, int *flag, char *str)
 	while (str[*i])
 	{
 		flag_handler(flag, str[*i]);
-		if ((str[*i] == '(' || str[*i] == ')') && flag == 0)
+		if ((str[*i] == '(' || str[*i] == ')') && *flag == 0)
 		{
 			if ((*i > 0 && ft_isspace(str[(*i) - 1]) == 1
 					&& !(str[(*i) - 1] == '(' || str[(*i) - 1] == ')')))
-				*count += 1;
+				(*count)++;
 			if (((*i) + 1 < ft_strlen(str) && ft_isspace(str[(*i) + 1]) == 1))
-				*count += 1;
+				(*count)++;
 		}
 		(*i)++;
 	}
@@ -57,9 +57,11 @@ static void	get_final_str(size_t *i, size_t *j, char *fstr, char *str)
 		fstr[*j] = ' ';
 		*j += 1;
 		fstr[*j] = str[*i];
-	}	
+	}
+	else
+		fstr[*j] = str[*i];	
 	if (*i < ft_strlen(str) && (ft_isspace(str[(*i) + 1]) == 1))
-	{		
+	{	
 		fstr[*j] = str[*i];
 		if ((*i) + 1 < ft_strlen(str))
 		{
@@ -68,7 +70,7 @@ static void	get_final_str(size_t *i, size_t *j, char *fstr, char *str)
 		}
 	}
 }
-
+//( ( cat"(()))" ) )
 char	*ft_parse_bis_bis(t_msh *msh, char *str)
 {
 	char	*fstr;
@@ -78,6 +80,8 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 	int		flag;
 
 	get_final_size(&i, &count, &flag, str);
+	if (count == 0)
+		return (str);
 	fstr = mcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MLC, NO_ENV, msh);
 	if (!fstr)
 		ft_exit(-1, -1, -1, msh);
@@ -85,13 +89,12 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 	j = 0;
 	while (str[++i])
 	{
-		dprintf(2, "hey\n");
 		flag_handler(&flag, str[i]);
 		if ((str[i] == '(' || str[i] == ')') && flag == 0)
 			get_final_str(&i, &j, fstr, str);
 		else
 			fstr[j] = str[i];
-		j++;
+		j++;	
 	}
 	fstr[j] = '\0';
 	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);

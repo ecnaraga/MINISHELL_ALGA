@@ -42,6 +42,7 @@ SRCS = main.c \
 	   ft_expand.c \
 	   ft_expand_wildcard.c \
 	   wildcards.c \
+	   wildcards_utils.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \
 	   ft_strtrim_msh.c \
@@ -50,11 +51,13 @@ SRCS = main.c \
 	   builtin_export.c \
 	   builtin_export_utils.c \
 	   builtin_export_utils_bis.c \
+	   builtin_export_utils_ter.c \
 	   builtin_unset.c \
 	   builtin_env.c \
 	   builtin_cd.c \
+	   builtin_cd_utils.c \
 	   builtin_exit.c \
-	   builtin_exit_utils.c \
+	   builtin_exit_utils.c 
 
 #SRCS_BONUS = 
 SRCS := $(SRCS:%=$(SRC_DIR)/%)

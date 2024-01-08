@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_export_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:10:17 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/05 12:59:08 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/08 14:22:38 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,11 @@ static void	fill_export_env(t_msh *msh, t_env **export_env, char **str)
 		name_size = get_name_size(str[i]);
 		content_size = ft_strlen(str[i] + (name_size + 1));
 		new = ft_lst_new_malloc(msh, name_size + 1, content_size + 2 + 1);
-		if (!new) // OK PROTEGER
+		if (!new)
 			ft_exit(-1, -1, -1, msh);
 		ft_strlcpy(new->name, str[i], name_size + 1);
-		ft_exstrlcpy(new->content, str[i] + (name_size + 1), content_size + 2 + 1);
+		ft_exstrlcpy(new->content, str[i] + (name_size + 1),
+			content_size + 2 + 1);
 		ft_lstadd_back_env(export_env, new);
 	}
 }
@@ -102,7 +103,7 @@ t_env	**get_export_env(t_msh *msh, char **str)
 	t_env	**export_env;
 
 	export_env = mcgic(mlcp(NULL, sizeof(t_env)), MLC, ENV, msh);
-	if (!export_env) // OK PROTEGER
+	if (!export_env)
 		return (ft_exit(-1, -1, -1, msh), NULL);
 	*export_env = NULL;
 	fill_export_env(msh, export_env, str);

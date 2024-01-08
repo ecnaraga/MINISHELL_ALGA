@@ -6,70 +6,33 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/08 16:00:21 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include <sys/types.h>
-#include <dirent.h>
-#include <stdio.h>
 
-char	*ft_strjoin3(t_msh *msh, char *s1, char *s2)
+int	match_wildcard(char *str, char *pattern, int *tab)
 {
-	int			len;
-	char		*s;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-	{
-		s1 = mcgic(mlcp(NULL, sizeof(char)), MLC, PIP, msh);
-		s1[0] = '\0';
-		len = ft_strlen(s2);
-	}
-	else if (!s2)
-		len = ft_strlen(s1);
-	else
-		len = ft_strlen(s1) + ft_strlen(s2);
-	s = mcgic(mlcp(NULL, sizeof(char) * (len + 2)), MLC, PIP, msh);
-	if (!s)
-		return (NULL);
-	s[0] = '\0';
-	if (s1)
-		ft_strcat(s, s1);
-	if (s2)
-		ft_strcat(s, s2);
-	s[len++] = '\t';
-	s[len] = '\0';
-	mcgic(mlcp(s1, 0), FREE, PIP, msh);
-	return (s);
-}
-
-int	matchWildcard(char *str, char *pattern, int *tab) 
-{
-	if ((*str == '\0' && *pattern == '\0') || (*pattern == '*' && *tab == 0 && *(pattern + 1) == '\0'))
+	if ((*str == '\0' && *pattern == '\0') || (*pattern == '*' && *tab == 0
+			&& *(pattern + 1) == '\0'))
 		return (1);
-		
 	if (*pattern == '\0' || *str == '\0')
 		return (0);
-		
 	if (*pattern == '*' && *tab == 0)
 	{
-		while(*(pattern + 1) == '*' && *(tab + 1) == 0)
+		while (*(pattern + 1) == '*' && *(tab + 1) == 0)
 		{
 			pattern++;
 			tab++;
 		}
-		if (!matchWildcard(str, pattern + 1, tab + 1))
-			return (matchWildcard(str + 1, pattern, tab));
+		if (!match_wildcard(str, pattern + 1, tab + 1))
+			return (match_wildcard(str + 1, pattern, tab));
 		else
 			return (1);
 	}
-		
 	if (*str == *pattern)
-		return matchWildcard(str + 1, pattern + 1, tab + 1);
-		
+		return (match_wildcard(str + 1, pattern + 1, tab + 1));
 	return (0);
 }
 
@@ -77,7 +40,7 @@ int	ft_strcmp_cas(char *s1, char *s2)
 {
 	size_t	i;
 	char	a;
-	char 	b;
+	char	b;
 
 	i = 0;
 	if (!s1[0] || !s2[0])
@@ -96,10 +59,10 @@ int	ft_strcmp_cas(char *s1, char *s2)
 char	**make_in_order(char **str)
 {
 	char	*tmp;
-	int	i;
-	
+	int		i;
+
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (str[i + 1] && ft_strcmp_cas(str[i], str[i + 1]) > 0)
 		{
@@ -114,12 +77,12 @@ char	**make_in_order(char **str)
 	return (str);
 }
 
-char	**wildcards(char *str, t_msh *msh, char *cmd_0)
+char	**wildcards(char *pattern, t_msh *msh, char *cmd_0)
 {
 	DIR				*dir;
 	struct dirent	*read;
-	char	*str2;
-	char	**str3;
+	char			*str2;
+	char			**str3;
 
 	str2 = NULL;
 	dir = opendir(".");
@@ -136,20 +99,16 @@ char	**wildcards(char *str, t_msh *msh, char *cmd_0)
 	}
 	while (read != NULL)
 	{
-		if (matchWildcard(read->d_name, str, msh->av->wild) == 1)
+		if (match_wildcard(read->d_name, pattern, msh->av->wild) == 1)
 		{
-			if((ft_strcmp("ls", cmd_0) != 0 && !(read->d_name[0] == '.')) || ft_strcmp("ls", cmd_0) == 0)
+			printf("read->d_name : %s\n", read->d_name);
+			if ((ft_strcmp("ls", cmd_0) != 0 && !(read->d_name[0] == '.'))
+				|| ft_strcmp("ls", cmd_0) == 0)
 			{
 				str2 = ft_strjoin3(msh, str2, read->d_name);
 				if (msh && msh->status == 255)
 					return (NULL);
 			}
-			// if((ft_strcmp("echo", cmd_0) == 0 && !(read->d_name[0] == '.')) || ft_strcmp("echo", cmd_0) != 0)
-			// {
-			// 	str2 = ft_strjoin3(msh, str2, read->d_name);
-			// 	if (msh && msh->status == 255)
-			// 		return (NULL);
-			// }
 		}
 		read = readdir(dir);
 	}
@@ -158,7 +117,7 @@ char	**wildcards(char *str, t_msh *msh, char *cmd_0)
 	if (!str3)
 		return (NULL);
 	mcgic(mlcp(str2, 0), FREE, PIP, msh);
-	if(str3[1])
+	if (str3[1])
 		str3 = make_in_order(str3);
 	return (str3);
 }

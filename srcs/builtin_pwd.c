@@ -6,20 +6,22 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:42:04 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/05 15:38:45 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/08 14:02:50 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	builtin_pwd()
+int	builtin_pwd(void)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
-		perror("pwd: error retrieving current directory: getcwd: cannot access parent directories");
+		ft_putstr_fd("pwd: error retrieving current directory: ", 2);
+		ft_putstr_fd("getcwd: cannot access parent directories: ", 2);
+		perror(NULL);
 		return (1);
 	}
 	printf("%s\n", pwd);
