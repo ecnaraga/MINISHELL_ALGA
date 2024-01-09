@@ -11,7 +11,7 @@ bash-5.1$
 
 // export a=gaga && < $a
 
-// (cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
 
 bash-5.1$ .
 bash: .: filename argument required
