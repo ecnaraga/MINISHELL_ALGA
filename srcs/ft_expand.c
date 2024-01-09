@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:15:16 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/06 10:50:02 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule)
 		return (NULL);
 	tmp2 = cmd;
 	cmd = mcgic(mlcp(ft_strjoin(cmd, tmp), 1), ADD, NO_ENV, msh);
-	printf("cmd = %s\n", cmd);
 	if (msh->status == 255) // IF MALLOC KO return NULL
 		return (NULL);
 	if (tmp2)
@@ -184,7 +183,11 @@ char	*ft_handle_dollar(t_msh *msh, char *cmd, int rule, t_expand *e)
 		e->j += 1;
 	}
 	else if (msh->av->type[e->j].expnd == 1 && msh->av->type[e->j].len_variable > 1)
+	{
 		cmd = ft_expand_var(msh, cmd, rule, e); // PROTEGER DANS FT_EXPAND
+		if (rule == CMD)
+			msh->ambiguous = 2;
+	}
 	return (cmd);
 }
 

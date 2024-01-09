@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_stdout_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/06 10:44:13 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,15 @@ fail open gere dans ft_invalid_infile
 static int	ft_open_outfile_tr(t_msh *msh, int *fd_outfile, t_head *save)
 {
 	if (msh->av->data[0] == '*')
-		return (msh->ambiguous = -3, 0);
+		return (msh->ambiguous = 1, 0);
 	if (*fd_outfile != -2)
 		close(*fd_outfile);
 	if (msh->av->type)
 		msh->av->data = ft_expand(msh, msh->av->data, OUTFILE_TRUNC);
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
+	if (!msh->av->data[0] || msh->av->data[0] == '*')
+		return (msh->ambiguous = 1, 0);
 	*fd_outfile = open(msh->av->data, O_CREAT | O_TRUNC | O_WRONLY, 0744); // IF ERREUR OPEN > GERE DANS REDEF_STDOUT
 	if (*fd_outfile > -1)
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
@@ -49,13 +51,15 @@ fail open gere dans ft_invalid_infile
 static int	ft_open_outfile_notr(t_msh *msh, int *fd_outfile, t_head *save)
 {
 	if (msh->av->data[0] == '*')
-		return (msh->ambiguous = -3, 0);
+		return (msh->ambiguous = 1, 0);
 	if (*fd_outfile != -2)
 		close(*fd_outfile);
 	if (msh->av->type)
 		msh->av->data = ft_expand(msh, msh->av->data, OUTFILE_NO_TRUNC);
 	if (msh->status == 255) // IF ERREUR MALLOC RETURN (255)
 		return (255);
+	if (!msh->av->data[0] || msh->av->data[0] == '*')
+		return (msh->ambiguous = 1, 0);
 	*fd_outfile = open(msh->av->data, O_CREAT | O_APPEND | O_WRONLY, 0744); // IF ERREUR OPEN > GERE DANS REDEF_STDOUT
 	if (*fd_outfile > -1)
 		msh->av = lstdel_relink_split(msh, msh->av, save->prev, &save->head);
@@ -78,7 +82,7 @@ int	ft_invalid_outfile(t_msh *msh, int rule, int j, t_head *save)
 	char *str;
 	
 	str = mcgic(mlcp(ft_strjoin("minishell: ", msh->av->data), 1), ADD, PIP, msh);
-	if (str && msh->ambiguous == -3)
+	if (str && msh->ambiguous == 1)
 	{
 		msh->status = 1;
 		str = mcgic(mlcp(ft_strjoin(str, ": ambiguous redirect\n"), 1), ADD, PIP, msh);
@@ -175,7 +179,7 @@ int	redef_stdout(t_msh *msh, int rule, int j, int sub)
 		}
 		else
 			ft_next(msh, &save);
-		if (fd.file == -1 || msh->ambiguous == -3)
+		if (fd.file == -1 || msh->ambiguous == 1)
 			return (ft_invalid_outfile(msh, rule, j, &save)); // IF ERREUR OPEN OUTFILETR OU OUTFILENOTR > QUITTE LE PROCESS ENFANT SI PIPE ET RETURN (-1 SI CMD_ALONE OU EXEC_PAR)
 	}
 	msh->av = save.head;

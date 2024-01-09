@@ -9,31 +9,96 @@ bash-5.1$ echo "$eee" "hola"
  hola
 bash-5.1$
 
-// (cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+// export a=gaga && < $a
+
+(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+
+bash-5.1$ .
+bash: .: filename argument required
+.: usage: . filename [arguments]
+bash-5.1$ . ...
+bash: .: ...: file not found
+bash-5.1$ . gaga
+bash: .: gaga: file not found
+bash-5.1$ . .
+bash: .: .: is a directory
+bash-5.1$ . ..
+bash: .: ..: is a directory
+bash-5.1$ echo $?
+1
+bash-5.1$ . gaga
+bash: .: gaga: file not found
+bash-5.1$ echo $?
+1
+bash-5.1$ 
+
+
+bash
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ echo $?
+0
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ .
+bash: .: filename argument required
+.: usage: . filename [arguments]
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ echo $?
+2
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ srcs/
+bash: srcs/: Is a directory
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ echo $?
+126
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ .
+bash: .: filename argument required
+.: usage: . filename [arguments]
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ echo $?
+2
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ .
+bash: .: filename argument required
+.: usage: . filename [arguments]
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ /gaga
+bash: /gaga: No such file or directory
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ ./gaga
+bash: ./gaga: Is a directory
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ ..
+..: command not found
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ ./
+bash: ./: Is a directory
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ . 
+bash: .: filename argument required
+.: usage: . filename [arguments]
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ /.
+bash: /.: Is a directory
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ . .
+bash: .: .: is a directory
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ echo $?
+1
+galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ .
+
 
 POUR ALIX : Minishell$ ((cat)|(ls))
 
-export a=* && echo $a if cmd = export export le wild card si apres =
+// bash-5.1$ < $b
+// bash: $b: ambiguous redirect
+// 
+// export a=* && echo $a if cmd = export export le wild card si apres =
 
-bash-5.1$ export a=* && echo $a
-code erreurs.odt Erreurs a gerer dans EXEC ERREUR VALGRIND A GERER fonction inutilisee gaga includes infile Instruction.c L libft Makefile MINI_700_TESTS.ods minishell objs outfile parsing.odg readline.supp srcs TEST_ERROR tests_parsing TO_DO_GARANCE.c
-bash-5.1$ export *=u && echo $a
-bash: export: `*=u': not a valid identifier
-bash-5.1$ *
-bash: code erreurs.odt: command not found
-bash-5.1$ export a=*a && echo $a
-gaga
-bash-5.1$ export a=*b && echo $a
-*b
-bash-5.1$ a
-bash: a: command not found
-bash-5.1$ $a
-bash: *b: command not found
-bash-5.1$ export a=*a && echo $a
-gaga
-bash-5.1$ $*a
-bash: a: command not found
-bash-5.1$ 
+// bash-5.1$ export a=* && echo $a
+// code erreurs.odt Erreurs a gerer dans EXEC ERREUR VALGRIND A GERER fonction inutilisee gaga includes infile Instruction.c L libft Makefile MINI_700_TESTS.ods minishell objs outfile parsing.odg readline.supp srcs TEST_ERROR tests_parsing TO_DO_GARANCE.c
+// bash-5.1$ export *=u && echo $a
+// bash: export: `*=u': not a valid identifier
+// bash-5.1$ *
+// bash: code erreurs.odt: command not found
+// bash-5.1$ export a=*a && echo $a
+// gaga
+// bash-5.1$ export a=*b && echo $a
+// *b
+// bash-5.1$ a
+// bash: a: command not found
+// bash-5.1$ $a
+// bash: *b: command not found
+// bash-5.1$ export a=*a && echo $a
+// gaga
+// bash-5.1$ $*a
+// bash: a: command not found
+// bash-5.1$ 
 
 // >> est ce que l entree standard est redefinie dans le pipe avant de creer le subshell et donc de fork a nouveau?
 // ( cat ) | ( ls )

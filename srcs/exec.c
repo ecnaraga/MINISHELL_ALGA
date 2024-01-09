@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 17:31:19 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 11:11:53 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	ft_skip_subelem(t_msh *msh, t_env *head_hd, t_split **head)
 	int par;
 
 	par = 0;
-	while (msh->av->token != PAR_CLOSE || par != 0)
+	while (msh->av && (msh->av->token != PAR_CLOSE || par != 0))
 	{
 		if (msh->av->token == PAR_OPEN)
 			par++;
