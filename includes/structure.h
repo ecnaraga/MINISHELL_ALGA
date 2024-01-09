@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 14:25:19 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 15:06:15 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define O 1
 
 // extern int	status;
-extern int	sign;
+extern int	g_sign;
 
 typedef struct s_dollar
 {

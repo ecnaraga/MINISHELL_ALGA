@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 15:08:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	ft_free(int sig)
 {
 	if (sig == SIGINT)
 	{
-		if (sign == 0 || sign == 2)
+		if (g_sign == 0 || g_sign == 2)
 		{
 			write(2, "\n", 1);
-			sign = 2;
+			g_sign = 2;
 		}
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -59,7 +59,7 @@ void	ft_free_bis(int signal)
 {
 	if (signal == SIGINT)
 	{
-		sign = 3;
+		g_sign = 3;
 		write(2, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -102,7 +102,7 @@ void	ft_free_ter(int signal)
 	{
 		close(STDIN_FILENO);
 		printf("\n");
-		sign = 1;
+		g_sign = 1;
 	}
 }
 

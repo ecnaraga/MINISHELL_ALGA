@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 12:17:47 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 15:54:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 # define BUILTIN_H
 
 # include "../includes/minishell.h"
+
+/*
+buitin.c
+*/
+int	ft_search_builtin(t_msh *msh);
 
 /*
 env

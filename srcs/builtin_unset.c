@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 12:13:11 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 13:15:29 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	builtin_unset(t_msh *msh, int rule)
 	int	i;
 
 	i = 0;
-	printf("BUILTIN\n");
 	if (msh->p.cmd_t[++i])
 	{
 		while (msh->p.cmd_t[i])

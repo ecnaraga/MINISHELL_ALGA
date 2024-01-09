@@ -5,233 +5,74 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/05 17:38:22 by galambey         ###   ########.fr       */
+/*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
+/*   Updated: 2024/01/09 16:11:52 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void	ft_init_var(t_pipex *p)
+static void	update_hdoc_list(t_msh *msh, t_env *head)
 {
-	p->good_path = NULL;
-	p->cmd_t = NULL;
-	p->fd_p = NULL;
-	p->re_split = 0;
+	head = msh->p.hdoc;
+	while (msh->p.hdoc && (ft_strcmp(msh->p.hdoc->name, msh->av->data) != 0
+			|| (ft_strcmp(msh->p.hdoc->name, msh->av->data) == 0
+				&& msh->p.hdoc->read == 1)))
+		msh->p.hdoc = msh->p.hdoc->next;
+	if (msh->p.hdoc)
+		msh->p.hdoc->read = 1;
+	msh->p.hdoc = head;
 }
 
-void	ft_parse(t_msh *msh, int sub)
+static void	ft_handle_par(t_msh *msh, int rule, int *par)
 {
-	ft_init_var(&msh->p);
-	msh->p.path = ft_research_path(msh, msh->env, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	if (msh->av->token == PAR_OPEN && rule != CMD_ALONE)
+	{
+		if (*par == 0)
+			ft_strtrim_msh(msh, &msh->line, 1);
+		(*par)++;
+	}
+	else if (msh->av->token == PAR_CLOSE)
+		(*par)--;
 }
 
-/*
-Return a tab of strings of the the known paths.
-If malloc ko, the process is quit in ft_split.
-Return NULL if there is no env or if the path has been unset or contain nothing.
-*/
-char	**ft_research_path(t_msh *msh, t_env **env, int sub)
+void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 {
-	t_env	*node;
+	t_split	*head;
+	t_env	*head_hd;
+	int		par;
 
-	if (!env)
-		return (NULL);
-	node = *env;
-	while (node)
+	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
+		perror("signal");
+	ft_close_fd(NULL, -1, fd_1, fd_2);
+	head_hd = NULL;
+	par = 0;
+	head = msh->av;
+	while (msh->av && ((msh->av->token != PIPE && msh->av->token != OPERATOR)
+			|| (par == 1 && rule != CMD_ALONE)))
 	{
-		if (ft_strncmp(node->name, "PATH", 4) == 0)
-			return (ft_split_magic_malloc(msh, sub, node->content, ':')); // IF ERROR MALLOC ON QUITTE LE PROCESS ACTUEL A L INTERIEUR
-		node = node->next;
+		ft_handle_par(msh, rule, &par);
+		if (msh->av->token == HDOC && rule != CMD_ALONE)
+			update_hdoc_list(msh, head_hd);
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, &head);
 	}
-	return (NULL);
+	if (msh->av && (msh->av->token == PIPE || msh->av->token == PAR_CLOSE))
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, &head);
 }
 
-static int	ft_find_good_path(t_msh *msh, char **ok_path, int accss)
+void	ft_child_exec(t_msh *msh)
 {
-	char	*tmp;
-	int		i;
+	int		err;
+	char	**env;
 
-	i = 0;
-	while (msh->p.path[i] && accss != 0)
-	{
-		*ok_path = mcgic(mlcp(ft_strjoin(msh->p.path[i], "/"), 1), ADD, PIP, msh);
-		if (!ok_path)
-			return (255);// OK PROTEGER
-		tmp = *ok_path;
-		*ok_path = mcgic(mlcp(ft_strjoin(*ok_path, msh->p.cmd_t[0]), 1), ADD, PIP, msh);
-		if (!*ok_path)
-			return (255);// OK PROTEGER
-		mcgic(mlcp(tmp, 0), FREE, PIP, msh);
-		accss = access(*ok_path, F_OK | X_OK);
-		if (accss == 0)
-			return (E_OK);
-		mcgic(mlcp(*ok_path, 0), FREE, PIP, msh);
-		*ok_path = NULL;
-		i++;
-	}
-	return (E_NO_CMD);
-}
-
-int	ft_access_cmd(t_msh *msh, char **ok_path)
-{
-	int		accss;
-	char	*tmp;
-
-	accss = access(msh->p.cmd_t[0], F_OK | X_OK);
-	if (accss == 0)
-	{
-		tmp = mcgic(mlcp(ft_strjoin(msh->p.cmd_t[0], "/"), 1), ADD, PIP, msh);
-		if (!tmp) // OK PROTEGER
-			return (255);
-		accss = access(tmp, F_OK | X_OK);
-		if (accss == 0)
-			return (mcgic(mlcp(tmp, 0), FREE, PIP, msh), E_NO_CMD);
-		*ok_path = mcgic(mlcp(ft_strdup(msh->p.cmd_t[0]), 1), ADD, PIP, msh);
-		if (!*ok_path) // OK PROTEGER
-			return (255);
-		return (E_OK);
-	}
-	if (!msh->p.path)
-		return (E_NO_CMD);
-	return (ft_find_good_path(msh, ok_path, accss));
-}
-
-// int	ft_maj_shlvl(t_msh *msh, char **env_tab, int i)
-// {
-// 	int shlvl;
-// 	char *tmp;
-	
-// 	if (ft_strncmp(env_tab[i], "SHLVL", 5) == 0)
-// 	{
-// 		shlvl = ft_atoi(env_tab[i] + 6) + 1;
-// 		tmp = mcgic(mlcp(ft_itoa(shlvl), 1), ADD, PIP, msh);
-// 		if (msh->status == 255) // OK PROTEGER
-// 			return (1);
-// 		mcgic(mlcp(env_tab[i], 0), FREE, PIP, msh);
-// 		env_tab[i] = mcgic(mlcp(ft_strjoin("SHLVL=", tmp), 1), ADD, PIP, msh);
-// 		if (msh->status == 255) // OK PROTEGER
-// 			return (255);
-// 		mcgic(mlcp(tmp, 0), FREE, PIP, msh);
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-// void	ft_inc_shlvl(char **env_tab, char *str, t_msh *msh)
-// {
-// 	int	i;
-// 	int shlvl;
-// 	char *tmp;
-
-// 	i = -1;
-// 	if (/* ft_strcmp(str, "/usr/bin/bash") != 0 && ft_strcmp(str, "/usr/bin/sh") != 0 && ft_strcmp(str, "/usr/bin/zsh") != 0 && */ ft_strcmp(str, "./minishell")!= 0 )
-// 		return;
-// 	while (env_tab[++i])
-// 	{
-// 		// if (ft_maj_shlvl(msh, env_tab, i) > 0)
-// 		// 	return ;
-// 		if (ft_strncmp(env_tab[i], "SHLVL", 5) == 0)
-// 		{
-// 			shlvl = ft_atoi(env_tab[i] + 6) + 1;
-// 			tmp = mcgic(mlcp(ft_itoa(shlvl), 1), ADD, PIP, msh);
-// 			if (msh->status == 255) // OK PROTEGER
-// 				return ;
-// 			mcgic(mlcp(env_tab[i], 0), FREE, PIP, msh);
-// 			env_tab[i] = mcgic(mlcp(ft_strjoin("SHLVL=", tmp), 1), ADD, PIP, msh);
-// 			if (msh->status == 255) // OK PROTEGER
-// 				return ;
-// 			mcgic(mlcp(tmp, 0), FREE, PIP, msh);
-// 			return ;
-// 		}
-// 	}
-// 	env_tab[i] = mcgic(mlcp(ft_strjoin("SHLVL=", "0"), 1), ADD, PIP, msh);
-// 	if (msh->status == 255) // OK PROTEGER
-// 		return ;
-// 	env_tab[++i] = NULL;
-// }
-
-char *ft_copy_env(t_msh *msh, t_env	**env)
-{
-	char *str;
-	char *tmp;
-	
-	str = mcgic(mlcp(ft_strjoin((*env)->name, "="), 1), ADD, PIP, msh);
-	if (!str)  // OK PROTEGER
-		return (NULL);
-	tmp = str;
-	str = mcgic(mlcp(ft_strjoin(str, (*env)->content), 1), ADD, PIP, msh);
-	mcgic(mlcp(tmp, 0), FREE, PIP, msh);
-	if (!str)  // OK PROTEGER
-		return (NULL);
-	return (str);
-}
-
-char **ft_transcript_env(t_env **env,/*  char *str, */ t_msh *msh)
-{
-	t_env	*head;
-	char	**env_tab;
-	int i;
-	
-	head = *env;
-	env_tab = mcgic(mlcp(NULL, sizeof(char *) * (ft_lstsize_env(*env) + 2)), MLC, PIP, msh);
-	if (!env_tab)  // OK PROTEGER
-			return (NULL);
-	i = -1;
-	while (*env)
-	{
-		env_tab[++i] = ft_copy_env(msh, env);
-		if (msh->status == 255)
-			return (NULL);
-		*env = (*env)->next;
-	}
-	env_tab[++i] = NULL;
-	*env = head;
-	return (env_tab);
-}
-/*
-rule == 1 : close fd.in
-rule == 2 : close fd.out
-rule == 0 : close fd.in and fd.out
-*/
-void	ft_close_fd(t_fdpar *fd, int rule, int fd1, int fd2)
-{
-	if ((rule == 1 || rule == 0) && fd && fd->in > -1)
-	{
-		close(fd->in);
-		fd->in = -1;
-	}
-	if ((rule == 2 || rule == 0) && fd && fd->out > -1)
-	{
-		close(fd->out);
-		fd->out = -1;
-	}
-	if (fd1 > -1)
-		close(fd1);
-	if (fd2 > -1)
-		close(fd2);
-}
-
-/*
-rule == 1 : dup and close fd.in
-rule == 2 : dup and close fd.out
-rule == 0 : dup and close fd.in and fd.out
-*/
-int	ft_dup_fd(t_msh *msh, int rule)
-{
-	if ((rule == 1 || rule == 0) && msh->fd.in > -1)
-	{
-		if (dup2(msh->fd.in, STDIN_FILENO) == -1) // A PROTEGER
-			return (1);
-		close(msh->fd.in);
-		msh->fd.in = -1;
-	}
-	if ((rule == 2 || rule == 0) && msh->fd.out > -1)
-	{
-		if (dup2(msh->fd.out, STDOUT_FILENO) == -1) // A PROTEGER
-			return (1);
-		close(msh->fd.out);
-		msh->fd.out = -1;
-	}
-	ft_close_fd(&msh->fd, 0, -1, -1);
-	return (0);
+	err = ft_access_cmd(msh, &msh->p.good_path);
+	if (msh->status == 255)
+		ft_exit(-1, -1, -1, msh);
+	if (err > 0)
+		(ft_perr(msh, err, msh->p.cmd_t[0]), ft_exit(-1, -1, -1, msh));
+	env = ft_transcript_env(msh->env, msh);
+	if (msh->status == 255)
+		ft_exit(-1, -1, -1, msh);
+	execve(msh->p.good_path, msh->p.cmd_t, env);
+	(perror("execve"), ft_exit(-1, -1, -1, msh));
 }

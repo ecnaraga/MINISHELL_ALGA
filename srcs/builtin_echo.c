@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 13:15:29 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 13:50:19 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 13:15:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	builtin_echo(t_msh *msh/* , t_split *av, int nb_arg */) //Il faudra envoyer
 
 	i = 1;
 	new_line = 0;
-	printf("BUILTIN\n");
 	while (msh->p.cmd_t[i] && ft_option_echo(msh->p.cmd_t[i]) == 0) // implementer expand dans boucle
 	{
 		new_line = 1;

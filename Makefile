@@ -5,6 +5,7 @@ SRC_DIR = srcs
 OBJ_DIR = objs
 #OBJ_DIR_BONUS = 
 SRCS = main.c \
+	   minishell.c \
 	   ft_parse_str.c \
 	   ft_parse_str_bis.c \
 	   ft_parse_str_ter.c \
@@ -30,22 +31,33 @@ SRCS = main.c \
 	   heredoc_utils.c \
 	   exec.c \
 	   exec_error.c \
+	   exec_exit.c \
 	   exec_utils.c \
 	   exec_utils_bis.c \
-	   exec_utils_make_cmd.c \
+	   exec_utils_ter.c \
+	   exec_utils_four.c \
+	   exec_par.c \
+	   exec_par_utils.c \
+	   exec_make_cmd.c \
+	   exec_make_cmd_utils.c \
+	   exec_std_utils.c \
+	   exec_stdin.c \
 	   exec_stdin_utils.c \
+	   exec_stdout.c \
 	   exec_stdout_utils.c \
 	   exec_cmd.c \
 	   pipex.c \
 	   pipex_handle_pipe.c \
 	   lpid_utils.c \
 	   ft_expand.c \
+	   ft_expand_utils.c \
 	   ft_expand_wildcard.c \
 	   wildcards.c \
 	   wildcards_utils.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \
 	   ft_strtrim_msh.c \
+	   buitin.c \
 	   builtin_echo.c \
 	   builtin_pwd.c \
 	   builtin_export.c \

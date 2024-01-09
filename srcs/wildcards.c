@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 16:00:21 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 13:16:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ char	**wildcards(char *pattern, t_msh *msh, char *cmd_0)
 	{
 		if (match_wildcard(read->d_name, pattern, msh->av->wild) == 1)
 		{
-			printf("read->d_name : %s\n", read->d_name);
 			if ((ft_strcmp("ls", cmd_0) != 0 && !(read->d_name[0] == '.'))
 				|| ft_strcmp("ls", cmd_0) == 0)
 			{

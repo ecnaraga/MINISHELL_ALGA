@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 12:14:05 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 15:07:08 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ static int	ft_recover_prompt(t_msh *msh, int fd, char *lim)
 	ft_signal_handler_msh_ter();
 	line = NULL;
 	line = readline("> ");
-	if (sign == 1)
+	if (g_sign == 1)
 		return (ft_sigint_hdoc(msh, fd));
 	if (!line) // SI SI CTRLD DANS READLINE
 		return (ft_handle_ctrld_hdoc(msh, fd, lim));

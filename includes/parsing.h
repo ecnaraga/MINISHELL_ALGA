@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:43:27 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 17:51:18 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 16:43:57 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-// void	*ft_free_split_msh(t_split *strs);
-
 /*
 ft_parse.c
 */
@@ -26,8 +24,6 @@ int		ft_parse_line(t_msh *minish);
 char	*add_spaces(t_msh *msh, char *str);
 int	is_operator(char c);
 char	*ft_parse_bis_bis(t_msh *msh, char *str);
-
-//char	*ft_parse_bis_bis(char *str);
 
 /*
 ft_parse_bis.c
