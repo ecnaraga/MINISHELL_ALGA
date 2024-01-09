@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 11:11:53 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:14:38 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,12 +141,12 @@ int		ft_test_hdoc(t_msh *msh)
 
 void	ft_handle_hdoc(t_msh *msh, t_env *head_hd)
 {
-		head_hd = msh->p.hdoc;
-		while (ft_test_hdoc(msh))
-			msh->p.hdoc = msh->p.hdoc->next;
-		if (msh->p.hdoc)
-			msh->p.hdoc->read = 1;
-		msh->p.hdoc = head_hd;
+	head_hd = msh->p.hdoc;
+	while (ft_test_hdoc(msh))
+		msh->p.hdoc = msh->p.hdoc->next;
+	if (msh->p.hdoc)
+		msh->p.hdoc->read = 1;
+	msh->p.hdoc = head_hd;
 }
 
 void	ft_skip_subelem(t_msh *msh, t_env *head_hd, t_split **head)

@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 13:56:01 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:09:20 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env)
 
 	i.name_size = get_name_size(str);
 	content_size = ft_strlen2(str + i.name_size);
+	if (str[0] == '_' && str[1] && str[1] == '=')
+		return (0);
 	if (!node_exist(env, str, i.name_size))
 	{
 		new = ft_lst_new_malloc(msh, i.name_size + 1, content_size + 2 + 1);

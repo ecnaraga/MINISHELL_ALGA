@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 16:57:46 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 11:15:20 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	flag_handler(int *flag, char c)
 }
 
 /* attention 
-dans la boucle on teste des str [i - 1] et str[i + 1] .. risque de invalid read ou write <-- Non, c'est protege
+dans la boucle on teste des str [i - 1] et str[i + 1] .. 
+risque de invalid read ou write <-- Non, c'est protege
 */
 static void	get_final_size(size_t *i, int *count, int *flag, char *str)
 {
@@ -70,7 +71,7 @@ static void	get_final_str(size_t *i, size_t *j, char *fstr, char *str)
 		}
 	}
 }
-//( ( cat"(()))" ) )
+
 char	*ft_parse_bis_bis(t_msh *msh, char *str)
 {
 	char	*fstr;

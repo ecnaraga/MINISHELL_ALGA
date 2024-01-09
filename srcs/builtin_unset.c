@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 17:05:52 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 14:18:58 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:13:11 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ void	del_node(t_env *node, t_env **env, t_msh *msh)
 	}	
 }
 
-void	del_env(char *cmd, t_msh *msh)
+void	del_env(char *cmd, t_msh *msh, int rule)
 {
 	t_env	*tmp;
 
 	tmp = *(msh->env);
-	while (tmp)
+	while (tmp && rule == 0)
 	{
 		if (!strcmp(cmd, tmp->name))
 		{
@@ -65,7 +65,7 @@ void	del_env(char *cmd, t_msh *msh)
 	}
 }
 
-void	builtin_unset(t_msh *msh)
+void	builtin_unset(t_msh *msh, int rule)
 {
 	int	i;
 
@@ -75,7 +75,7 @@ void	builtin_unset(t_msh *msh)
 	{
 		while (msh->p.cmd_t[i])
 		{
-			del_env(msh->p.cmd_t[i], msh);
+			del_env(msh->p.cmd_t[i], msh, rule);
 			i++;
 		}
 	}

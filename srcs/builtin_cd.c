@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 14:06:37 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:06:23 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,12 @@ void	cd_error_message(t_msh *msh, char *str)
 
 	tmp = mcgic(mlcp(ft_strjoin("minishell: cd: ", str), 1), ADD, NO_ENV,
 			msh);
+	if (msh->status == 255)
+		return ;
 	message = mcgic(mlcp(ft_strjoin(tmp, ": No such file or directory\n"), 1),
 			ADD, NO_ENV, msh);
+	if (msh->status == 255)
+		return ;
 	mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 	ft_putstr_fd(message, 2);
 	mcgic(mlcp(message, 0), FREE, NO_ENV, msh);
@@ -75,7 +79,7 @@ int	builtin_cd_exec2(char *test, t_msh *msh, char **path, char *old_pwd)
 	if (!test && msh->p.cmd_t[1])
 	{
 		cd_error_message(msh, msh->p.cmd_t[1]);
-		return (msh->status = 1, 1);
+		return (msh->status);
 	}
 	*path = get_path(msh->p.cmd_t);
 	if (!(*path))

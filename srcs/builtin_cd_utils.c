@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 13:33:55 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 13:52:35 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:17:55 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_old_pwd(t_env **env, t_msh *msh)
 	else
 	{
 		old = mcgic(mlcp(ft_strjoin("OLDPWD=", old), 1),
-				ADD, NO_ENV, msh);
+				ADD, NO_ENV, msh); // PROTEGE
 		return (old);
 	}
 }
@@ -74,20 +74,23 @@ static void	change_env_helper(char *old_pwd, t_msh *msh)
 int	change_env(char	*old_pwd, t_msh *msh, int statut)
 {
 	char	*tmp;
-	char	*newpath;
+	char	*newpath = NULL;
 
 	change_env_helper(old_pwd, msh);
 	tmp = getcwd(NULL, 0);
 	if (!tmp)
 	{
-		del_env("OLDPWD", msh);
+		del_env("OLDPWD", msh, 0);
 		return (0);
 	}
 	else if (statut == 0)
 	{
-		newpath = mcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh);
+		newpath = mcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh); // PROTEGE
 		if (msh->status == 255)
+		{
+			free(tmp);
 			return (255);
+		}
 		new_env_node_env(msh, newpath, 2, msh->env);
 		new_env_node_export(msh, newpath, 2, msh->export_env);
 	}

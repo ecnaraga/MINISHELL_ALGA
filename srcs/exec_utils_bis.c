@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_bis.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/06 09:29:30 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/09 12:13:50 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int		ft_search_builtin_bis(t_msh *msh)
 	int r_exit;
 	
 	if (ft_strcmp(msh->p.cmd_t[0], "unset") == 0)
-		return (builtin_unset(msh), 1);
+		return (builtin_unset(msh, 0), 1);
 	else if (ft_strcmp(msh->p.cmd_t[0], "env") == 0)
 	{
 		builtin_env(msh);

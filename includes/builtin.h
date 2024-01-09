@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/08 13:55:01 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:17:47 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,6 @@ void	doublon_handler_bis(t_msh *msh, char *str, t_env *tmp, t_intel i);
 /*
 unset
 */
-void	builtin_unset(t_msh *minish);
-void	del_env(char *cmd, t_msh *minish);
+void	builtin_unset(t_msh *minish, int rule);
+void	del_env(char *cmd, t_msh *minish, int rule);
 #endif

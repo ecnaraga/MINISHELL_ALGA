@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/05 15:49:39 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/09 12:17:30 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ int	pipex_multi(t_msh *msh, int sub)
 		ft_exit_bis(msh, sub, -1, -1);
 	}
 	ft_signal_handler_msh();
+	del_env("_", msh, 1);
 	sign = 0;
 	mcgic(NULL, FLUSH, PIP, msh);
 	return (0);
