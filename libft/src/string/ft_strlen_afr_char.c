@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen_afr_char.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:58:56 by galambey          #+#    #+#             */
-/*   Updated: 2023/09/10 09:59:39 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/10 18:42:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ chaine, si pas de char c retourne la len totale de la string
 */
 size_t	ft_strlen_afr_char(const char *str, char c)
 {
-	int	i;
+	int		i;
 	size_t	len;
 
 	len = 0;
