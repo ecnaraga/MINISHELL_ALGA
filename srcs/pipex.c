@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 15:07:44 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 16:37:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	ft_count_pipe(t_msh *msh, t_split *head)
 {
-	int par;
-	int count;
+	int	par;
+	int	count;
 
 	par = 0;
 	count = 0;
@@ -30,10 +30,10 @@ static int	ft_count_pipe(t_msh *msh, t_split *head)
 				else if (msh->av->token == PAR_CLOSE)
 					par--;
 				if (msh->av->token == PAR_CLOSE && par == 0)
-					break;
+					break ;
 				msh->av = msh->av->next;
 			}
-		}	
+		}
 		else if (msh->av->token == PIPE)
 			count += 1;
 		msh->av = msh->av->next;
@@ -48,12 +48,12 @@ static void	ft_create_fd_p(t_msh *msh, int sub, int size, t_pipex *p)
 	j = -1;
 	p->fd_p = mcgic(mlcp(NULL, sizeof(int *) * (size + 1)), MLC, PIP, msh);
 	if (!p->fd_p)
-		ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
+		ft_exit_bis(msh, sub, -1, -1);
 	while (++j < size)
 	{
 		p->fd_p[j] = mcgic(mlcp(NULL, sizeof(int *) * 2), MLC, PIP, msh);
 		if (!p->fd_p)
-			ft_exit_bis(msh, sub, -1, -1); // IF MALLOC KO ON QUITTE
+			ft_exit_bis(msh, sub, -1, -1);
 	}
 	p->fd_p[size] = NULL;
 }
@@ -62,7 +62,7 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 {
 	while (++index.i < nb_pipe)
 	{
-		if (pipe(msh->p.fd_p[index.j]) == -1) // IF PIPE FAIL ON RETURN DANS PIPEX MULTI
+		if (pipe(msh->p.fd_p[index.j]) == -1)
 		{
 			perror("pipe");
 			msh->status = 255;
@@ -71,29 +71,29 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 			return ;
 		}
 		if (index.i == 0)
-			ft_first_pipe(msh, pid_l);
+			ft_first_cmd(msh, pid_l);
 		else if (index.i >= 1)
-			ft_middle_pipe(msh, index.j, pid_l);
-		if (msh->status == 255) // IF FORK FAILED IN FIRST OR MID ON RETURN DANS PIPEX MULTI
+			ft_middle_cmd(msh, index.j, pid_l);
+		if (msh->status == 255)
 			return ;
 		ft_close_fd(&msh->fd, 1, -1, -1);
 		index.j++;
 	}
-	ft_last_pipe(msh, index.j, pid_l);
+	ft_last_cmd(msh, index.j, pid_l);
 	ft_close_fd(&msh->fd, 2, -1, -1);
 }
 
 void	ft_waitpid_loop(t_msh *msh, t_lpid *pid_l)
 {
-	int tmp;
-	
+	int	tmp;
+
 	tmp = 0;
 	while (pid_l)
 	{
 		waitpid(pid_l->pid, &msh->status, WUNTRACED);
 		if (WIFEXITED(msh->status))
 			msh->status = WEXITSTATUS(msh->status);
-		else if (WIFSIGNALED(msh->status)/*  && tmp == 0 */)
+		else if (WIFSIGNALED(msh->status))
 		{
 			msh->status = WTERMSIG(msh->status) + 128;
 			if (tmp == 0 && msh->status == 131)
@@ -114,30 +114,27 @@ void	ft_waitpid_loop(t_msh *msh, t_lpid *pid_l)
 int	pipex_multi(t_msh *msh, int sub)
 {
 	size_t	nb_pipe;
-	t_split *head;
+	t_split	*head;
 	t_index	index;
 	t_lpid	*pid_l;
-	int free;
-	
+	int		free;
+
 	pid_l = NULL;
-	ft_parse(msh, sub); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	ft_parse(msh, sub);
 	head = msh->av;
 	nb_pipe = ft_count_pipe(msh, head);
-	ft_create_fd_p(msh, sub, nb_pipe, &msh->p); // IF MALLOC KO ON QUITTE A L INTERIEUR
+	ft_create_fd_p(msh, sub, nb_pipe, &msh->p);
 	index.i = -1;
 	index.j = 0;
 	msh->sub = sub;
 	ft_pipex(msh, nb_pipe, index, &pid_l);
-	free = msh->status; // IF PIPE KO OR FORK KO ON QUITTE LE PROCESS ACTUEL
+	free = msh->status;
 	ft_waitpid_loop(msh, pid_l);
-	if (free == 255) // IF PIPE KO OR FORK KO DANS F_PIPEX ON QUITTE LE PROCESS ACTUEL
+	if (free == 255 || ft_signal_handler_msh(msh) == 255)
 	{
 		msh->status = 255;
 		ft_exit_bis(msh, sub, -1, -1);
 	}
-	ft_signal_handler_msh();
 	del_env("_", msh, 1);
-	g_sign = 0;
-	mcgic(NULL, FLUSH, PIP, msh);
-	return (0);
+	return (g_sign = 0, mcgic(NULL, FLUSH, PIP, msh), 0);
 }

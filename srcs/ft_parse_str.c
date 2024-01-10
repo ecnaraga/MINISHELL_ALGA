@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/05 17:55:12 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 18:22:35 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ char	*add_spaces(t_msh *msh, char *str)
 	get_final_size(&count, &flag, str, &i);
 	fstr = mcgic(mlcp(NULL, sizeof(char) * (i + count + 1)), MLC, NO_ENV, msh);
 	if (!fstr)
-		ft_exit(-1, -1, -1, msh); // SI MALLOC KO => ON QUITTE MINISHELL
+		ft_exit(-1, -1, -1, msh);
 	i = -1;
 	j = 0;
 	while (str[++i])

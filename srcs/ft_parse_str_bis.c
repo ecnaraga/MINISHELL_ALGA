@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 13:15:39 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 11:37:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ int	is_operator(char c)
 }
 
 /*
-Verifie que les " et ' sont bien apparies
-	- quote entre quote 🗸
-	- pouvoir ajouter plusieurs quote entre 2 mm quote : "'bra'vo" 🗸
+Check if " et ' are by even
 */
 static void	ft_quote_order_bis(char *str, char c, int *i, int *nb_q)
 {
@@ -35,7 +33,7 @@ static void	ft_quote_order_bis(char *str, char c, int *i, int *nb_q)
 	{
 		*nb_q += 1;
 	}
-	if (str[*i] /* && str[*i + 1] */)
+	if (str[*i])
 		*i += 1;
 }
 
@@ -72,7 +70,7 @@ int	ft_parse_line(t_msh *msh)
 {
 	if (ft_quote_order(msh->line) == 2)
 		return (1);
-	msh->line = add_spaces(msh, msh->line); // SI MALLOC KO ON QUITTE DANS ADD_SPACES
+	msh->line = add_spaces(msh, msh->line);
 	// msh->line = ft_parse_bis_bis(msh, msh->line);
 	// if (!msh->line)
 	// 	return (1);

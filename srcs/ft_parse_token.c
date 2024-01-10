@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_token.c                                         :+:      :+:    :+:   */
+/*   ft_parse_token.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:57:39 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:38:48 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static void	ft_token_chev_left(t_msh *msh)
 	else if (msh->av->next)
 		msh->av->next->token = INFILE;
 }
-void	ft_set_token(t_msh *msh)
+
+static void	ft_set_token(t_msh *msh)
 {
 	if (!msh->av->quote && msh->av->data[0] == '>')
 		ft_token_chev_right(msh);
@@ -37,7 +38,8 @@ void	ft_set_token(t_msh *msh)
 		ft_token_chev_left(msh);
 	else if (!msh->av->quote && msh->av->data[0] == '|' && !msh->av->data[1])
 		msh->av->token = PIPE;
-	else if (!msh->av->quote && (msh->av->data[0] == '&' || msh->av->data[0] == '|'))
+	else if (!msh->av->quote && (msh->av->data[0] == '&'
+			|| msh->av->data[0] == '|'))
 		msh->av->token = OPERATOR;
 	else if (!msh->av->quote && msh->av->data[0] == '(')
 		msh->av->token = PAR_OPEN;
@@ -46,6 +48,7 @@ void	ft_set_token(t_msh *msh)
 	else if (msh->av->token == TO_DEFINE)
 		msh->av->token = CMD;
 }
+
 void	ft_token(t_msh *msh)
 {
 	t_split	*head;
@@ -53,7 +56,7 @@ void	ft_token(t_msh *msh)
 	head = msh->av;
 	while (msh->av)
 	{
-		if (!msh->av->data[0] /* || msh->av->token != TO_DEFINE */)
+		if (!msh->av->data[0])
 		{
 			msh->av = msh->av->next;
 			continue ;

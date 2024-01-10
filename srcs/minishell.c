@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 15:10:21 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 15:10:47 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:57:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	ft_parsing(t_msh *msh, int sub)
 {
 	if (sub == 0 && ft_parse_line(msh) != 0)
 		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
-	if (sub == 0 && ft_parse_bis(msh) != 0)
+	if (sub == 0 && ft_parse_par(msh) != 0)
 		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	msh->av = ft_split_msh(msh->line, msh);
 	if (!msh->av)
@@ -28,7 +28,7 @@ static int	ft_parsing(t_msh *msh, int sub)
 	if (msh->ac == 0)
 		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	ft_token(msh);
-	if (sub == 0 && ft_parse_ter(msh) != 0)
+	if (sub == 0 && ft_parse_error_token(msh) != 0)
 		return (mcgic(NULL, FLUSH, NO_ENV, msh), 1);
 	return (0);
 }

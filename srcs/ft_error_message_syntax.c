@@ -6,13 +6,13 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 16:43:16 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 13:37:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	err_syntax(char *str)
+int	e_syntx(char *str)
 {
 	if (!str)
 		return (1);

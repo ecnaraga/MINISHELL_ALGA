@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 15:11:41 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 16:49:08 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	ft_readline(t_msh *msh)
 	if (g_sign == 1)
 	{
 		msh->status = 130;
-		g_sign = 3;
+		g_sign = 0;
 	}
 	msh->previous_status = msh->status;
 	msh->status = 0;
@@ -84,7 +84,8 @@ int	main(int ac, char **av, char **env)
 	ft_init_var(&msh, env);
 	while (1)
 	{
-		ft_signal_handler_msh();
+		if (ft_signal_handler_msh(&msh) == 255)
+			ft_exit(-1, -1, -1, &msh);
 		if (ft_readline(&msh) == -1)
 			continue ;
 		add_history(msh.line);

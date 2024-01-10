@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str_ter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 11:15:20 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/10 18:23:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,17 @@ static void	get_final_size(size_t *i, int *count, int *flag, char *str)
 
 static void	get_final_str(size_t *i, size_t *j, char *fstr, char *str)
 {
-	if (*i > 0 && ft_isspace(str[(*i) - 1]) == 1
-		&& !(str[(*i) - 1] == '(' || str[(*i) - 1] == ')'))
+	if (*i > 0 && ft_isspace(str[(*i) - 1]) == 1 && !(str[(*i) - 1] == '('
+			|| str[(*i) - 1] == ')'))
 	{
 		fstr[*j] = ' ';
 		*j += 1;
 		fstr[*j] = str[*i];
 	}
 	else
-		fstr[*j] = str[*i];	
+		fstr[*j] = str[*i];
 	if (*i < ft_strlen(str) && (ft_isspace(str[(*i) + 1]) == 1))
-	{	
+	{
 		fstr[*j] = str[*i];
 		if ((*i) + 1 < ft_strlen(str))
 		{
@@ -95,7 +95,7 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 			get_final_str(&i, &j, fstr, str);
 		else
 			fstr[j] = str[i];
-		j++;	
+		j++;
 	}
 	fstr[j] = '\0';
 	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);

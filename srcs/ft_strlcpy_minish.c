@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 11:03:47 by garance           #+#    #+#             */
-/*   Updated: 2024/01/05 10:45:09 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:33:42 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int	ft_test_ter(char c, t_quote q)
 		return (0);
 	if (c != '"' && c != 39 && ft_isspace(c) == 1)
 		return (0);
-	
 	return (1);
 }
 
@@ -61,11 +60,13 @@ static int	ft_test_four(t_split *strs, const char *src, t_index *x, t_quote *q)
 	return (1);
 }
 
-void	ft_exec_strlcpy_msh(t_split *strs, const char *src, t_index *x, t_quote *q)
+static void	ft_exec_strlcpy_msh(t_split *strs, const char *src, t_index *x,
+		t_quote *q)
 {
 	if (ft_test_four(strs, src, x, q) == 0)
 		strs->type[x->d].len_variable += 1;
-	if (src[x->i] == '$' && strs->type && strs->type[x->d].expnd == MULTI_DOLLAR)
+	if (src[x->i] == '$' && strs->type
+		&& strs->type[x->d].expnd == MULTI_DOLLAR)
 		x->i++;
 	else if (ft_test_bis(src[x->i], q->d, q->s) == 0)
 	{
@@ -102,7 +103,8 @@ Copie dans dst size - 1 char de src. Saute les quotes non compris entre quotes
 		normalement le $ et les char qui suivent
 	4. Si strs[i]->type[d].expnd == MULTI_DOLLAR : Afficher 1 $ et sauter les
 		suivants
-begin == -1 > cas de figure : "" ou '' ou "$USUSUSUS" ( a la difference de $USUSUSUS)
+begin ==
+	-1 > cas de figure : "" ou '' ou "$USUSUSUS" ( a la difference de $USUSUSUS)
 */
 void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 {
@@ -117,7 +119,7 @@ void	ft_strlcpy_msh(t_split *strs, const char *src, size_t size, int begin)
 			strs->quote = 1;
 		ft_inc_quote(src[0], &q.d, &q.s);
 	}
-	if (begin  == -1 && (src[1] == '"' || src[1] == '\''))
+	if (begin == -1 && (src[1] == '"' || src[1] == '\''))
 		strs->quote = 1;
 	while (size > 0 && src[x.i] && x.j < (size - 1))
 	{

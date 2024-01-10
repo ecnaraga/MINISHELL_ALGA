@@ -3,62 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/06 09:38:16 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/10 11:14:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	ft_list_remove(t_list **begin_list, t_list **lst, t_list **prev)
-{
-	if ((*lst)->next == NULL)
-	{
-		if ((*lst) == *begin_list)
-			*begin_list = NULL;
-		if (*prev)
-			(*prev)->next = NULL;
-		ft_lstdelone(*lst, del);
-		*lst = NULL;
-	}
-	else if (*lst == *begin_list)
-	{
-		*begin_list = (*lst)->next;
-		ft_lstdelone(*lst, del);
-		*lst = *begin_list;
-	}
-	else
-	{
-		(*prev)->next = (*lst)->next;
-		ft_lstdelone(*lst, del);
-		*lst = (*prev)->next;
-	}
-}
-
-void	ft_list_remove_if(t_list **begin_list, t_magic *p, int (*cmp)())
-{
-	t_list	*prev;
-	t_list	*lst;
-
-	lst = *begin_list;
-	prev = NULL;
-	while (lst)
-	{
-		if (cmp(lst->content, p->addr))
-		{
-			ft_list_remove(begin_list, &lst, &prev);
-			break ;
-		}
-		else
-		{
-			prev = lst;
-			lst = lst->next;
-		}
-	}
-	free(p);
-}
 
 static void	*ft_magic_add_mlc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 {
@@ -71,7 +23,8 @@ static void	*ft_magic_add_mlc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 	else
 		tmp = ft_lstnew_add(p->addr);
 	if (!tmp)
-		return (write(2, "minishell: Cannot allocate memory\n", 35), msh->status = 255, NULL);
+		return (write(2, "minishell: Cannot allocate memory\n", 35),
+			msh->status = 255, NULL);
 	if (*mlc)
 	{
 		while ((*mlc)->next)
@@ -84,13 +37,32 @@ static void	*ft_magic_add_mlc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 	free(p);
 	return (tmp->content);
 }
+
+static void	ft_clearlst(int lst, t_list **mlc, t_list **mlc_env,
+		t_list **mlc_pip)
+{
+	if (lst == NO_ENV)
+		ft_lstclear(mlc, del);
+	else if (lst == ENV)
+		ft_lstclear(mlc_env, del);
+	else if (lst == PIP)
+		ft_lstclear(mlc_pip, del);
+}
+
+static void	ft_clearall(t_list **mlc, t_list **mlc_env, t_list **mlc_pip)
+{
+	ft_lstclear(mlc, del);
+	ft_lstclear(mlc_env, del);
+	ft_lstclear(mlc_pip, del);
+}
+
 /*
 size == -1 => signifie regle ADD select
 */
 t_magic	*mlcp(void *addr, size_t size)
 {
 	t_magic	*param;
-	
+
 	if (!addr && size == 0)
 		return (NULL);
 	param = malloc(sizeof(t_magic));
@@ -103,21 +75,6 @@ t_magic	*mlcp(void *addr, size_t size)
 	param->addr = addr;
 	param->size = size;
 	return (param);
-}
-void	ft_clearlst(int lst, t_list **mlc, t_list **mlc_env, t_list **mlc_pip)
-{
-	if (lst == NO_ENV)
-		ft_lstclear(mlc, del);
-	else if (lst == ENV)
-		ft_lstclear(mlc_env, del);
-	else if (lst == PIP)
-		ft_lstclear(mlc_pip, del);
-}
-void	ft_clearall(t_list **mlc, t_list **mlc_env, t_list **mlc_pip)
-{
-	ft_lstclear(mlc, del);
-	ft_lstclear(mlc_env, del);
-	ft_lstclear(mlc_pip, del);
 }
 
 /*
@@ -160,7 +117,7 @@ void	*mcgic(t_magic *p, int rule, int lst, t_msh *msh)
 		ft_list_remove_if(&mlc_pip, p, ft_check);
 	else if (rule == FLUSH)
 		ft_clearlst(lst, &mlc, &mlc_env, &mlc_pip);
-	else //QUIT
+	else
 		ft_clearall(&mlc, &mlc_env, &mlc_pip);
 	return (NULL);
 }

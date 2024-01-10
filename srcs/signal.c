@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:56:21 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 15:08:28 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 16:43:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 /*
 If SIG_INT is catched: 
-- Free all the mallocs except the environment
-- Set the exit status at 130
 - Redisplay the prompt
 */
-void	ft_free(int sig)
+static void	ft_free(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -38,35 +36,18 @@ Set the instructions in case of catch Ctrl-C or Ctrl-/
 Ctrl-C : free all except environment + redisplay prompt
 Ctrl-/ : Do nothing
 */
-int	ft_signal_handler_msh(void)
+int	ft_signal_handler_msh(t_msh *msh)
 {
 	if (signal (SIGINT, &ft_free) == SIG_ERR)
-		return (perror("signal"), 1);
+		return (perror("signal"), msh->status = 255);
 	if (signal (SIGQUIT, SIG_IGN) == SIG_ERR)
-		return (perror("signal"), 1);
+		return (perror("signal"), msh->status = 255);
 	if (signal (SIGPIPE, SIG_DFL) == SIG_ERR)
-		return (perror("signal"), 1);
-	return (0); //revoir le code renvoye en cas d erreur
+		return (perror("signal"), msh->status = 255);
+	return (0);
 }
 
-/*
-If SIG_INT is catched: 
-- Free all the mallocs except the environment
-- Set the exit status at 130
-- Redisplay the prompt
-*/
-void	ft_free_bis(int signal)
-{
-	if (signal == SIGINT)
-	{
-		g_sign = 3;
-		write(2, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-	}
-}
-
-void	ft_free_four(int signal)
+static void	ft_free_bis(int signal)
 {
 	mcgic(NULL, QUIT, 0, NULL);
 	exit(signal + 128);
@@ -74,48 +55,18 @@ void	ft_free_four(int signal)
 
 /*
 Set the instructions in case of catch Ctrl-C or Ctrl-/
-Ctrl-C : free all except environment + redisplay prompt
-Ctrl-/ : Do nothing
+Ctrl-C : in child default behaviour
+Ctrl-/ : in child default behaviour
 */
-int	ft_signal_handler_msh_bis(void)
+int	ft_signal_handler_msh_child(t_msh *msh)
 {
 	if (signal(SIGINT, SIG_DFL) == SIG_ERR)
-		return (perror("signal"), 1);
+		return (perror("signal"), msh->status = 255);
 	if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
-		return (perror("signal"), 1);
+		return (perror("signal"), msh->status = 255);
 	if (signal(SIGQUIT, &ft_free) == SIG_ERR)
-		return (perror("signal"), 1);
-	if (signal(SIGPIPE, &ft_free_four) == SIG_ERR)
-		return (perror("signal"), 1);
+		return (perror("signal"), msh->status = 255);
+	if (signal(SIGPIPE, &ft_free_bis) == SIG_ERR)
+		return (perror("signal"), msh->status = 255);
 	return (0);
-}
-
-/*
-If SIG_INT is catched: 
-- Free all the mallocs except the environment
-- Set the exit status at 130
-- Redisplay the prompt
-*/
-void	ft_free_ter(int signal)
-{
-	if (signal == SIGINT)
-	{
-		close(STDIN_FILENO);
-		printf("\n");
-		g_sign = 1;
-	}
-}
-
-/*
-Set the instructions in case of catch Ctrl-C or Ctrl-/
-Ctrl-C : free all except environment + redisplay prompt
-Ctrl-/ : Do nothing
-*/
-int	ft_signal_handler_msh_ter(void)
-{
-	if (signal (SIGINT, &ft_free_ter) == SIG_ERR)
-		return (perror("signal"), 1);
-	if (signal (SIGQUIT, SIG_IGN) == SIG_ERR)
-		return (perror("signal"), 1);
-	return (0); //revoir le code renvoye en cas d erreur
 }

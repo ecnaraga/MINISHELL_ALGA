@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 15:52:53 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 15:53:22 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 18:39:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_search_builtin(t_msh *msh)
 		return (1);
 	}
 	else if (ft_strcmp(msh->p.cmd_t[0], "pwd") == 0)
-		return (builtin_pwd(msh), 1);
+		return (builtin_pwd(), 1);
 	else if (ft_strcmp(msh->p.cmd_t[0], "export") == 0)
 	{
 		builtin_export(msh);

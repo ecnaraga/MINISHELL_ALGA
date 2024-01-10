@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 13:33:55 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 12:17:55 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:04:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_old_pwd(t_env **env, t_msh *msh)
 	else
 	{
 		old = mcgic(mlcp(ft_strjoin("OLDPWD=", old), 1),
-				ADD, NO_ENV, msh); // PROTEGE
+				ADD, NO_ENV, msh);
 		return (old);
 	}
 }
@@ -74,8 +74,9 @@ static void	change_env_helper(char *old_pwd, t_msh *msh)
 int	change_env(char	*old_pwd, t_msh *msh, int statut)
 {
 	char	*tmp;
-	char	*newpath = NULL;
+	char	*newpath;
 
+	newpath = NULL;
 	change_env_helper(old_pwd, msh);
 	tmp = getcwd(NULL, 0);
 	if (!tmp)
@@ -85,7 +86,7 @@ int	change_env(char	*old_pwd, t_msh *msh, int statut)
 	}
 	else if (statut == 0)
 	{
-		newpath = mcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh); // PROTEGE
+		newpath = mcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh);
 		if (msh->status == 255)
 		{
 			free(tmp);

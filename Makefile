@@ -12,23 +12,29 @@ SRCS = main.c \
 	   get_env.c \
 	   get_env_utils.c \
 	   get_export_env.c \
-	   ft_parse_bis.c \
-	   ft_parse_bis_utils.c \
-	   ft_parse_bis_storage.c \
-	   ft_parse_ter.c \
+	   ft_parse_par.c \
+	   ft_parse_par_utils.c \
+	   ft_parse_par_storage.c \
+	   ft_parse_token.c \
+	   ft_parse_error_token.c \
+	   ft_parse_error_token_utils.c \
 	   ft_parse_utils.c \
 	   ft_error_message_syntax.c \
 	   ft_split_minish_utils.c \
+	   ft_split_minish_utils_bis.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
 	   ft_strlcpy_minish_utils.c \
-	   lst_split.c \
-	   ft_token.c \
+	   ft_split_minish_lst.c \
+	   ft_split_minish_lst_bis.c \
 	   ft_magic_malloc.c \
 	   ft_magic_malloc_utils.c \
+	   ft_magic_malloc_utils_bis.c \
 	   signal.c \
+	   signal_bis.c \
 	   heredoc.c \
 	   heredoc_utils.c \
+	   heredoc_utils_bis.c \
 	   exec.c \
 	   exec_error.c \
 	   exec_exit.c \
@@ -57,7 +63,7 @@ SRCS = main.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \
 	   ft_strtrim_msh.c \
-	   buitin.c \
+	   builtin.c \
 	   builtin_echo.c \
 	   builtin_pwd.c \
 	   builtin_export.c \

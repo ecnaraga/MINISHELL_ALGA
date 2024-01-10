@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 16:27:02 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:42:37 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	ft_exec_or(t_msh *msh, t_split **head, int sub)
 			msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 	}
 }
-	
+
 static int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 {
 	ft_choice_exec(msh, head, sub);
@@ -62,7 +62,8 @@ static int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 	{
 		if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "&&") == 0)
 			ft_exec_and(msh, head, sub);
-		else if (msh->av->token == OPERATOR && ft_strcmp(msh->av->data, "||") == 0)
+		else if (msh->av->token == OPERATOR
+			&& ft_strcmp(msh->av->data, "||") == 0)
 			ft_exec_or(msh, head, sub);
 		else
 			msh->av = msh->av->next;
@@ -72,8 +73,8 @@ static int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 
 int	ft_exec(t_msh *msh, int sub, t_fdpar *fd)
 {
-	t_split *head;
-	
+	t_split	*head;
+
 	if (sub == 0 && ft_heredoc(msh) == 130)
 		return (1);
 	head = msh->av;
