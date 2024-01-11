@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:55 by garance           #+#    #+#             */
-/*   Updated: 2023/11/30 14:12:54 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 18:42:43 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_select_char(int fd)
 {
-	char buf[1];
-	
+	char	buf[1];
+
 	buf[0] = '\0';
 	while (ft_isalnum(buf[0]) == 0)
 	{
@@ -32,7 +32,7 @@ int	ft_select_char(int fd)
 char	*ft_random_string(int n)
 {
 	char	*str;
-	int 	c;
+	int		c;
 	int		fd;
 	int		i;
 

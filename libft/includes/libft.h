@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:34:22 by garance           #+#    #+#             */
-/*   Updated: 2023/12/22 17:30:54 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 11:11:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 # include <fcntl.h>
 # include <stdarg.h>
 # include <stdint.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <unistd.h>
-# include <stdio.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 50
@@ -155,7 +155,8 @@ char					*ft_strjoin_aftr_char(char const *s1, char const *s2,
 char					*ft_strjoin_char(char const *s1, char c);
 char					*ft_strtrim(char const *s1, char const *set);
 char					*ft_strtrim_exept_set(char const *s1, char const *set);
-char					*ft_strtrim_except_tips(char const *s1, char const *set);
+char					*ft_strtrim_except_tips(char const *s1,
+							char const *set, int rule);
 char					*ft_substr(char const *s, unsigned int start,
 							size_t len);
 void					ft_striteri(char *s, void (*f)(unsigned int, char *));
@@ -182,7 +183,7 @@ int						ft_isascii(int c);
 int						ft_isprint(int c);
 int						ft_toupper(int c);
 int						ft_tolower(int c);
-int	ft_islower(int c);
-int	ft_isupp(int c);
+int						ft_islower(int c);
+int						ft_isupp(int c);
 
 #endif

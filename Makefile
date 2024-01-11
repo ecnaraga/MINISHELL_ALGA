@@ -5,47 +5,66 @@ SRC_DIR = srcs
 OBJ_DIR = objs
 #OBJ_DIR_BONUS = 
 SRCS = main.c \
+	   minishell.c \
 	   ft_parse_str.c \
 	   ft_parse_str_bis.c \
 	   ft_parse_str_ter.c \
 	   get_env.c \
 	   get_env_utils.c \
 	   get_export_env.c \
-	   ft_parse_bis.c \
-	   ft_parse_bis_utils.c \
-	   ft_parse_bis_storage.c \
-	   ft_parse_ter.c \
+	   ft_parse_par.c \
+	   ft_parse_par_utils.c \
+	   ft_parse_par_storage.c \
+	   ft_parse_token.c \
+	   ft_parse_error_token.c \
+	   ft_parse_error_token_utils.c \
 	   ft_parse_utils.c \
 	   ft_error_message_syntax.c \
 	   ft_split_minish_utils.c \
+	   ft_split_minish_utils_bis.c \
 	   ft_split_minish.c \
 	   ft_strlcpy_minish.c \
 	   ft_strlcpy_minish_utils.c \
-	   lst_split.c \
-	   ft_token.c \
+	   ft_split_minish_lst.c \
+	   ft_split_minish_lst_bis.c \
 	   ft_magic_malloc.c \
 	   ft_magic_malloc_utils.c \
+	   ft_magic_malloc_utils_bis.c \
 	   signal.c \
+	   signal_bis.c \
 	   heredoc.c \
 	   heredoc_utils.c \
+	   heredoc_utils_bis.c \
 	   exec.c \
 	   exec_error.c \
+	   exec_exit.c \
 	   exec_utils.c \
 	   exec_utils_bis.c \
-	   exec_utils_make_cmd.c \
+	   exec_utils_ter.c \
+	   exec_utils_four.c \
+	   exec_par.c \
+	   exec_par_utils.c \
+	   exec_make_cmd.c \
+	   exec_make_cmd_utils.c \
+	   exec_std_utils.c \
+	   exec_stdin.c \
 	   exec_stdin_utils.c \
+	   exec_stdout.c \
 	   exec_stdout_utils.c \
 	   exec_cmd.c \
 	   pipex.c \
 	   pipex_handle_pipe.c \
 	   lpid_utils.c \
 	   ft_expand.c \
+	   ft_expand_utils.c \
+	   ft_expand_utils_bis.c \
 	   ft_expand_wildcard.c \
 	   wildcards.c \
 	   wildcards_utils.c \
 	   ft_split_magic_malloc.c \
 	   ft_split_magic_isspace.c \
 	   ft_strtrim_msh.c \
+	   builtin.c \
 	   builtin_echo.c \
 	   builtin_pwd.c \
 	   builtin_export.c \

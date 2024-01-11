@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_minish_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:30:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	ft_test(char c, const char *c1, const char *cm1, t_quote *q)
 		return (1);
 	if (c != '"' && c != 39)
 		return (0);
-	if (c == '"' && ((c1 && *c1 && ft_isspace(*c1) == 1) || (cm1
-				&& ft_isspace(*cm1) == 1)))
+	if (c == '"' && ((c1 && *c1 && ft_isspace(*c1) == 1)
+			|| (cm1 && ft_isspace(*cm1) == 1)))
 		return (0);
 	if (c == 39 && ((c1 && *c1 && ft_isspace(*c1) == 1) || (cm1
 				&& ft_isspace(*cm1) == 1)))
@@ -71,9 +71,10 @@ void	ft_alloc_type(t_split *new, t_msh *msh, int l)
 
 	if (new->dollar > 0)
 	{
-		new->type = mcgic(mlcp(NULL, sizeof(t_dollar) * new->dollar), MLC, NO_ENV, msh);
+		new->type = mcgic(
+				mlcp(NULL, sizeof(t_dollar) * new->dollar), MLC, NO_ENV, msh);
 		if (new->type == NULL)
-			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
+			ft_exit(-1, -1, -1, msh);
 		d = -1;
 		while (++d < new->dollar)
 			new->type[d].expnd = TO_DEFINE;
@@ -83,6 +84,23 @@ void	ft_alloc_type(t_split *new, t_msh *msh, int l)
 	{
 		new->wild = mcgic(mlcp(NULL, sizeof(int) * l), MLC, NO_ENV, msh);
 		if (new->wild == NULL)
-			ft_exit(-1, -1, -1, msh); // SI MALLOC KO ON QUITTE
+			ft_exit(-1, -1, -1, msh);
 	}
+}
+
+void	ft_count_dlw(const char *s, int *i, t_quote *q, t_letter *l)
+{
+	ft_inc_quote(s[*i], &q->d, &q->s);
+	if (q->wildcard == 0 && s[*i] == '*')
+		q->wildcard += 1;
+	if (s[*i] == '$')
+	{
+		if (*i == 0 || s[*i - 1] != '$'
+			|| (q->mod_dollar % 2 == 0 && s[*i - 1] == '$'))
+			q->dollar += 1;
+		q->mod_dollar += 1;
+	}
+	if (ft_test_bis(s[(*i)++], q->d, q->s) == 0)
+		l->lt++;
+	l->k += 1;
 }

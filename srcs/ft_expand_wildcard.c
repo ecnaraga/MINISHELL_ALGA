@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand_wildcard.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 16:40:39 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 16:28:58 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:04:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int	ft_sizetab(char **tmp)
 {
-	int i;
-	int count;
-	
+	int	i;
+	int	count;
+
 	i = -1;
 	count = 0;
 	while (tmp[++i])
@@ -38,9 +38,10 @@ char	**ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i)
 		return (NULL);
 	if (!tmp)
 	{
-		msh->p.cmd_t[*i] = mcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP, msh);
+		msh->p.cmd_t[*i] = mcgic(mlcp(ft_strdup(msh->av->data), 1), ADD, PIP,
+				msh);
 		if (!msh->p.cmd_t[*i])
-			return (NULL); // IF ERREUR MALLOC ON QUITTE LE PROCESS EN COURS DANS FT_MAKE_CMD
+			return (NULL);
 		return (msh->p.cmd_t);
 	}
 	*cmd_nb += ft_sizetab(tmp);

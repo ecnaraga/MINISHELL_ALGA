@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 13:33:55 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/11 14:16:02 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:03:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,14 @@ char	*get_old_pwd(t_env **env, t_msh *msh)
 	else
 	{
 		old = mcgic(mlcp(ft_strjoin("OLDPWD=", old), 1),
-				ADD, NO_ENV, msh);
+					ADD,
+					NO_ENV,
+					msh);
 		return (old);
 	}
 }
 
-char	*get_path(char	**str)
+char	*get_path(char **str)
 {
 	char	*path;
 
@@ -71,11 +73,12 @@ static void	change_env_helper(char *old_pwd, t_msh *msh)
 	}
 }
 
-int	change_env(char	*old_pwd, t_msh *msh, int statut)
+int	change_env(char *old_pwd, t_msh *msh, int statut)
 {
 	char	*tmp;
 	char	*newpath;
 
+	newpath = NULL;
 	change_env_helper(old_pwd, msh);
 	tmp = getcwd(NULL, 0);
 	if (!tmp)

@@ -1,4 +1,3 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 12:26:52 by galambey          #+#    #+#             */
-/*   Updated: 2023/05/09 13:54:54 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 18:41:53 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +17,11 @@ char	*ft_strchr(const char *s, int c)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == (char) c)
-			return ((char *) s + i);
+		if (s[i] == (char)c)
+			return ((char *)s + i);
 		i++;
 	}
 	if (c == '\0')
-		return ((char *) s + i);
+		return ((char *)s + i);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 12:14:56 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 17:22:08 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 13:49:59 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,6 @@ static int	ft_countwords(const char *s, char c)
 	return (c_wd);
 }
 
-// static void	*ft_free_strs(char **strs, int j)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < j)
-// 	{
-// 		ft_magic_malloc(FREE, 0, strs[i], PIP);
-// 		i++;
-// 	}
-// 	ft_magic_malloc(FREE, 0, strs, PIP);
-// 	return (NULL);
-// }
-
 static char	**ft_split_strs(t_msh *msh, const char *s, t_spl *st, char c)
 {
 	int	j;
@@ -66,9 +52,10 @@ static char	**ft_split_strs(t_msh *msh, const char *s, t_spl *st, char c)
 		}
 		if (c_lt > 0)
 		{
-			st->strs[j] = mcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MLC, PIP, msh);
+			st->strs[j] = mcgic(
+					mlcp(NULL, sizeof(char *) * (c_lt + 1)), MLC, PIP, msh);
 			if (st->strs[j] == NULL)
-				return (NULL); // TOUT SERA FREE DANS LE GARBAGGE COLLECTOR
+				return (NULL);
 			ft_strlcpy (st->strs[j], s - c_lt, c_lt + 1);
 		}
 	}
@@ -87,9 +74,9 @@ char	**ft_split_magic_malloc(t_msh *msh, int sub, char const *s, char c)
 		st.c_wd = ft_countwords(s, c);
 	st.strs = mcgic(mlcp(NULL, sizeof(char *) * (st.c_wd + 1)), MLC, PIP, msh);
 	if (st.strs == NULL)
-		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO ON QUITTE LE PROCESS ACTUEL
+		ft_exit_bis(msh, sub, -1, -1);
 	if (ft_split_strs(msh, s, &st, c) == NULL)
-		ft_exit_bis(msh, sub, -1, -1); // SI MALLOC KO  DAN FT_SPLIT_st.STRS ON QUITTE LE PROCESS ACTUEL
+		ft_exit_bis(msh, sub, -1, -1);
 	st.strs[st.c_wd] = NULL;
 	return (st.strs);
 }

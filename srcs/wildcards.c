@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 16:53:42 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:05:48 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	match_wildcard(char *str, char *pattern, int *tab)
+static int	match_wildcard(char *str, char *pattern, int *tab)
 {
 	if ((*str == '\0' && *pattern == '\0') || (*pattern == '*' && *tab == 0
 			&& *(pattern + 1) == '\0'))
@@ -36,7 +36,7 @@ int	match_wildcard(char *str, char *pattern, int *tab)
 	return (0);
 }
 
-int	ft_strcmp_cas(char *s1, char *s2)
+static int	ft_strcmp_cas(char *s1, char *s2)
 {
 	size_t	i;
 	char	a;
@@ -56,7 +56,7 @@ int	ft_strcmp_cas(char *s1, char *s2)
 	return (ft_tolower(s1[i]) - ft_tolower(s2[i]));
 }
 
-char	**make_in_order(char **str)
+static char	**make_in_order(char **str)
 {
 	char	*tmp;
 	int		i;

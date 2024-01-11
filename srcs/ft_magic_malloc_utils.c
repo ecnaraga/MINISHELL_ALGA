@@ -6,22 +6,11 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/04 13:26:17 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 11:08:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	del(void *content)
-{
-	free(content);
-	content = NULL;
-}
-
-int	ft_check(void *data, void *data_ref)
-{
-	return (data == data_ref);
-}
 
 t_list	*ft_lstnew_malloc(size_t size)
 {

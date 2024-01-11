@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 13:20:47 by garance           #+#    #+#             */
-/*   Updated: 2024/01/05 12:15:03 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 15:44:48 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ t_lpid	*ft_lpidnew(int content)
 	temp = malloc(sizeof(t_list));
 	if (temp == NULL)
 		return (NULL);
-	temp -> pid = content;
-	temp -> next = NULL;
+	temp->pid = content;
+	temp->next = NULL;
 	return (temp);
 }
 
-t_lpid	*ft_lpidlast(t_lpid *lst)
+static t_lpid	*ft_lpidlast(t_lpid *lst)
 {
 	t_lpid	*temp;
 
@@ -44,8 +44,8 @@ static int	ft_lpidsize(t_lpid *lst)
 	count = 0;
 	while (lst)
 	{
-		count ++;
-		lst = lst -> next;
+		count++;
+		lst = lst->next;
 	}
 	return (count);
 }

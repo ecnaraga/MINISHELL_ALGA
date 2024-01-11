@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:01:59 by garance           #+#    #+#             */
-/*   Updated: 2024/01/04 17:21:28 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/10 13:41:46 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ static char	**ft_split_strs(t_msh *msh, const char *s, char **strs, int c_wd)
 		}
 		if (c_lt > 0)
 		{
-			strs[j] = mcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MLC, PIP, msh);
+			strs[j] = mcgic(mlcp(NULL, sizeof(char *) * (c_lt + 1)), MLC, PIP,
+					msh);
 			if (strs[j] == NULL)
 				return (ft_free_strs(msh, strs, j));
 			ft_strlcpy(strs[j], s - c_lt, c_lt + 1);

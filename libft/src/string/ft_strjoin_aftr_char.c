@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_aftr_char.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 12:16:55 by galambey          #+#    #+#             */
-/*   Updated: 2023/09/10 10:01:23 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/10 18:42:32 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strjoin_aftr_char(char const *s1, char const *s2, char c)
 {
-	size_t		len;
+	size_t	len;
 	char	*s;
 	size_t	i;
 
