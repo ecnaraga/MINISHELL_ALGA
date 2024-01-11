@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 11:00:05 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:37:59 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 	e->len = valide_expand(e->tmp);
 	if (e->len == 0)
 	{
-		cmd = ft_do_expand(msh, e->tmp, cmd, rule);
+		cmd = ft_do_expand(msh, e, cmd, rule);
 		if (msh->status == 255)
 			return (NULL);
 		e->i += msh->av->type[e->j].len_variable;
@@ -117,6 +117,7 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule)
 	e.i = 0;
 	e.j = 0;
 	cmd = NULL;
+	msh->first_d = 0;
 	while (msh->av->data[e.i])
 	{
 		if (msh->av->data[e.i] == '$')

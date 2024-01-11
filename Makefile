@@ -57,6 +57,7 @@ SRCS = main.c \
 	   lpid_utils.c \
 	   ft_expand.c \
 	   ft_expand_utils.c \
+	   ft_expand_utils_bis.c \
 	   ft_expand_wildcard.c \
 	   wildcards.c \
 	   wildcards_utils.c \

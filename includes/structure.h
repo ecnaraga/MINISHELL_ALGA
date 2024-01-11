@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 18:40:38 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:00:45 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef struct s_msh
 	t_pipex			p;
 	t_fdpar			fd;
 	int				ambiguous;
+	int				first_d;
 	int				status;
 	int				previous_status;
 	int				sub;
@@ -110,6 +111,7 @@ typedef struct s_expand
 	int				len;
 	char			*tmp;
 	char			*tmp2;
+	char			*cmd;
 }					t_expand;
 
 typedef struct s_par

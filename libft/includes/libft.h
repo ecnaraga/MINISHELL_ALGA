@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:34:22 by garance           #+#    #+#             */
-/*   Updated: 2024/01/10 18:43:12 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 11:11:50 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ char					*ft_strjoin_char(char const *s1, char c);
 char					*ft_strtrim(char const *s1, char const *set);
 char					*ft_strtrim_exept_set(char const *s1, char const *set);
 char					*ft_strtrim_except_tips(char const *s1,
-							char const *set);
+							char const *set, int rule);
 char					*ft_substr(char const *s, unsigned int start,
 							size_t len);
 void					ft_striteri(char *s, void (*f)(unsigned int, char *));

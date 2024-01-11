@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 18:28:00 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:07:56 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,9 @@ char	*ft_expand(t_msh *msh, char *cmd, int rule);
 ft_expand_utils.c
 */
 int		valide_expand(char *key);
-char	*get_value(t_msh *msh, t_env **env, char *str, int rule);
+char	*get_value(t_msh *msh, t_env **env, t_expand *e, int rule);
 char	*ft_add_char(t_msh *msh, char *cmd, t_expand *e, int *j);
-char	*ft_do_expand(t_msh *msh, char *tmp, char *cmd, int rule);
+char	*ft_do_expand(t_msh *msh, t_expand *e, char *cmd, int rule);
 char	*ft_expand_valid_var(t_msh *msh, char *cmd, int rule, t_expand *e);
 
 /*

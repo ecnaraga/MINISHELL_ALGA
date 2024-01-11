@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2023/12/11 17:08:08 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 11:20:22 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static unsigned int	ft_present_char(char c, char const *set)
 	return (1);
 }
 
-static	unsigned int	ft_count_deb(char const *s1, char const *set)
+static	unsigned int	ft_count_deb(char const *s1, char const *set, int rule)
 {
 	unsigned int	i;
 	unsigned int	count;
@@ -38,13 +38,13 @@ static	unsigned int	ft_count_deb(char const *s1, char const *set)
 		count ++;
 		i++;
 	}
-	if (count > 0)
+	if (count > 0 && rule != 2)
 		return (count - 1);
 	return (count);
 }
 
 static	unsigned int	ft_count_end(char const *s1, char const *set,
-		unsigned int len)
+		unsigned int len, int rule)
 {
 	unsigned int	i;
 	unsigned int	count;
@@ -56,12 +56,16 @@ static	unsigned int	ft_count_end(char const *s1, char const *set,
 		count ++;
 		i++;
 	}
-	if (count > 0)
+	if (count > 0 && rule != 1)
 		return (count - 1);
 	return (count);
 }
-
-char	*ft_strtrim_except_tips(char const *s1, char const *set)
+/*
+if rule == 0 : trim set but leave the tips at the begining and end
+if rule == 1 : trim set but leave the tips at the begining only
+if rule == 2 : trim set but leave the tips at the end only
+*/
+char	*ft_strtrim_except_tips(char const *s1, char const *set, int rule)
 {
 	unsigned int	count_deb;
 	unsigned int	len_s1;
@@ -75,11 +79,11 @@ char	*ft_strtrim_except_tips(char const *s1, char const *set)
 	else
 	{
 		len_s1 = ft_strlen(s1);
-		count_deb = ft_count_deb(s1, set);
+		count_deb = ft_count_deb(s1, set, rule);
 		if (count_deb == len_s1)
 			len_s2 = 1;
 		else
-			len_s2 = len_s1 + 1 - count_deb - ft_count_end(s1, set, len_s1);
+			len_s2 = len_s1 + 1 - count_deb - ft_count_end(s1, set, len_s1, rule);
 		s2 = (char *)malloc(sizeof(char) * len_s2);
 		if (s2 == NULL)
 			return (NULL);

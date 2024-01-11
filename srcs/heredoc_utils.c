@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 11:31:49 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 18:16:08 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:07:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_expand_hdoc(t_msh *msh, char *line, int fd, t_expand *e)
 		if (msh->status == 255)
 			ft_exit_bis(msh, 0, fd, -1);
 	}
-	e->tmp = get_value(msh, msh->env, e->tmp, HDOC);
+	e->tmp = get_value(msh, msh->env, e, HDOC);
 	if (msh->status == 255)
 		ft_exit_bis(msh, 0, fd, -1);
 	if (ft_strcmp(e->tmp, " ") != 0)
