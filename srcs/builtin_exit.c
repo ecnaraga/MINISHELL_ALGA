@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 10:37:46 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/04 16:54:26 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:14:20 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ static int	is_nbr(char *str)
 	err = 0;
 	while (str[i])
 	{
-		if (str[i] <= '0' || str[i] >= '9')
+		if (str[i] < '0' || str[i] > '9')
 			return (0);
 		i++;
 	}
 	ft_atol(str, &err);
+	//printf("atol : %d\n", err);
 	if (err == 1)
 		return (0);
 	return (1);

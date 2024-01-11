@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/11 15:02:30 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 15:07:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,6 @@ char	*ft_strjoin3(t_msh *msh, char *s1, char *s2);
 /*
 wildcards.c
 */
-char	**wildcards(char *str, t_msh *msh, char *cmd_0);
+char	**wildcards(char *pattern, t_msh *msh, char *cmd_0, char *cmd_1);
 
 #endif
