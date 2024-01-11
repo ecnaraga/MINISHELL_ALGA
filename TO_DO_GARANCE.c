@@ -81,7 +81,7 @@ TO DO : Renvoyer erreurs pour test :
 // galambey@made-f0Br8s5:~/Documents/MINISHELL_ALGA_BIS$ .
 
 
-POUR ALIX : Minishell$ ((cat)|(ls))
+// POUR ALIX : Minishell$ ((cat)|(ls))
 
 // bash-5.1$ < $b
 // bash: $b: ambiguous redirect

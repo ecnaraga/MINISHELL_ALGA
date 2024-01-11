@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 16:38:05 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 17:04:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub, t_fdpar *fd)
 	else if (pid == 0)
 	{
 		msh->sub = sub;
+		dprintf(2, "sub->msh->line |%s|\n", sub_msh->line);
 		(ft_redef_std_sub(msh, fd), ft_minishell(sub_msh, 1, fd));
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 16:49:08 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:15:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	main(int ac, char **av, char **env)
 {
 	t_msh	msh;
 	int		fd;
+	(void) fd;
 
 	(void)av;
 	if (isatty(0) == 1)
