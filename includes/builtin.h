@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:25:02 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 12:17:47 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:43:22 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	builtin_echo(t_msh *msh/*t_split *av , int nb_arg */);
 /*
 pwd
 */
-int	builtin_pwd();
+int	builtin_pwd(t_msh *msh);
 
 /*
 cd
@@ -38,6 +38,7 @@ int	builtin_cd(t_msh *minish);
 int	change_env(char	*old_pwd, t_msh *msh, int statut);
 char	*get_path(char	**str);
 char	*get_old_pwd(t_env **env, t_msh *msh);
+int	pwd_exist(t_env **env);
 
 /*
 exit
@@ -75,17 +76,16 @@ int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env);
 void	ft_print_export(t_msh *minish);
 int	get_statut(char *cmd);
 int	valide_key(char *key);
-int	node_exist(t_env **env, char *str, int size);
+int	node_exist(t_env **env, char *str, int size, t_msh *msh);
 void	error_export(t_msh *msh, char *str);
 
 size_t	ft_strlen2(const char *s);
-char	*ft_strjoin2(char const *s1, char const *s2);
+char	*ft_strjoin2(char const *s1, char const *s2, t_msh *msh);
 char	*ft_exstrjoin(t_msh *msh, char const *s1, char const *s2);
 void	strlcpy_enjoyer(char *str, t_env *node, int statut, int size);
 void	change_env_export(t_env *node, t_env **env, int info);
 
-void	doublon_handler(t_msh *m, char *str, t_env **env, t_intel i);
-void	doublon_handler_bis(t_msh *msh, char *str, t_env *tmp, t_intel i);
+int	doublon_handler(t_msh *m, char *str, t_env **env, t_intel i);
 /*
 unset
 */

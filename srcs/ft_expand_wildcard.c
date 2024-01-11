@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand_wildcard.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 16:40:39 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/06 09:20:03 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/09 16:28:58 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ char	**ft_expand_wildcard(t_msh *msh, int *cmd_nb, int *i)
 	char	**tmp;
 
 	if (msh->p.cmd_t[0])
-		tmp = wildcards(msh->av->data, msh, msh->p.cmd_t[0]);
+	{
+		tmp = wildcards(msh->av->data, msh, msh->p.cmd_t[0], msh->p.cmd_t[1]);
+	}
 	else
-		tmp = wildcards(msh->av->data, msh, msh->av->data);
+		tmp = wildcards(msh->av->data, msh, msh->av->data, NULL);
 	if (msh->status == 255)
 		return (NULL);
 	if (!tmp)

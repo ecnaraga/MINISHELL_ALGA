@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 16:00:21 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 16:53:42 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,29 @@ char	**make_in_order(char **str)
 	return (str);
 }
 
-char	**wildcards(char *pattern, t_msh *msh, char *cmd_0)
+int	is_flag_a(char *cmd)
+{
+	int	i;
+
+	i = -1;
+	if (!cmd)
+		return (0);
+	while(cmd[++i])
+	{
+		if(cmd[i] == 'a')
+			return (1);
+		
+	}
+	return (0);
+}
+
+char	**wildcards(char *pattern, t_msh *msh, char *cmd_0, char *cmd_1)
 {
 	DIR				*dir;
 	struct dirent	*read;
 	char			*str2;
 	char			**str3;
-
+	(void)cmd_1;
 	str2 = NULL;
 	dir = opendir(".");
 	if (!dir)
@@ -99,12 +115,13 @@ char	**wildcards(char *pattern, t_msh *msh, char *cmd_0)
 	}
 	while (read != NULL)
 	{
+		//dprintf(2, "test0\n");
 		if (match_wildcard(read->d_name, pattern, msh->av->wild) == 1)
 		{
-			printf("read->d_name : %s\n", read->d_name);
-			if ((ft_strcmp("ls", cmd_0) != 0 && !(read->d_name[0] == '.'))
-				|| ft_strcmp("ls", cmd_0) == 0)
+			//dprintf(2, "test1\n");
+			if (!(read->d_name[0] == '.') || (ft_strcmp("ls", cmd_0) == 0 && is_flag_a(cmd_1) == 0 && read->d_type != 4) || (pattern[0] == '.' && (pattern[1] == '*')))
 			{
+				//dprintf(2, "test2\n");
 				str2 = ft_strjoin3(msh, str2, read->d_name);
 				if (msh && msh->status == 255)
 					return (NULL);

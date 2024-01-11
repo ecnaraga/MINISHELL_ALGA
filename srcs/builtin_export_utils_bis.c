@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 14:47:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 13:56:56 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:53:19 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ size_t	ft_strlen2(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin2(char const *s1, char const *s2)
+char	*ft_strjoin2(char const *s1, char const *s2, t_msh *msh)
 {
 	int		len;
 	char	*s;
@@ -39,8 +39,8 @@ char	*ft_strjoin2(char const *s1, char const *s2)
 		len = ft_strlen(s1);
 	else
 		len = ft_strlen(s1) + ft_strlen2(s2);
-	s = (char *)malloc(sizeof(char) * (len + 1));
-	if (!s)
+	s = mcgic(mlcp(NULL, sizeof(char) * (len + 1)), MLC, ENV, msh);
+	if (msh->status == 255)
 		return (NULL);
 	s[0] = '\0';
 	if (s1)
@@ -66,7 +66,7 @@ char	*ft_exstrjoin(t_msh *msh, char const *s1, char const *s2)
 	else
 		len = ft_strlen(s1) + ft_strlen(s2);
 	s = mcgic(mlcp(NULL, sizeof(char) * (len + 1)), MLC, ENV, msh);
-	if (!s)
+	if (msh->status == 255)
 		return (NULL);
 	s[0] = '\0';
 	if (s1)

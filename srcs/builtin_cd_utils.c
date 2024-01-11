@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 13:33:55 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 12:17:55 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:16:02 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_old_pwd(t_env **env, t_msh *msh)
 	else
 	{
 		old = mcgic(mlcp(ft_strjoin("OLDPWD=", old), 1),
-				ADD, NO_ENV, msh); // PROTEGE
+				ADD, NO_ENV, msh);
 		return (old);
 	}
 }
@@ -74,7 +74,7 @@ static void	change_env_helper(char *old_pwd, t_msh *msh)
 int	change_env(char	*old_pwd, t_msh *msh, int statut)
 {
 	char	*tmp;
-	char	*newpath = NULL;
+	char	*newpath;
 
 	change_env_helper(old_pwd, msh);
 	tmp = getcwd(NULL, 0);
@@ -85,7 +85,7 @@ int	change_env(char	*old_pwd, t_msh *msh, int statut)
 	}
 	else if (statut == 0)
 	{
-		newpath = mcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh); // PROTEGE
+		newpath = mcgic(mlcp(ft_strjoin("PWD=", tmp), 1), ADD, NO_ENV, msh);
 		if (msh->status == 255)
 		{
 			free(tmp);
@@ -95,5 +95,21 @@ int	change_env(char	*old_pwd, t_msh *msh, int statut)
 		new_env_node_export(msh, newpath, 2, msh->export_env);
 	}
 	free(tmp);
+	return (0);
+}
+
+int	pwd_exist(t_env **env)
+{
+	t_env	*tmp;
+
+	tmp = *env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->name, "PWD"))
+		{
+			return (1);
+		}
+		tmp = tmp->next;
+	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_magic_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 12:18:58 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/06 09:38:16 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/11 12:37:54 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	*ft_magic_add_mlc(t_msh *msh, t_list **mlc, int rule, t_magic *p)
 	return (tmp->content);
 }
 /*
-size == -1 => signifie regle ADD select
+size == 1 => signifie regle ADD select
 */
 t_magic	*mlcp(void *addr, size_t size)
 {

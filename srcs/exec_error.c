@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 12:26:41 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 10:50:01 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:47:48 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	ft_free_fd_p(int **fd_p, int j)
-{
-	if (j != -1)
-	{
-		while (--j >= 0)
-			free(fd_p[j]);
-		free(fd_p);
-	}
-	else
-	{
-		while (fd_p[++j])
-			free(fd_p[j]);
-		free(fd_p);
-	}
-}
 
 void	ft_exit_bis(t_msh *msh, int sub, int fd1, int fd2)
 {

@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:13:14 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 12:09:20 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:36:02 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,21 @@ int	new_env_node_env(t_msh *msh, char *str, int statut, t_env **env)
 
 	i.name_size = get_name_size(str);
 	content_size = ft_strlen2(str + i.name_size);
-	if (!node_exist(env, str, i.name_size))
+	if (!node_exist(env, str, i.name_size, msh))
 	{
 		new = ft_lst_new_malloc(msh, i.name_size + 1, content_size + 1);
 		if (!new)
 			return (255);
 		ft_strlcpy(new->name, str, i.name_size + 1);
 		strlcpy_enjoyer(str + (i.name_size + 1), new, statut + 2, content_size);
+		new->print = 1;
 		change_env_export(new, env, 2);
 	}
 	else
 	{
 		i.statut = statut + 2;
-		doublon_handler(msh, str, env, i);
+		if (doublon_handler(msh, str, env, i) != 0)
+			return (255);
 	}
 	return (0);
 }
@@ -47,19 +49,21 @@ int	new_env_node_export(t_msh *msh, char *str, int statut, t_env **env)
 	content_size = ft_strlen2(str + i.name_size);
 	if (str[0] == '_' && str[1] && str[1] == '=')
 		return (0);
-	if (!node_exist(env, str, i.name_size))
+	if (!node_exist(env, str, i.name_size, msh))
 	{
 		new = ft_lst_new_malloc(msh, i.name_size + 1, content_size + 2 + 1);
 		if (!new)
 			return (255);
 		ft_strlcpy(new->name, str, i.name_size + 1);
 		strlcpy_enjoyer(str + (i.name_size + 1), new, statut + 1, content_size);
+		new->print = 1;
 		change_env_export(new, env, 1);
 	}
 	else
 	{
 		i.statut = statut + 1;
-		doublon_handler(msh, str, env, i);
+		if (doublon_handler(msh, str, env, i) != 0)
+			return (255);
 	}
 	return (0);
 }

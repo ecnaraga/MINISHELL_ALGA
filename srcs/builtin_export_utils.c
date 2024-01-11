@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:47:35 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/05 14:49:20 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:07:32 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void	ft_print_export(t_msh *minish)
 	tmp = *(minish->export_env);
 	while (tmp)
 	{
-		printf("export %s=%s\n", (char *)tmp->name, (char *)tmp->content);
+		if (tmp->content[0])
+			printf("export %s=%s\n", (char *)tmp->name, (char *)tmp->content);
+		else
+			printf("export %s\n", (char *)tmp->name);
 		tmp = tmp->next;
 	}
 }
@@ -61,17 +64,23 @@ int	valide_key(char *key)
 	return (0);
 }
 
-int	node_exist(t_env **env, char *str, int size)
+int	node_exist(t_env **env, char *str, int size, t_msh *msh)
 {
 	t_env	*tmp;
+	char	*temp;
 
 	tmp = *env;
+	temp = mcgic(mlcp(ft_substr(str, 0, size), 1), ADD, PIP, msh);
 	while (tmp)
 	{
-		if (ft_strncmp(str, tmp->name, size) == 0)
+		if (ft_strcmp(temp, tmp->name) == 0)
+		{
+			mcgic(mlcp(temp, 0), FREE, PIP, msh);
 			return (1);
+		}
 		tmp = tmp->next;
 	}
+	mcgic(mlcp(temp, 0), FREE, PIP, msh);
 	return (0);
 }
 

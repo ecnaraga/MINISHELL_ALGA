@@ -6,7 +6,7 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 15:32:01 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/08 14:22:01 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/09 17:27:50 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ static void	fill_env(t_msh *msh, t_env **env, char **str)
 			ft_exit(-1, -1, -1, msh);
 		ft_strlcpy(new->name, str[i], size_name + 1);
 		ft_strlcpy(new->content, str[i] + (size_name + 1), size_content + 1);
+		new->print = 1;
 		ft_lstadd_back_env(env, new);
 	}
 }

@@ -6,27 +6,11 @@
 /*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 14:17:15 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/09 12:06:23 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:49:09 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	pwd_exist(t_env **env)
-{
-	t_env	*tmp;
-
-	tmp = *env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->name, "PWD"))
-		{
-			return (1);
-		}
-		tmp = tmp->next;
-	}
-	return (0);
-}
 
 void	cd_error_message(t_msh *msh, char *str)
 {
@@ -40,7 +24,10 @@ void	cd_error_message(t_msh *msh, char *str)
 	message = mcgic(mlcp(ft_strjoin(tmp, ": No such file or directory\n"), 1),
 			ADD, NO_ENV, msh);
 	if (msh->status == 255)
+	{
+		mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 		return ;
+	}
 	mcgic(mlcp(tmp, 0), FREE, NO_ENV, msh);
 	ft_putstr_fd(message, 2);
 	mcgic(mlcp(message, 0), FREE, NO_ENV, msh);
@@ -64,7 +51,7 @@ char	*build_cd_exec(t_msh *msh, char **old_pwd, int *statut)
 		}
 		*old_pwd = mcgic(mlcp(ft_strjoin("OLDPWD=", tmp), 1), ADD, NO_ENV, msh);
 		if (msh->status == 255)
-			return (NULL);
+			return (free(tmp), NULL);
 		free(tmp);
 	}
 	if (!(*old_pwd))
@@ -78,6 +65,7 @@ int	builtin_cd_exec2(char *test, t_msh *msh, char **path, char *old_pwd)
 {
 	if (!test && msh->p.cmd_t[1])
 	{
+		msh->status = 1;
 		cd_error_message(msh, msh->p.cmd_t[1]);
 		return (msh->status);
 	}
@@ -91,6 +79,13 @@ int	builtin_cd_exec2(char *test, t_msh *msh, char **path, char *old_pwd)
 	return (0);
 }
 
+int	chdir_error(char *path, t_msh *msh)
+{
+	msh->status = 1;
+	cd_error_message(msh, path);
+	return (msh->status);
+}
+
 int	builtin_cd(t_msh *msh)
 {
 	char		*path;
@@ -98,6 +93,7 @@ int	builtin_cd(t_msh *msh)
 	char		*test;
 	static int	statut = 0;
 
+	path = NULL;
 	if (msh->p.cmd_t[1] && msh->p.cmd_t[2])
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
@@ -112,8 +108,8 @@ int	builtin_cd(t_msh *msh)
 		change_env(old_pwd, msh, statut);
 	else
 	{
-		cd_error_message(msh, path);
-		msh->status = 1;
+		free(test);
+		return (chdir_error(path, msh));
 	}
 	free(test);
 	return (0);
