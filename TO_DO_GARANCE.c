@@ -3,6 +3,12 @@
 echo & USER
 */
 
+echo "echo coucou" | ./minishell
+
+( ( cat | cat )  << L ) | cat << L
+
+ls|infileexistant cat > infileexistant => fail de access
+
 bash-5.1$ echo $eee hola
 hola
 bash-5.1$ echo "$eee" "hola"
@@ -19,7 +25,7 @@ TO DO : Renvoyer erreurs pour test :
 
 // export a=gaga && < $a
 
-// (cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
 
 // bash-5.1$ .
 // bash: .: filename argument required

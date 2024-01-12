@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/12 18:38:39 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/11 16:15:26 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,6 @@ static void	ft_init_var(t_msh *msh, char **env)
 	msh->sub = 0;
 }
 
-// void	ft_no_interactive(t_msh *msh, char **env)
-// {
-// 	char *line;
-
-// 	line = get_next_line(STDIN_FILENO);
-// 	dprintf(2, "line %s\n", line);
-// 	if (ft_strcmp(line, "./minishell") == 0)
-// 		exit(0);
-// 	else
-// 	{
-// 		ft_init_var(msh, env);
-// 		ft_minishell(msh, 0, NULL);
-// 		mcgic(NULL, QUIT, -1, msh);
-// 		exit(msh->status);
-// 	}
-// }
-
 /*
 if	isatty(0) == 1, in case of the STDOUT_FILENO has already been redirected,
 	we open /dev/stdin tu dup2 , to be sure the STDOUT_FILENO of our
@@ -89,16 +72,6 @@ int	main(int ac, char **av, char **env)
 	(void) fd;
 
 	(void)av;
-	// if (ac != 1)
-	// 	return (write(2, "bash: minishell: too many arguments\n", 37), 1);
-	// if (isatty(0) == 0)
-	// 	ft_no_interactive(&msh, env);
-	// if (isatty(0) == 1)
-	// {
-	// 	fd = open("/dev/stdin", O_RDWR);
-	// 	dup2(fd, STDOUT_FILENO);
-	// 	close(fd);
-	// }
 	if (isatty(0) == 1)
 	{
 		fd = open("/dev/stdin", O_RDWR);
