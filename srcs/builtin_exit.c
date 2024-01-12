@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 10:37:46 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/11 15:14:20 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:07:24 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static int	is_nbr(char *str)
 		i++;
 	}
 	ft_atol(str, &err);
-	//printf("atol : %d\n", err);
 	if (err == 1)
 		return (0);
 	return (1);

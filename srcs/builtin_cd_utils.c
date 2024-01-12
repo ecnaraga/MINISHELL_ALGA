@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 13:33:55 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/11 15:03:22 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:07:13 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ char	*get_old_pwd(t_env **env, t_msh *msh)
 	else
 	{
 		old = mcgic(mlcp(ft_strjoin("OLDPWD=", old), 1),
-					ADD,
-					NO_ENV,
-					msh);
+				ADD, NO_ENV, msh);
 		return (old);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 15:44:01 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/10 18:22:35 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 18:53:41 by athiebau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,5 @@ char	*add_spaces(t_msh *msh, char *str)
 	}
 	fstr[j] = '\0';
 	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
-	// return (ft_parse_bis_bis(msh, fstr));
 	return (fstr);
 }
