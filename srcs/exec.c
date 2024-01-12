@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 15:42:37 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 16:34:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	ft_exec(t_msh *msh, int sub, t_fdpar *fd)
 	{
 		msh->fd.in = fd->in;
 		msh->fd.out = fd->out;
+		dprintf(2, "EXEC TEST msh->fd.in %d msh->fd.out %d\n", msh->fd.in, msh->fd.out);
 	}
 	else
 	{

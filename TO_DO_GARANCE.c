@@ -3,6 +3,12 @@
 echo & USER
 */
 
+echo "echo coucou" | ./minishell
+
+( ( cat | cat )  << L ) | cat << L
+
+ls|infileexistant cat > infileexistant => fail de access
+
 bash-5.1$ echo $eee hola
 hola
 bash-5.1$ echo "$eee" "hola"

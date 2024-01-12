@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 16:32:17 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 16:07:10 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static pid_t	ft_exec_cmd_fork(t_msh *msh, int old_stdout, int old_stdin,
 	}
 	if (pid == 0)
 	{
+		dprintf(2, "EXEC_CMD_FORK PID = %d\n", getpid());
 		close(old_stdout);
 		close(old_stdin);
 		if (ft_signal_handler_msh_child(msh) == 255)

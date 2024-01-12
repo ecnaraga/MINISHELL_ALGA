@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 15:10:21 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 15:57:51 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 17:08:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,17 @@ static int	ft_parsing(t_msh *msh, int sub)
 
 void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd)
 {
+	// dprintf(2, "AAAAAAAAAAAAA\n");
 	if (ft_parsing(msh, sub) != 0)
 		return ;
+	// dprintf(2, "BBBBBBBBBBBBBB\n");
+	// if (fd)
+	// {
+	// 	dprintf(2, "MINISHELL fd->in %d fd->out %d\n", fd->in, fd->out);
+	// }
 	if (ft_exec(msh, sub, fd) != 0)
 		return ;
+	// dprintf(2, "ccccccccccccccccccccc\n");
 	if (sub != 0)
 		ft_exit(-1, -1, -1, msh);
 }

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 16:11:52 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 16:00:23 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,13 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 	head_hd = NULL;
 	par = 0;
 	head = msh->av;
-	while (msh->av && ((msh->av->token != PIPE && msh->av->token != OPERATOR)
-			|| (par == 1 && rule != CMD_ALONE)))
+	while ((msh->av && rule != CMD_ALONE) || (msh->av && rule == CMD_ALONE && msh->av->token != PIPE && msh->av->token != OPERATOR))
 	{
+		if (rule != CMD_ALONE)
+		{
+			if ((msh->av->token == OPERATOR || msh->av->token == PIPE) && par == 0)
+				break;
+		}
 		ft_handle_par(msh, rule, &par);
 		if (msh->av->token == HDOC && rule != CMD_ALONE)
 			update_hdoc_list(msh, head_hd);

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/11 17:04:11 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 17:08:16 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,13 @@ static void	ft_create_sub_msh(t_msh *sub_msh, t_msh *msh, int sub, t_fdpar *fd)
 	else if (pid == 0)
 	{
 		msh->sub = sub;
-		dprintf(2, "sub->msh->line |%s|\n", sub_msh->line);
+		// if (fd)
+		// {
+		// 	sub_msh->fd.in = fd->in;
+		// 	sub_msh->fd.out = fd->out;
+		// 	dprintf(2, "sub_msh->fd.in %d sub_msh->fd.out %d\n", sub_msh->fd.in, sub_msh->fd.out);
+		// }
+		// dprintf(2, "EXEC_PAR PID = %d sub->msh->line |%s|\n", getpid(), sub_msh->line);
 		(ft_redef_std_sub(msh, fd), ft_minishell(sub_msh, 1, fd));
 	}
 	else
@@ -84,6 +90,7 @@ void	ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd)
 	t_msh	sub_msh;
 	t_env	*head_hd;
 
+	dprintf(2, "EXEC PAR msh->fd.in %d msh->fd.out %d\n", msh->fd.in, msh->fd.out);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	sub_msh.p.hdoc = ft_copy_heredoc(msh, msh->p.hdoc, sub);

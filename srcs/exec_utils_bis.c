@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/09 16:20:31 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/12 16:25:48 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,10 @@ rule == 0 : dup and close fd.in and fd.out
 */
 int	ft_dup_fd(t_msh *msh, int rule)
 {
+	dprintf(2, "test00 msh->fd.in %d msh->fd.out %d\n", msh->fd.in, msh->fd.out);
 	if ((rule == 1 || rule == 0) && msh->fd.in > -1)
 	{
+		dprintf(2, "test\n");
 		if (dup2(msh->fd.in, STDIN_FILENO) == -1)
 			return (1);
 		close(msh->fd.in);
@@ -91,6 +93,7 @@ int	ft_dup_fd(t_msh *msh, int rule)
 	}
 	if ((rule == 2 || rule == 0) && msh->fd.out > -1)
 	{
+		dprintf(2, "test1\n");
 		if (dup2(msh->fd.out, STDOUT_FILENO) == -1)
 			return (1);
 		close(msh->fd.out);
