@@ -25,7 +25,7 @@ TO DO : Renvoyer erreurs pour test :
 
 // export a=gaga && < $a
 
-(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c ou ctl + d leaks
+// (cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c ou ctl + d leaks
 ne marche plus, revenir a TMP 13/01
 
 // bash-5.1$ .
