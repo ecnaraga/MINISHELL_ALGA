@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/12 16:00:23 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/13 13:04:17 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 
 	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
 		perror("signal");
-	ft_close_fd(NULL, -1, fd_1, fd_2);
+	ft_close_fd(fd_1, fd_2);
 	head_hd = NULL;
 	par = 0;
 	head = msh->av;

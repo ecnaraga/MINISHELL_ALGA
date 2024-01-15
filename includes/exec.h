@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/11 15:07:28 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/13 13:04:47 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 /*
 minishell.c
 */
-void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd);
+void	ft_minishell(t_msh *msh, int sub);
 
 /*
 exec.c
 */
-int		ft_exec(t_msh *msh, int sub, t_fdpar *fd);
+int		ft_exec(t_msh *msh, int sub);
 
 /*
 exec_utils
@@ -35,8 +35,7 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule);
 exec_utils_bis
 */
 char	**ft_transcript_env(t_env **env, t_msh *msh);
-void	ft_close_fd(t_fdpar *fd, int rule, int fd1, int fd2);
-int		ft_dup_fd(t_msh *msh, int rule);
+void	ft_close_fd(int fd1, int fd2);
 
 /*
 exec_utils_ter
@@ -53,7 +52,7 @@ int		ft_search_pipe(t_msh *msh);
 /*
 exec_par.c
 */
-void	ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd);
+void	ft_exec_par(t_msh *msh, t_split **head, int sub);
 
 /*
 exec_par_utils.c

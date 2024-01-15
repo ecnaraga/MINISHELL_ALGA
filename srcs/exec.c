@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/12 16:34:03 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/13 13:05:01 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	ft_choice_exec(t_msh *msh, t_split **head, int sub)
 	if (ft_search_pipe(msh) == 1)
 		pipex_multi(msh, sub);
 	else if (msh->av->token == PAR_OPEN)
-		ft_exec_par(msh, head, sub, NULL);
+		ft_exec_par(msh, head, sub);
 	else
 		ft_cmd_alone(msh, sub);
 }
@@ -71,24 +71,13 @@ static int	ft_exec_operator(t_msh *msh, t_split **head, int sub)
 	return (0);
 }
 
-int	ft_exec(t_msh *msh, int sub, t_fdpar *fd)
+int	ft_exec(t_msh *msh, int sub)
 {
 	t_split	*head;
 
 	if (sub == 0 && ft_heredoc(msh) == 130)
 		return (1);
 	head = msh->av;
-	if (fd)
-	{
-		msh->fd.in = fd->in;
-		msh->fd.out = fd->out;
-		dprintf(2, "EXEC TEST msh->fd.in %d msh->fd.out %d\n", msh->fd.in, msh->fd.out);
-	}
-	else
-	{
-		msh->fd.in = -1;
-		msh->fd.out = -1;
-	}
 	ft_exec_operator(msh, &head, sub);
 	if (sub == 0)
 		ft_unlink_heredoc(msh->p.hdoc);

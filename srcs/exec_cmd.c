@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 15:35:28 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/12 16:07:10 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/13 13:04:06 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ static void	ft_exec_cmd_bis(t_msh *msh, int old_stdout, int old_stdin, int sub)
 
 static int	ft_return_error(t_msh *msh, int old_std[2], int rule, int sub)
 {
-	ft_close_fd(&msh->fd, 0, -1, -1);
 	if (old_std[I] > -1)
 	{
 		if (dup2(old_std[I], 0) == -1)
@@ -95,8 +94,6 @@ int	ft_exec_cmd(t_msh *msh, int sub)
 
 	old_std[I] = -1;
 	old_std[O] = -1;
-	if (ft_dup_fd(msh, 0) == 1)
-		ft_return_error(msh, old_std, CMD_ALONE, sub);
 	old_std[I] = redef_stdin(msh, CMD_ALONE, 0, sub);
 	if (old_std[I] == -1)
 		return (ft_return_error(msh, old_std, CMD_ALONE, sub));

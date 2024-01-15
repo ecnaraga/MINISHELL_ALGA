@@ -2,12 +2,12 @@
 /*
 echo & USER
 */
+( ( ( cat | cat) | cat ) << L > /dev/stdin ) | ls
+// echo "echo coucou" | ./minishell
 
-echo "echo coucou" | ./minishell
+// ( ( cat | cat )  << L ) | cat << L
 
-( ( cat | cat )  << L ) | cat << L
-
-ls|infileexistant cat > infileexistant => fail de access
+ls|infileexistant cat > infileexistant => fail de access si f1 et que a l ecole
 
 bash-5.1$ echo $eee hola
 hola
@@ -25,7 +25,8 @@ TO DO : Renvoyer erreurs pour test :
 
 // export a=gaga && < $a
 
-(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c leaks
+(cat | cat | cat | cat) | ( cat | cat ) | ( ls) > avec des ctrl + c ou ctl + d leaks
+ne marche plus, revenir a TMP 13/01
 
 // bash-5.1$ .
 // bash: .: filename argument required
