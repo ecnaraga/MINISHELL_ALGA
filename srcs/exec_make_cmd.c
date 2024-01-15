@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 10:13:19 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 16:03:34 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:01:34 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	ft_count_cmd(t_msh *msh)
 
 	head = msh->av;
 	count = 0;
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OP)
 	{
 		if (msh->av->token == CMD)
 			count++;
@@ -67,7 +67,7 @@ static int	ft_build_cmd(t_msh *msh, t_head *save, int *cmd_nb)
 	int	i;
 
 	i = 0;
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR)
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OP)
 	{
 		if (msh->av->token == CMD)
 		{

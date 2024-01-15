@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:54:09 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 15:38:48 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:02:11 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	ft_set_token(t_msh *msh)
 		msh->av->token = PIPE;
 	else if (!msh->av->quote && (msh->av->data[0] == '&'
 			|| msh->av->data[0] == '|'))
-		msh->av->token = OPERATOR;
+		msh->av->token = OP;
 	else if (!msh->av->quote && msh->av->data[0] == '(')
 		msh->av->token = PAR_OPEN;
 	else if (!msh->av->quote && msh->av->data[0] == ')')

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/09 15:40:57 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:01:37 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void	ft_open_heredoc(t_msh *msh, int *fd_infile, t_head *save)
 }
 
 /*
-Open and close in a loop all the heredoc and infile until a pipe, operator or
+Open and close in a loop all the heredoc and infile until a pipe, OP or
 	the end of commandline.
 The last heredoc or infile encountered is dup2 to stdin_fileno before being
 	closed
@@ -90,7 +90,7 @@ int	redef_stdin(t_msh *msh, int rule, int j, int sub)
 
 	ft_init_var_std(&save, &fd, msh);
 	ft_dup_pipe(msh, rule, j);
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OP
 		&& msh->av->token != PAR_CLOSE)
 	{
 		if (msh->av->token == INFILE)

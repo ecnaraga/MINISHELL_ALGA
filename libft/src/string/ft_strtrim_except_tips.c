@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 10:25:25 by garance           #+#    #+#             */
-/*   Updated: 2024/01/11 11:20:22 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:35:02 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static	unsigned int	ft_count_end(char const *s1, char const *set,
 		return (count - 1);
 	return (count);
 }
+
 /*
 if rule == 0 : trim set but leave the tips at the begining and end
 if rule == 1 : trim set but leave the tips at the begining only
@@ -68,9 +69,9 @@ if rule == 2 : trim set but leave the tips at the end only
 char	*ft_strtrim_except_tips(char const *s1, char const *set, int rule)
 {
 	unsigned int	count_deb;
-	unsigned int	len_s1;
+	unsigned int	l_s1;
 	char			*s2;
-	unsigned int	len_s2;
+	unsigned int	l_s2;
 
 	if (!s1)
 		return (NULL);
@@ -78,16 +79,16 @@ char	*ft_strtrim_except_tips(char const *s1, char const *set, int rule)
 		s2 = ft_strdup(s1);
 	else
 	{
-		len_s1 = ft_strlen(s1);
+		l_s1 = ft_strlen(s1);
 		count_deb = ft_count_deb(s1, set, rule);
-		if (count_deb == len_s1)
-			len_s2 = 1;
+		if (count_deb == l_s1)
+			l_s2 = 1;
 		else
-			len_s2 = len_s1 + 1 - count_deb - ft_count_end(s1, set, len_s1, rule);
-		s2 = (char *)malloc(sizeof(char) * len_s2);
+			l_s2 = l_s1 + 1 - count_deb - ft_count_end(s1, set, l_s1, rule);
+		s2 = (char *)malloc(sizeof(char) * l_s2);
 		if (s2 == NULL)
 			return (NULL);
-		ft_strlcpy(s2, s1 + count_deb, len_s2);
+		ft_strlcpy(s2, s1 + count_deb, l_s2);
 	}
 	return (s2);
 }

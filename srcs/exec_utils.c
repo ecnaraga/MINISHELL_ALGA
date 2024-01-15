@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 11:06:45 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/13 13:04:17 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/15 11:04:19 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,17 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule)
 
 	if (signal(SIGINT, SIG_IGN) == SIG_ERR)
 		perror("signal");
-	ft_close_fd(fd_1, fd_2);
+	ft_close_fd(NULL, -1, fd_1, fd_2);
 	head_hd = NULL;
 	par = 0;
 	head = msh->av;
-	while ((msh->av && rule != CMD_ALONE) || (msh->av && rule == CMD_ALONE && msh->av->token != PIPE && msh->av->token != OPERATOR))
+	while ((msh->av && rule != CMD_ALONE) || (msh->av && rule == CMD_ALONE
+			&& msh->av->token != PIPE && msh->av->token != OP))
 	{
 		if (rule != CMD_ALONE)
 		{
-			if ((msh->av->token == OPERATOR || msh->av->token == PIPE) && par == 0)
-				break;
+			if ((msh->av->token == OP || msh->av->token == PIPE) && par == 0)
+				break ;
 		}
 		ft_handle_par(msh, rule, &par);
 		if (msh->av->token == HDOC && rule != CMD_ALONE)

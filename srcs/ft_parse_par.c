@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 13:36:00 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:02:03 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_parse_par(t_msh *msh)
 		if (res == 2)
 			return (0);
 	}
-	if (p.par_c != p.par_o && p.prec_iss != OPERATOR)
+	if (p.par_c != p.par_o && p.prec_iss != OP)
 		return (msh->status = 2,
 			e_syntx("syntax error parenthesis expected closed\n"));
 	return (0);

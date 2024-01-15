@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export_utils_ter.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 13:53:39 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/12 12:08:21 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/15 10:58:47 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ static int	doublon_handler_ter(t_env *t, char *str, t_intel i, t_msh *m)
 	char	*tmp2;
 
 	tmp2 = t->content;
-	t->content = ft_strjoin2(t->content, str + i.name_size
-			+ 1, m);
+	t->content = ft_strjoin2(t->content, str + i.name_size + 1, m);
 	if (m->status == 255)
 		return (255);
 	mcgic(mlcp(tmp2, 0), FREE, ENV, m);

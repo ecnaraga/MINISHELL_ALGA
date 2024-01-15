@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:51 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/13 13:06:15 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/15 10:52:28 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	ft_init_var(t_msh *msh, char **env)
 
 void	ft_no_interactive(t_msh *msh, char **env)
 {
-	char *line;
+	char	*line;
 
 	line = get_next_line(STDIN_FILENO);
 	if (!line)
@@ -72,7 +72,7 @@ void	ft_no_interactive(t_msh *msh, char **env)
 		ft_init_var(msh, env);
 		msh->line = mcgic(mlcp(ft_strdup(line), 1), ADD, NO_ENV, msh);
 		free(line);
-		ft_minishell(msh, 0);
+		ft_minishell(msh, 0, NULL);
 		mcgic(NULL, QUIT, -1, msh);
 		exit(msh->status);
 	}
@@ -87,11 +87,11 @@ int	main(int ac, char **av, char **env)
 {
 	t_msh	msh;
 	int		fd;
-	(void) fd;
 
+	(void)fd;
 	(void)av;
 	if (ac != 1)
-		return (write(2, "bash: minishell: too many arguments\n", 37), 1);
+		return (write(2, "minishell: too many arguments\n", 31), 1);
 	if (isatty(0) == 0)
 		ft_no_interactive(&msh, env);
 	if (isatty(0) == 1)
@@ -107,7 +107,7 @@ int	main(int ac, char **av, char **env)
 		if (ft_readline(&msh) == -1)
 			continue ;
 		add_history(msh.line);
-		ft_minishell(&msh, 0);
+		ft_minishell(&msh, 0, NULL);
 		mcgic(NULL, FLUSH, NO_ENV, &msh);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 14:42:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/11 15:02:56 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:32:54 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@
 # define O 1
 
 extern int			g_sign;
+
+typedef struct s_wildcard
+{
+	char			*cmd_0;
+	char			*cmd_1;
+	char			*pattern;
+}					t_wildcard;
 
 typedef struct s_dollar
 {
@@ -172,7 +179,7 @@ enum				e_token
 	OUTFILE_TRUNC,
 	OUTFILE_NO_TRUNC,
 	HDOC,
-	OPERATOR,
+	OP,
 	PIPE,
 	PAR_OPEN,
 	PAR_CLOSE,

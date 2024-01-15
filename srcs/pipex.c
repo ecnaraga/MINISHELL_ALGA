@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 09:52:34 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/13 13:01:37 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/15 11:02:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	ft_count_pipe(t_msh *msh, t_split *head)
 
 	par = 0;
 	count = 0;
-	while (msh->av && msh->av->token != OPERATOR)
+	while (msh->av && msh->av->token != OP)
 	{
 		if (msh->av->token == PAR_OPEN)
 		{
@@ -76,9 +76,11 @@ static void	ft_pipex(t_msh *msh, size_t nb_pipe, t_index index, t_lpid **pid_l)
 			ft_middle_cmd(msh, index.j, pid_l);
 		if (msh->status == 255)
 			return ;
+		ft_close_fd(&msh->fd, 1, -1, -1);
 		index.j++;
 	}
 	ft_last_cmd(msh, index.j, pid_l);
+	ft_close_fd(&msh->fd, 2, -1, -1);
 }
 
 void	ft_waitpid_loop(t_msh *msh, t_lpid *pid_l)

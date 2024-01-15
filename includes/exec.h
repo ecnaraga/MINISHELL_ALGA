@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 14:09:00 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/13 13:04:47 by garance          ###   ########.fr       */
+/*   Updated: 2024/01/15 11:36:07 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 /*
 minishell.c
 */
-void	ft_minishell(t_msh *msh, int sub);
+void	ft_minishell(t_msh *msh, int sub, t_fdpar *fd);
 
 /*
 exec.c
 */
-int		ft_exec(t_msh *msh, int sub);
+int		ft_exec(t_msh *msh, int sub, t_fdpar *fd);
 
 /*
 exec_utils
@@ -35,7 +35,8 @@ void	ft_parent(t_msh *msh, int fd_1, int fd_2, int rule);
 exec_utils_bis
 */
 char	**ft_transcript_env(t_env **env, t_msh *msh);
-void	ft_close_fd(int fd1, int fd2);
+void	ft_close_fd(t_fdpar *fd, int rule, int fd1, int fd2);
+int		ft_dup_fd(t_msh *msh, int rule);
 
 /*
 exec_utils_ter
@@ -52,7 +53,7 @@ int		ft_search_pipe(t_msh *msh);
 /*
 exec_par.c
 */
-void	ft_exec_par(t_msh *msh, t_split **head, int sub);
+void	ft_exec_par(t_msh *msh, t_split **head, int sub, t_fdpar *fd);
 
 /*
 exec_par_utils.c
@@ -195,10 +196,13 @@ char	*ft_strtrim_msh(t_msh *msh, char **s1, int sub);
 wildcards_utils.c
 */
 char	*ft_strjoin3(t_msh *msh, char *s1, char *s2);
+int		is_flag_a(char *cmd);
+char	**make_in_order(char **str);
 
 /*
 wildcards.c
 */
 char	**wildcards(char *pattern, t_msh *msh, char *cmd_0, char *cmd_1);
+int		ft_strcmp_cas(char *s1, char *s2);
 
 #endif

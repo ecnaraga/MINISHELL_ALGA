@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 14:47:27 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/10 18:21:59 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:32:31 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,40 @@ char	*ft_strjoin3(t_msh *msh, char *s1, char *s2)
 	s[len] = '\0';
 	mcgic(mlcp(s1, 0), FREE, PIP, msh);
 	return (s);
+}
+
+int	is_flag_a(char *cmd)
+{
+	int	i;
+
+	i = -1;
+	if (!cmd)
+		return (0);
+	while (cmd[++i])
+	{
+		if (cmd[i] == 'a')
+			return (1);
+	}
+	return (0);
+}
+
+char	**make_in_order(char **str)
+{
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i + 1] && ft_strcmp_cas(str[i], str[i + 1]) > 0)
+		{
+			tmp = str[i];
+			str[i] = str[i + 1];
+			str[i + 1] = tmp;
+			i = 0;
+		}
+		else
+			i++;
+	}
+	return (str);
 }

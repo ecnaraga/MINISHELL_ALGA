@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 11:43:13 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/12 18:55:01 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 10:59:58 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	ft_quote_order(char *str)
 	}
 	if (dq % 2 != 0 || sq % 2 != 0)
 	{
-		ft_putstr_fd("minishell: quotes not properly matched\n", 2);
+		ft_putstr_fd("minishell: les quote ne sont pas appariees\n", 2);
 		return (2);
 	}
 	return (0);

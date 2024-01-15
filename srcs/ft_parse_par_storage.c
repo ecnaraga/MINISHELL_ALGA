@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 12:45:33 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/10 13:36:00 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:01:59 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ Retour = 0 => 1ere erreur de syntaxe trouvee sur les operateurs qui est gere
 */
 static int	ft_operator(t_msh *msh, t_par *p, int *i)
 {
-	if (p->prec_iss == TO_DEFINE || ((p->prec_iss == OPERATOR
+	if (p->prec_iss == TO_DEFINE || ((p->prec_iss == OP
 				|| p->prec_iss == CHEVRON) && p->prec == ISS)
 		|| ft_count_char(msh->line + *i) == 1)
 		return (0);
-	p->prec_iss = OPERATOR;
-	p->prec = OPERATOR;
+	p->prec_iss = OP;
+	p->prec = OP;
 	p->chev = 0;
 	p->multi_cmd = 0;
 	(*i)++;

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/09 16:39:45 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:01:39 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_search_pipe(t_msh *msh)
 	t_split	*head;
 
 	head = msh->av;
-	while (msh->av && msh->av->token != OPERATOR)
+	while (msh->av && msh->av->token != OP)
 	{
 		if (msh->av->token == PAR_OPEN)
 		{
@@ -43,7 +43,7 @@ int	ft_search_pipe(t_msh *msh)
 		}
 		if (msh->av->token == PIPE)
 			return (msh->av = head, 1);
-		if (msh->av->token == OPERATOR)
+		if (msh->av->token == OP)
 			return (msh->av = head, 0);
 		msh->av = msh->av->next;
 	}

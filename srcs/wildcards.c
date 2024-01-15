@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: athiebau <athiebau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:35:53 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/12 18:52:40 by athiebau         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:35:51 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	match_wildcard(char *str, char *pattern, int *tab)
 	return (0);
 }
 
-static int	ft_strcmp_cas(char *s1, char *s2)
+int	ft_strcmp_cas(char *s1, char *s2)
 {
 	size_t	i;
 	char	a;
@@ -56,43 +56,7 @@ static int	ft_strcmp_cas(char *s1, char *s2)
 	return (ft_tolower(s1[i]) - ft_tolower(s2[i]));
 }
 
-static char	**make_in_order(char **str)
-{
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i + 1] && ft_strcmp_cas(str[i], str[i + 1]) > 0)
-		{
-			tmp = str[i];
-			str[i] = str[i + 1];
-			str[i + 1] = tmp;
-			i = 0;
-		}
-		else
-			i++;
-	}
-	return (str);
-}
-
-int	is_flag_a(char *cmd)
-{
-	int	i;
-
-	i = -1;
-	if (!cmd)
-		return (0);
-	while (cmd[++i])
-	{
-		if (cmd[i] == 'a')
-			return (1);
-	}
-	return (0);
-}
-
-int	wildcards_begin(DIR **dir, struct dirent **read)
+static int	wildcards_begin(DIR **dir, struct dirent **read)
 {
 	*dir = opendir(".");
 	if (!(*dir))
@@ -109,32 +73,44 @@ int	wildcards_begin(DIR **dir, struct dirent **read)
 	return (0);
 }
 
-char	**wildcards(char *pattern, t_msh *msh, char *cmd_0, char *cmd_1)
+static char	*wildcard_end(struct dirent *read, t_wildcard *w, t_msh *msh,
+		DIR *dir)
 {
-	DIR				*dir;
-	struct dirent	*read;
-	char			*str2;
-	char			**str3;
+	char	*str;
 
-	str2 = NULL;
-	(void)cmd_1;
-	if (wildcards_begin(&dir, &read) != 0)
-		return (NULL);
+	str = NULL;
 	while (read != NULL)
 	{
-		if (match_wildcard(read->d_name, pattern, msh->av->wild) == 1)
+		if (match_wildcard(read->d_name, w->pattern, msh->av->wild) == 1)
 		{
-			if (!(read->d_name[0] == '.') || (ft_strcmp("ls", cmd_0) == 0
-					&& is_flag_a(cmd_1) == 0 && read->d_type != 4)
-				|| (pattern[0] == '.' && (pattern[1] == '*')))
+			if (!(read->d_name[0] == '.') || (ft_strcmp("ls", w->cmd_0) == 0
+					&& is_flag_a(w->cmd_1) == 0 && read->d_type != 4)
+				|| (w->pattern[0] == '.' && (w->pattern[1] == '*')))
 			{
-				str2 = ft_strjoin3(msh, str2, read->d_name);
+				str = ft_strjoin3(msh, str, read->d_name);
 				if (msh && msh->status == 255)
 					return (NULL);
 			}
 		}
 		read = readdir(dir);
 	}
+	return (str);
+}
+
+char	**wildcards(char *pattern, t_msh *msh, char *cmd_0, char *cmd_1)
+{
+	DIR				*dir;
+	struct dirent	*read;
+	char			**str3;
+	t_wildcard		w;
+	char			*str2;
+
+	w.cmd_0 = cmd_0;
+	w.cmd_1 = cmd_1;
+	w.pattern = pattern;
+	if (wildcards_begin(&dir, &read) != 0)
+		return (NULL);
+	str2 = wildcard_end(read, &w, msh, dir);
 	closedir(dir);
 	str3 = ft_split_magic_malloc(msh, 1, str2, '\t');
 	if (!str3)

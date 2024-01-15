@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/11 14:41:34 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:10:17 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*get_value_other(t_msh *msh, t_env *node, char *str)
 {
 	if (!str)
 		return (mcgic(mlcp(ft_strtrim_except_tips(node->content,
-					" \b\t\n\v\f\r", 2), 1), ADD, NO_ENV, msh));
+						" \b\t\n\v\f\r", 2), 1), ADD, NO_ENV, msh));
 	return (mcgic(mlcp(ft_strtrim_except_tips(node->content,
 					" \b\t\n\v\f\r", 0), 1), ADD, NO_ENV, msh));
 }
@@ -29,22 +29,22 @@ static char	*get_value_cmd(t_msh *msh, t_env *node, char *str)
 		{
 			msh->first_d = 1;
 			return (mcgic(mlcp(ft_strtrim(node->content, " \b\t\n\v\f\r"),
-			1), ADD, NO_ENV, msh));
+						1), ADD, NO_ENV, msh));
 		}
-		else if (msh->first_d == 0  && !str)
+		else if (msh->first_d == 0 && !str)
 		{
 			msh->first_d = 1;
 			return (mcgic(mlcp(ft_strtrim_except_tips(node->content,
-					" \b\t\n\v\f\r", 2), 1), ADD, NO_ENV, msh));
+							" \b\t\n\v\f\r", 2), 1), ADD, NO_ENV, msh));
 		}
 		else
 		{
 			return (mcgic(mlcp(ft_strtrim_except_tips(node->content,
-					" \b\t\n\v\f\r", 0), 1), ADD, NO_ENV, msh));
+							" \b\t\n\v\f\r", 0), 1), ADD, NO_ENV, msh));
 		}
 	}
 	return (mcgic(mlcp(ft_strtrim(node->content, " \b\t\n\v\f\r"),
-			1), ADD, NO_ENV, msh));
+				1), ADD, NO_ENV, msh));
 }
 
 char	*get_value(t_msh *msh, t_env **env, t_expand *e, int rule)

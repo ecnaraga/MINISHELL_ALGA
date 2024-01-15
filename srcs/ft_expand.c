@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:50:24 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/11 14:37:59 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 12:01:08 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ static char	*ft_expand_exitcode(t_msh *msh, char *cmd, t_expand *e)
 
 static char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 {
-	e->tmp = mcgic(mlcp(ft_substr(msh->av->data, e->i + 1,
-					msh->av->type[e->j].len_variable - 1), 1), ADD, NO_ENV,
-			msh);
-	if (msh->status == 255)
-		return (NULL);
 	e->len = valide_expand(e->tmp);
 	if (e->len == 0)
 	{
@@ -45,7 +40,10 @@ static char	*ft_expand_env(t_msh *msh, char *cmd, int rule, t_expand *e)
 		e->i += msh->av->type[e->j].len_variable;
 	}
 	else if (e->len == -1)
-		e->i += 2;
+	{
+		msh->av->type[e->j].expnd = 2;
+		return (cmd);
+	}
 	else
 	{
 		cmd = ft_expand_valid_var(msh, cmd, rule, e);
@@ -62,7 +60,14 @@ static char	*ft_expand_var(t_msh *msh, char *cmd, int rule, t_expand *e)
 	if (msh->av->data[e->i + 1] == '?')
 		cmd = ft_expand_exitcode(msh, cmd, e);
 	else
+	{
+		e->tmp = mcgic(mlcp(ft_substr(msh->av->data, e->i + 1,
+						msh->av->type[e->j].len_variable - 1), 1), ADD, NO_ENV,
+				msh);
+		if (msh->status == 255)
+			return (NULL);
 		cmd = ft_expand_env(msh, cmd, rule, e);
+	}
 	return (cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:06:45 by athiebau          #+#    #+#             */
-/*   Updated: 2024/01/10 18:23:39 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:17:12 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,5 @@ char	*ft_parse_bis_bis(t_msh *msh, char *str)
 		j++;
 	}
 	fstr[j] = '\0';
-	mcgic(mlcp(str, 0), FREE, NO_ENV, msh);
-	return (fstr);
+	return (mcgic(mlcp(str, 0), FREE, NO_ENV, msh), fstr);
 }

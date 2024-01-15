@@ -6,7 +6,7 @@
 /*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 08:53:13 by garance           #+#    #+#             */
-/*   Updated: 2024/01/09 15:48:45 by galambey         ###   ########.fr       */
+/*   Updated: 2024/01/15 11:01:38 by galambey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	redef_stdout(t_msh *msh, int rule, int j, int sub)
 
 	ft_init_var_std(&save, &fd, msh);
 	ft_dup_pipe(msh, rule, j);
-	while (msh->av && msh->av->token != PIPE && msh->av->token != OPERATOR
+	while (msh->av && msh->av->token != PIPE && msh->av->token != OP
 		&& msh->av->token != PAR_CLOSE)
 	{
 		if (msh->av->token == OUTFILE_TRUNC)
