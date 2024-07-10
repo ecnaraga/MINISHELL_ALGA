@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: galambey <galambey@student.42.fr>          +#+  +:+       +#+        */
+/*   By: garance <garance@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:20:52 by galambey          #+#    #+#             */
-/*   Updated: 2024/01/15 11:01:46 by galambey         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:32:42 by garance          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static void	ft_exec_and(t_msh *msh, t_split **head, int sub)
 	}
 	else
 	{
-		while (msh->av)
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
+		while (msh->av && msh->av->token != OP)
 			msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 	}
 }
@@ -49,7 +50,8 @@ static void	ft_exec_or(t_msh *msh, t_split **head, int sub)
 	}
 	else
 	{
-		while (msh->av)
+		msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
+		while (msh->av && msh->av->token != OP)
 			msh->av = lstdel_relink_split(msh, msh->av, NULL, head);
 	}
 }
